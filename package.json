@@ -1,0 +1,16 @@
+{
+	"name": "@devclaim/neos-modern-backend",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "node Neos.Ui/esbuild.js",
+		"watch": "node Neos.Ui/esbuild.js --watch",
+		"check": "tsc --noEmit -p Neos.Ui"
+	},
+	"devDependencies": {
+		"@neos-project/neos-ui-extensibility": "^9.1",
+		"esbuild": "~0.27.2",
+		"typescript": "^5.9.0"
+	},
+	"packageManager": "yarn@3.2.1"
+}

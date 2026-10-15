@@ -1,0 +1,415 @@
+:root {
+	--devclaim-modern-backend-tab-inner: calc(var(--devclaim-modern-backend-tab-height) - 2 * var(--devclaim-modern-backend-border));
+	--devclaim-modern-backend-plus-inner: calc(var(--devclaim-modern-backend-plus) - 2 * var(--devclaim-modern-backend-border));
+	--devclaim-modern-backend-frame: var(--devclaim-modern-backend-border) solid var(--devclaim-modern-backend-blue);
+	--devclaim-modern-backend-separator: 1px solid var(--devclaim-modern-backend-line);
+}
+
+@supports (anchor-name: --a) {
+	[class*='toolBar__anchor'] {
+		anchor-name: none !important;
+	}
+
+	[data-devclaim-neos-modern-backend] > [data-focused] {
+		anchor-name: --inline-ui-node-toolbar-anchor;
+	}
+
+	#neos-ContextToolbar {
+		position: absolute !important;
+		right: calc(anchor(right) + var(--devclaim-modern-backend-tab-inset));
+		left: auto;
+		top: auto !important;
+		bottom: calc(anchor(top) - var(--devclaim-modern-backend-border)) !important;
+		margin: 0 !important;
+		transition: opacity var(--devclaim-modern-backend-switch-fade) ease;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='top-inside'] #neos-ContextToolbar {
+		top: anchor(top) !important;
+		bottom: auto !important;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='bottom'] #neos-ContextToolbar {
+		top: calc(anchor(bottom) - var(--devclaim-modern-backend-border)) !important;
+		bottom: auto !important;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='bottom-inside'] #neos-ContextToolbar {
+		top: auto !important;
+		bottom: anchor(bottom) !important;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='float'] #neos-ContextToolbar {
+		position: fixed !important;
+		top: auto !important;
+		bottom: var(--devclaim-modern-backend-float-margin) !important;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='narrow'] #neos-ContextToolbar {
+		right: anchor(right);
+	}
+
+	html[data-devclaim-neos-modern-backend-tab-hidden] #neos-ContextToolbar {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	#neos-ContextToolbar > [class*='toolBar'] {
+		display: flex;
+		align-items: flex-start;
+		height: var(--devclaim-modern-backend-tab-height);
+		box-sizing: border-box;
+		background: var(--devclaim-modern-backend-dark);
+		border: var(--devclaim-modern-backend-frame);
+		border-bottom: 0;
+		color: #fff;
+		font: 15px/1 'Noto Sans', sans-serif;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='top-inside'] #neos-ContextToolbar > [class*='toolBar'],
+	html[data-devclaim-neos-modern-backend-tab~='bottom'] #neos-ContextToolbar > [class*='toolBar'] {
+		border-top: 0;
+		border-bottom: var(--devclaim-modern-backend-frame);
+		align-items: flex-end;
+	}
+
+	html[data-devclaim-neos-modern-backend-tab~='float'] #neos-ContextToolbar > [class*='toolBar'],
+	html[data-devclaim-neos-modern-backend-tab~='overhang'] #neos-ContextToolbar > [class*='toolBar'] {
+		border: var(--devclaim-modern-backend-frame);
+		align-items: center;
+	}
+
+	#neos-ContextToolbar [class*='toolBar__contextMenuWrapper'],
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] {
+		display: contents !important;
+	}
+
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:first-child {
+		order: 1;
+		box-sizing: content-box;
+		width: 18px !important;
+		height: 18px;
+		padding: 11px 0 11px 16px;
+		color: #fff;
+		pointer-events: none;
+	}
+
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > span {
+		order: 2;
+		display: flex;
+		align-items: center;
+		height: var(--devclaim-modern-backend-tab-inner);
+		max-width: 260px;
+		padding: 0 16px 0 10px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	#neos-ContextToolbar > [class*='toolBar'] > :not([class*='toolBar__contextMenuWrapper']) {
+		order: 3;
+		display: flex;
+	}
+
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-child {
+		order: 4;
+		box-sizing: border-box;
+		width: var(--devclaim-modern-backend-tab-inner) !important;
+		height: var(--devclaim-modern-backend-tab-inner);
+		padding: 13px;
+		border-left: var(--devclaim-modern-backend-separator);
+		color: #fff;
+		cursor: pointer;
+	}
+
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-child:hover,
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel']:has(~ :popover-open) > svg:last-child {
+		background: var(--devclaim-modern-backend-dark-hover);
+		color: var(--devclaim-modern-backend-blue);
+	}
+
+	#neos-InlineToolbar-DragSelectedNode {
+		width: var(--devclaim-modern-backend-tab-inner) !important;
+		height: var(--devclaim-modern-backend-tab-inner) !important;
+		min-width: 0;
+		padding: 0;
+		background: transparent !important;
+		color: #fff;
+		border: 0;
+		border-left: var(--devclaim-modern-backend-separator) !important;
+		cursor: grab;
+	}
+
+	#neos-InlineToolbar-DragSelectedNode svg {
+		width: 14px !important;
+		height: 14px;
+	}
+
+	#neos-InlineToolbar-DragSelectedNode:hover:not(:disabled) {
+		background: var(--devclaim-modern-backend-dark-hover) !important;
+		color: var(--devclaim-modern-backend-blue);
+	}
+
+	#neos-ContextToolbar-ContextMenu {
+		position-anchor: --inline-ui-context-toolbar-anchor;
+		right: anchor(right) !important;
+		left: auto !important;
+		top: anchor(bottom) !important;
+		bottom: auto !important;
+		width: max-content !important;
+		min-width: 0 !important;
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		background: var(--devclaim-modern-backend-dark) !important;
+		border: 0 !important;
+		clip-path: inset(0);
+		transition:
+			clip-path var(--devclaim-modern-backend-menu-open) cubic-bezier(0.2, 0.8, 0.2, 1),
+			display var(--devclaim-modern-backend-menu-open) allow-discrete,
+			overlay var(--devclaim-modern-backend-menu-open) allow-discrete;
+	}
+
+	#neos-ContextToolbar-ContextMenu:not(:popover-open) {
+		clip-path: inset(0 0 100% 0);
+	}
+
+	@starting-style {
+		#neos-ContextToolbar-ContextMenu:popover-open {
+			clip-path: inset(0 0 100% 0);
+		}
+	}
+
+	:is(
+			html[data-devclaim-neos-modern-backend-tab~='bottom'],
+			html[data-devclaim-neos-modern-backend-tab~='bottom-inside'],
+			html[data-devclaim-neos-modern-backend-tab~='float']
+		)
+		#neos-ContextToolbar-ContextMenu {
+		top: auto !important;
+		bottom: anchor(top) !important;
+	}
+
+	:is(
+			html[data-devclaim-neos-modern-backend-tab~='bottom'],
+			html[data-devclaim-neos-modern-backend-tab~='bottom-inside'],
+			html[data-devclaim-neos-modern-backend-tab~='float']
+		)
+		#neos-ContextToolbar-ContextMenu:not(:popover-open) {
+		clip-path: inset(100% 0 0 0);
+	}
+
+	@starting-style {
+		:is(
+				html[data-devclaim-neos-modern-backend-tab~='bottom'],
+				html[data-devclaim-neos-modern-backend-tab~='bottom-inside'],
+				html[data-devclaim-neos-modern-backend-tab~='float']
+			)
+			#neos-ContextToolbar-ContextMenu:popover-open {
+			clip-path: inset(100% 0 0 0);
+		}
+	}
+
+	#neos-ContextToolbar-ContextMenu [class*='btnGroupVertical'] {
+		display: flex;
+		flex-direction: row;
+	}
+
+	#neos-ContextToolbar-ContextMenu button {
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		width: var(--devclaim-modern-backend-tab-inner) !important;
+		height: var(--devclaim-modern-backend-tab-inner) !important;
+		min-width: 0 !important;
+		min-height: 0;
+		padding: 0 !important;
+		border: 0 !important;
+		background: transparent !important;
+		color: #fff !important;
+		font-size: 0 !important;
+		cursor: pointer;
+		transition:
+			background-color 100ms ease,
+			color 100ms ease;
+	}
+
+	#neos-ContextToolbar-ContextMenu button svg {
+		width: 15px !important;
+		height: 15px;
+		color: #fff !important;
+	}
+
+	#neos-ContextToolbar-ContextMenu button:hover:not(:disabled) {
+		background: var(--devclaim-modern-backend-dark-hover) !important;
+	}
+
+	#neos-ContextToolbar-ContextMenu button:hover:not(:disabled) svg,
+	#neos-ContextToolbar-ContextMenu button[class*='btn--brandActive'],
+	#neos-ContextToolbar-ContextMenu button[class*='btn--brandActive'] svg {
+		color: var(--devclaim-modern-backend-blue) !important;
+	}
+
+	#neos-InlineToolbar-DeleteSelectedNode:hover:not(:disabled) svg {
+		color: #ff6a3c !important;
+	}
+
+	#neos-InlineToolbar-CopySelectedNode {
+		order: 1;
+	}
+
+	#neos-InlineToolbar-CutSelectedNode {
+		order: 2;
+	}
+
+	#neos-InlineToolbar-DuplicateSelectedNode {
+		order: 3;
+	}
+
+	#neos-InlineToolbar-HideSelectedNode {
+		order: 4;
+	}
+
+	#neos-InlineToolbar-DeleteSelectedNode {
+		order: 5;
+	}
+
+	#neos-ContextToolbar-ContextMenu:has(
+			:is(#neos-InlineToolbar-CopySelectedNode, #neos-InlineToolbar-CutSelectedNode, #neos-InlineToolbar-DuplicateSelectedNode):not(:disabled)
+		)
+		#neos-InlineToolbar-HideSelectedNode,
+	#neos-ContextToolbar-ContextMenu:has(
+			:is(
+					#neos-InlineToolbar-CopySelectedNode,
+					#neos-InlineToolbar-CutSelectedNode,
+					#neos-InlineToolbar-DuplicateSelectedNode,
+					#neos-InlineToolbar-HideSelectedNode
+				):not(:disabled)
+		)
+		#neos-InlineToolbar-DeleteSelectedNode {
+		border-left: var(--devclaim-modern-backend-separator) !important;
+	}
+
+	#neos-ContextToolbar-ContextMenu button:disabled,
+	#neos-ContextToolbar-ContextMenu:not(:has(button:not(:disabled))),
+	#neos-InlineToolbar-DragSelectedNode:disabled,
+	#neos-ContextToolbar > [class*='toolBar'] > div:has(> #neos-InlineToolbar-DragSelectedNode:disabled) {
+		display: none !important;
+	}
+
+	#neos-ContextToolbar:not(:has(#neos-ContextToolbar-ContextMenu button:not(:disabled))) [class*='contextToolbar__nodeLabel'] > svg:last-child {
+		display: none;
+	}
+
+	[class*='structuralToolBar__popover']:not(#\#) {
+		position-anchor: --inline-ui-node-toolbar-anchor;
+		position-area: none;
+		position-try-fallbacks: none;
+		top: calc(anchor(top) - var(--devclaim-modern-backend-plus) + var(--devclaim-modern-backend-border));
+		left: anchor(center);
+		right: auto;
+		bottom: auto;
+		translate: -50% 0;
+		margin: 0;
+		border: 0;
+		transition: opacity var(--devclaim-modern-backend-switch-fade) ease;
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='above-inside'] [class*='structuralToolBar__popover']:not(#\#) {
+		top: anchor(top);
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='below'] [class*='structuralToolBar__popover']:not(#\#) {
+		top: calc(anchor(bottom) - var(--devclaim-modern-backend-border));
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='below-inside'] [class*='structuralToolBar__popover']:not(#\#) {
+		top: calc(anchor(bottom) - var(--devclaim-modern-backend-plus));
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='into'] [class*='structuralToolBar__popover']:not(#\#) {
+		top: anchor(center);
+		translate: -50% -50%;
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='crowded'] [class*='structuralToolBar__popover']:not(#\#) {
+		position-anchor: --inline-ui-context-toolbar-anchor;
+		top: anchor(top);
+		left: auto;
+		right: calc(anchor(left) + var(--devclaim-modern-backend-plus-spacing));
+		translate: none;
+	}
+
+	html[data-devclaim-neos-modern-backend-plus-hidden] [class*='structuralToolBar__popover'] {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	[class*='structuralToolBar__popover'] > [class*='toolBar'] {
+		display: flex;
+		align-items: flex-start;
+		box-sizing: border-box;
+		height: var(--devclaim-modern-backend-plus);
+		background: var(--devclaim-modern-backend-dark) !important;
+		border: var(--devclaim-modern-backend-frame);
+		border-bottom: 0;
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='above-inside'] [class*='structuralToolBar__popover'] > [class*='toolBar'],
+	html[data-devclaim-neos-modern-backend-plus~='below'] [class*='structuralToolBar__popover'] > [class*='toolBar'] {
+		border-top: 0;
+		border-bottom: var(--devclaim-modern-backend-frame);
+		align-items: flex-end;
+	}
+
+	html[data-devclaim-neos-modern-backend-plus~='into'] [class*='structuralToolBar__popover'] > [class*='toolBar'],
+	html[data-devclaim-neos-modern-backend-plus~='overhang'] [class*='structuralToolBar__popover'] > [class*='toolBar'] {
+		border: var(--devclaim-modern-backend-frame);
+		align-items: center;
+	}
+
+	[class*='structuralToolBar__popover'] [class*='btnGroup'] {
+		background: none !important;
+	}
+
+	[class*='structuralToolBar__popover'] button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--devclaim-modern-backend-plus-inner) !important;
+		height: var(--devclaim-modern-backend-plus-inner) !important;
+		min-width: 0;
+		padding: 0 !important;
+		border: 0;
+		background: transparent !important;
+		color: #fff !important;
+		cursor: pointer;
+		transition:
+			background-color 100ms ease,
+			color 100ms ease;
+	}
+
+	[class*='structuralToolBar__popover'] button + button {
+		border-left: var(--devclaim-modern-backend-separator);
+	}
+
+	[class*='structuralToolBar__popover'] button svg {
+		width: 15px !important;
+		height: 15px;
+	}
+
+	[class*='structuralToolBar__popover'] button:hover:not(:disabled) {
+		background: var(--devclaim-modern-backend-blue) !important;
+	}
+
+	[class*='structuralToolBar__popover'] .fa-layers > :not(:first-child) {
+		display: none;
+	}
+
+	[class*='structuralToolBar__popover'] button:disabled,
+	[class*='structuralToolBar__popover']:not(:has(button:not(:disabled))) {
+		display: none !important;
+	}
+}

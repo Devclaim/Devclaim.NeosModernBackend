@@ -1,0 +1,19 @@
+Neos:
+  Neos:
+    Ui:
+      resources:
+        javascript:
+          'Devclaim.NeosModernBackend:Plugin':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Neos.Ui/Plugin.js'
+      frontendConfiguration:
+        'Devclaim.NeosModernBackend':
+          # distance between the node and its outline (px); less where the frame has no room for it
+          offset: 10
+          # distance kept to the edge of the frame (px), where the offset does not fit
+          gap: 8
+          # the outline moves from node to node (off with prefers-reduced-motion)
+          animate: true
+          # duration of the movement (ms)
+          duration: 180
+          # drag and drop of the selected node in the page (it zooms out while dragging), instead of the native one
+          dragAndDrop: true

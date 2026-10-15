@@ -1,0 +1,90 @@
+html:root {
+	--ck-color-base-background: var(--devclaim-modern-backend-dark);
+	--ck-color-base-foreground: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-base-border: var(--devclaim-modern-backend-line);
+	--ck-color-base-text: #fff;
+	--ck-color-base-focus: var(--devclaim-modern-backend-blue);
+	--ck-color-base-active: var(--devclaim-modern-backend-blue);
+	--ck-color-base-active-focus: var(--devclaim-modern-backend-blue);
+	--ck-color-text: #fff;
+	--ck-color-toolbar-background: var(--devclaim-modern-backend-dark);
+	--ck-color-toolbar-border: var(--devclaim-modern-backend-line);
+	--ck-color-button-default-background: transparent;
+	--ck-color-button-default-hover-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-button-default-active-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-button-on-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-button-on-hover-background: var(--devclaim-modern-backend-line);
+	--ck-color-button-on-active-background: var(--devclaim-modern-backend-line);
+	--ck-color-button-on-color: var(--devclaim-modern-backend-blue);
+	--ck-color-split-button-hover-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-split-button-hover-border: var(--devclaim-modern-backend-line);
+	--ck-color-dropdown-panel-background: var(--devclaim-modern-backend-dark);
+	--ck-color-dropdown-panel-border: var(--devclaim-modern-backend-dark);
+	--ck-color-panel-background: var(--devclaim-modern-backend-dark);
+	--ck-color-panel-border: var(--devclaim-modern-backend-dark);
+	--ck-color-list-background: var(--devclaim-modern-backend-dark);
+	--ck-color-list-button-hover-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-list-button-on-background: var(--devclaim-modern-backend-blue);
+	--ck-color-list-button-on-background-focus: var(--devclaim-modern-backend-blue);
+	--ck-color-list-button-on-text: #fff;
+	--ck-color-input-background: var(--devclaim-modern-backend-dark-hover);
+	--ck-color-input-border: var(--devclaim-modern-backend-line);
+	--ck-color-input-text: #fff;
+	--ck-color-labeled-field-label-background: var(--devclaim-modern-backend-dark);
+	--ck-color-tooltip-background: var(--devclaim-modern-backend-line);
+	--ck-color-tooltip-text: #fff;
+	--ck-color-focus-border: var(--devclaim-modern-backend-blue);
+	--ck-color-focus-outer-shadow: transparent;
+	--ck-color-shadow-inner: transparent;
+	--ck-border-radius: 0;
+	--ck-font-face: 'Noto Sans', sans-serif;
+	--ck-font-size-base: 14px;
+}
+
+.ck.ck-toolbar.neos-ck-anchored-toolbar:not(#\#) {
+	bottom: calc(anchor(top) + 7px);
+	left: calc(anchor(left) - 7px);
+	border: 0;
+	padding: 0 4px;
+}
+
+.ck.ck-toolbar.neos-ck-anchored-toolbar:not(#\#) .ck-toolbar__separator {
+	background: var(--devclaim-modern-backend-line);
+}
+
+.ck.ck-toolbar.neos-ck-anchored-toolbar:not(#\#) :is(.ck-button, .ck-dropdown__button):not(.ck-on) {
+	color: #fff;
+}
+
+.ck.ck-button,
+.ck.ck-list__item .ck-button,
+.ck.ck-dropdown__button {
+	cursor: pointer !important;
+}
+
+.ck.ck-button:focus,
+.ck.ck-dropdown__button:focus {
+	box-shadow: none !important;
+}
+
+.ck.ck-button:focus-visible,
+.ck.ck-dropdown__button:focus-visible {
+	outline: none !important;
+	background: var(--devclaim-modern-backend-dark-hover) !important;
+	color: var(--devclaim-modern-backend-blue) !important;
+}
+
+.ck.ck-dropdown__panel {
+	box-shadow: none;
+}
+
+.ck.ck-button:not(.ck-disabled):hover,
+.ck.ck-dropdown__button:not(.ck-disabled):hover {
+	background: var(--devclaim-modern-backend-line) !important;
+	color: var(--devclaim-modern-backend-blue) !important;
+}
+
+.ck.ck-button:not(.ck-disabled):hover .ck-icon,
+.ck.ck-dropdown__button:not(.ck-disabled):hover .ck-dropdown__arrow {
+	color: inherit;
+}

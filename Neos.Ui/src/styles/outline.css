@@ -1,0 +1,66 @@
+:root {
+	--devclaim-modern-backend-blue: #00adee;
+	--devclaim-modern-backend-orange: #ff8700;
+	--devclaim-modern-backend-dark: #222;
+	--devclaim-modern-backend-dark-hover: #2e2e2e;
+	--devclaim-modern-backend-line: #3f3f3f;
+}
+
+:is([class*='markHoveredNodeAsHovered'], [class*='markActiveNodeAsFocused--focusedNode']):not(#\#) {
+	outline: none !important;
+}
+
+[data-devclaim-neos-modern-backend] {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	overflow: visible;
+	pointer-events: none;
+	z-index: 2147479999;
+}
+
+[data-devclaim-neos-modern-backend] > div {
+	position: absolute;
+	box-sizing: border-box;
+	opacity: 0;
+	transition:
+		left var(--devclaim-modern-backend-duration) ease,
+		top var(--devclaim-modern-backend-duration) ease,
+		width var(--devclaim-modern-backend-duration) ease,
+		height var(--devclaim-modern-backend-duration) ease,
+		opacity 150ms ease;
+}
+
+[data-devclaim-neos-modern-backend] > div[data-visible] {
+	opacity: 1;
+}
+
+[data-devclaim-neos-modern-backend] > div[data-instant] {
+	transition: opacity 150ms ease;
+}
+
+[data-devclaim-neos-modern-backend] > [data-focused] {
+	border: var(--devclaim-modern-backend-border) solid var(--devclaim-modern-backend-blue);
+}
+
+[data-devclaim-neos-modern-backend] > [data-focused][data-shine-through] {
+	border-color: var(--devclaim-modern-backend-orange);
+}
+
+[data-devclaim-neos-modern-backend] > [data-hovered],
+[data-devclaim-neos-modern-backend] > [data-hovered][data-instant] {
+	border: 1px solid rgb(63 63 63 / 50%);
+	transition: opacity var(--devclaim-modern-backend-fade) ease;
+}
+
+[data-devclaim-neos-modern-backend] > [data-hovered][data-shine-through] {
+	border-color: rgb(255 135 0 / 55%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-devclaim-neos-modern-backend] > [data-focused] {
+		transition: opacity 150ms ease;
+	}
+}

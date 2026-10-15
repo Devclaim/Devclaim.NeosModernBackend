@@ -1,0 +1,60 @@
+/*
+ * Drag and drop of the selected node (src/dragAndDrop.ts). While dragging, <html> has the attribute -dragging, the
+ * page (<body>) zooms out (a transform set by the script), the dragged node has the attribute -dragged.
+ */
+
+html[data-devclaim-neos-modern-backend-dragging],
+html[data-devclaim-neos-modern-backend-dragging] * {
+	cursor: grabbing !important;
+	user-select: none !important;
+}
+
+/* the browser keeps the content in view when nodes above it change (scroll anchoring): the dragged node does that all
+   the time, the page would jump */
+html[data-devclaim-neos-modern-backend-dragging] {
+	overflow-anchor: none;
+}
+
+html[data-devclaim-neos-modern-backend-dragging] body,
+html[data-devclaim-neos-modern-backend-zooming] body {
+	transition: transform var(--devclaim-modern-backend-drag-zoom) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* the toolbars would zoom with the page: away while dragging */
+html[data-devclaim-neos-modern-backend-dragging]
+	:is(#neos-ContextToolbar, #neos-ContextToolbar-ContextMenu, [class*='structuralToolBar__popover'], .neos-ck-anchored-toolbar) {
+	opacity: 0 !important;
+	pointer-events: none !important;
+}
+
+[data-devclaim-neos-modern-backend-dragged] {
+	opacity: 0.55;
+	transition: opacity 150ms ease;
+}
+
+/* the card at the pointer: what is being moved */
+[data-devclaim-neos-modern-backend] > [data-ghost] {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	height: 36px;
+	padding: 0 14px;
+	box-sizing: border-box;
+	background: var(--devclaim-modern-backend-dark);
+	border: var(--devclaim-modern-backend-border) solid var(--devclaim-modern-backend-blue);
+	color: #fff;
+	font: 14px/1 'Noto Sans', sans-serif;
+	white-space: nowrap;
+	pointer-events: none;
+	transform: translate(14px, 14px) rotate(-1.5deg);
+	z-index: 2147480001;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html[data-devclaim-neos-modern-backend-dragging] body,
+	html[data-devclaim-neos-modern-backend-zooming] body {
+		transition: none;
+	}
+}
