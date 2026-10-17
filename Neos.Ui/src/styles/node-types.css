@@ -1,0 +1,57 @@
+/*
+ * The node types in the dialog "Hinzufügen" of the Neos UI (Modals/SelectNodeType): tiles in a grid with a gap,
+ * icon above the label with room between them, long words hyphenated (by the language of the UI, see index.ts)
+ * instead of squashed.
+ *
+ * The Neos UI hashes the prefix of its class names, so they are matched by the readable part (`[class*='_name']`).
+ */
+/* wide enough for five tiles in a row */
+[class*='_dialog__contents']:has([class*='_nodeTypeDialogHeader']):not(#\#) {
+	width: min(960px, calc(100vw - 80px));
+	max-width: min(960px, calc(100vw - 80px));
+}
+
+[class*='_groupContents']:has(> [class*='_nodeType']):not(#\#) {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+	gap: 8px;
+}
+
+[class*='_groupContents'] > [class*='_nodeType']:not(#\#) {
+	width: auto;
+	padding: 0;
+}
+
+/* the help of a node type spans the whole row below the tiles */
+[class*='_groupContents'] > [class*='_helpMessage__wrapper']:not(#\#) {
+	grid-column: 1 / -1;
+	margin-top: 0;
+}
+
+[class*='_nodeType__item']:not(#\#) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 96px;
+	padding: 14px 12px;
+	line-height: 1.35;
+	white-space: normal;
+}
+
+[class*='_nodeType__item'] > span:not(#\#) {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	max-width: 100%;
+	hyphens: auto;
+	overflow-wrap: break-word;
+	text-wrap: balance;
+}
+
+[class*='_nodeType__iconWrapper']:not(#\#) {
+	margin: 0;
+	line-height: 1;
+}

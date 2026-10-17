@@ -1,12 +1,11 @@
 /** What the node toolbar of the Neos UI shows, beyond its styles (styles/node-toolbar.css) */
-import type {Neos} from './neos';
+import {type Neos, nodeOf} from './neos';
 
 const MENU = '#neos-ContextToolbar-ContextMenu';
 
 /** The type of a node ("Text"), not its own label (generated from its content); '' if unknown */
 export function typeLabel(element: HTMLElement, neos: Neos): string {
-	const contextPath = element.getAttribute('data-__neos-node-contextpath');
-	const node = contextPath ? neos.store.getState().cr?.nodes?.byContextPath?.[contextPath] : undefined;
+	const node = nodeOf(element, 'data-__neos-node-contextpath', neos);
 	const label = node && neos.nodeTypes.get(node.nodeType)?.label;
 
 	return label ? neos.i18n.translate(label, label) : '';
@@ -28,6 +27,18 @@ export function syncNodeToolbar(doc: Document, selected: HTMLElement, neos: Neos
 			button.title = text;
 		}
 	});
+
+	// The Neos UI (9.2) decides whether its drag handle is enabled only for the first node its toolbar shows (useMemo
+	// without dependencies): after a reload of the page (publishing) on a node that cannot move, it stays disabled for
+	// all of them. Decided here for the selected node, by the same rules: not tethered, no document, editable.
+	const handle = doc.querySelector<HTMLButtonElement>('#neos-InlineToolbar-DragSelectedNode');
+	const node = nodeOf(selected, 'data-__neos-node-contextpath', neos);
+	if (handle && node) {
+		const canBeDragged = !node.isAutoCreated && !neos.nodeTypes.hasRole(node.nodeType, 'document') && node.policy?.canEdit !== false;
+		if (handle.disabled === canBeDragged) {
+			handle.disabled = !canBeDragged;
+		}
+	}
 }
 
 /** The menu closes once an action is chosen (the popover of the Neos UI stays open) */

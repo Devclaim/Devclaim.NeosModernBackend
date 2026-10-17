@@ -8,10 +8,12 @@ import type {Neos} from './neos';
 import {closeMenuAfterAction, syncNodeToolbar} from './nodeToolbar';
 import type {Options} from './options';
 import {Outline} from './outline';
+import {syncPlaceholders} from './placeholders';
 import {Toolbars} from './toolbars';
 import ckeditorStyles from './styles/ckeditor.css';
 import dragStyles from './styles/drag.css';
 import nodeToolbarStyles from './styles/node-toolbar.css';
+import placeholderStyles from './styles/placeholders.css';
 import outlineStyles from './styles/outline.css';
 
 export function attach(win: FrameWindow, options: Options, neos: Neos): void {
@@ -23,7 +25,8 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 	root.setAttribute(`${ATTRIBUTE}-attached`, '');
 
 	const style = doc.createElement('style');
-	style.textContent = [outlineStyles, nodeToolbarStyles, ckeditorStyles, dragStyles].join('\n');
+	style.textContent = [outlineStyles, nodeToolbarStyles, ckeditorStyles, placeholderStyles, dragStyles].join('\n');
+	// also while the page still loads (no <head> yet: on <html>)
 	(doc.head ?? root).appendChild(style);
 	for (const [name, value] of Object.entries(cssVariables(options.animate ? options.duration : 0))) {
 		root.style.setProperty(name, value);
@@ -34,7 +37,7 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 	const layer = doc.createElement('div');
 	layer.setAttribute(ATTRIBUTE, '');
 	layer.setAttribute('aria-hidden', 'true');
-	root.insertBefore(layer, doc.body);
+	root.insertBefore(layer, doc.body ?? null);
 
 	const outline = new Outline(layer, win, options);
 	const toolbars = new Toolbars(win);
@@ -57,6 +60,7 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 	const update = () => {
 		frame = 0;
 		hideStaleEditorToolbars(doc);
+		syncPlaceholders(doc, neos);
 		const focused = doc.querySelector<HTMLElement>(FOCUSED);
 		const hovered = doc.querySelector<HTMLElement>(HOVERED);
 		const placed = outline.placeFocus(focused);
@@ -73,12 +77,18 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 		frame ||= win.requestAnimationFrame(update);
 	};
 
-	// the marker classes, inline editing and anything else that moves the nodes (not the layer itself)
+	// the marker classes, inline editing and anything else that moves the nodes (not the layer itself); the placeholders
+	// here, before the change is painted (new and re-rendered properties, CKEditor starting, typing)
 	new win.MutationObserver((mutations) => {
 		if (mutations.some((mutation) => !layer.contains(mutation.target))) {
+			syncPlaceholders(doc, neos);
 			schedule();
 		}
 	}).observe(root, {attributes: true, attributeFilter: ['class', 'style'], childList: true, subtree: true, characterData: true});
+	// the Neos UI loaded the data of the nodes of the page: the placeholders of the ones it did not know yet
+	const unsubscribe = neos.store.subscribe(() => syncPlaceholders(doc, neos));
+	win.addEventListener('pagehide', unsubscribe, {once: true});
+	syncPlaceholders(doc, neos);
 	// page coordinates: scrolling only matters for the clamp to the visible width and where the toolbars go
 	win.addEventListener('scroll', schedule, {capture: true, passive: true});
 	win.addEventListener('resize', schedule, {passive: true});

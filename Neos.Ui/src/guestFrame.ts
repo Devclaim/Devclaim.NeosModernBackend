@@ -4,16 +4,41 @@ const NAME = 'neos-content-main';
 /** The window of the content frame, with its own globals (observers made there go away with its document) */
 export type FrameWindow = Window & typeof globalThis;
 
-/** Calls onLoad with the window of the content frame, for every document loaded into it */
+/**
+ * Calls onLoad with the window of the content frame for every document loaded into it: as soon as there is one, while
+ * it is still being parsed (before it is painted: placeholders, styles), at the latest on its load event. Not for the
+ * empty document of a new frame (about:blank).
+ */
 export function watchGuestFrame(onLoad: (frameWindow: FrameWindow) => void): void {
 	let current: HTMLIFrameElement | null = null;
 
-	const handleLoad = (event: Event) => {
-		const frame = event.target as HTMLIFrameElement;
-		if (frame.contentWindow) {
-			onLoad(frame.contentWindow as FrameWindow);
+	const handle = (frame: HTMLIFrameElement) => {
+		const frameWindow = frame.contentWindow as FrameWindow | null;
+		if (!frameWindow?.document.documentElement || frameWindow.location.href === 'about:blank') {
+			return false;
 		}
+		onLoad(frameWindow);
+		// the next document: watched from when this one goes
+		frameWindow.addEventListener('pagehide', () => waitForNextDocument(frame, frameWindow.document), {once: true});
+		return true;
 	};
+
+	const waitForNextDocument = (frame: HTMLIFrameElement, previous: Document) => {
+		const poll = () => {
+			if (frame !== current) {
+				return;
+			}
+			const doc = frame.contentDocument;
+			if (doc && doc !== previous && handle(frame)) {
+				return;
+			}
+			requestAnimationFrame(poll);
+		};
+		requestAnimationFrame(poll);
+	};
+
+	// the load event too, in case the polling missed a document (attach only runs once per document)
+	const handleLoad = (event: Event) => handle(event.target as HTMLIFrameElement);
 
 	const check = () => {
 		const frame = (document.getElementsByName(NAME)[0] as HTMLIFrameElement | undefined) ?? null;
@@ -24,8 +49,9 @@ export function watchGuestFrame(onLoad: (frameWindow: FrameWindow) => void): voi
 		current = frame;
 		if (frame) {
 			frame.addEventListener('load', handleLoad);
-			if (frame.contentWindow && frame.contentDocument?.readyState === 'complete') {
-				onLoad(frame.contentWindow as FrameWindow);
+			// not there yet (the empty document of a new frame): the next one
+			if (!handle(frame) && frame.contentDocument) {
+				waitForNextDocument(frame, frame.contentDocument);
 			}
 		}
 	};

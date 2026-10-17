@@ -17,3 +17,5 @@ Neos:
           duration: 180
           # drag and drop of the selected node in the page (it zooms out while dragging), instead of the native one
           dragAndDrop: true
+          # the document and content tree in the left sidebar in the style of the inspector
+          sidebar: true

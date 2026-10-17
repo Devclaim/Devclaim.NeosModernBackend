@@ -10,6 +10,8 @@ export type Options = {
 	duration: number;
 	/** drag and drop of the selected node in the page (zooming out), instead of the native one of the Neos UI */
 	dragAndDrop: boolean;
+	/** the document and content tree in the left sidebar in the style of the inspector */
+	sidebar: boolean;
 };
 
 export function readOptions(configuration: unknown): Options {
@@ -21,6 +23,7 @@ export function readOptions(configuration: unknown): Options {
 		gap: number(settings.gap, 8),
 		animate: settings.animate !== false,
 		duration: number(settings.duration, 180),
-		dragAndDrop: settings.dragAndDrop !== false
+		dragAndDrop: settings.dragAndDrop !== false,
+		sidebar: settings.sidebar !== false
 	};
 }

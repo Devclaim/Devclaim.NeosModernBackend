@@ -1,0 +1,552 @@
+/*
+ * The left sidebar of the Neos UI, in the style of the inspector and of the node trees in the link and references
+ * editor. The sidebar and the header rows are the components of this package (`devclaim-sidebar…`, src/sidebar).
+ *
+ * The trees and the search bar stay the ones of the Neos UI: it hashes the prefix of its class names, so they are
+ * matched by the readable part (`[class*='_name']`); `:not(#\#)` wins against its own selectors, whatever their order.
+ */
+:root {
+	--devclaim-modern-backend-sidebar-row: 32px;
+	--devclaim-modern-backend-sidebar-panel: #222;
+	--devclaim-modern-backend-sidebar-hover: #2c2c2c;
+	--devclaim-modern-backend-sidebar-selected: #323232;
+	--devclaim-modern-backend-sidebar-selected-hover: #3a3a3a;
+	--devclaim-modern-backend-sidebar-line: #3f3f3f;
+	--devclaim-modern-backend-sidebar-muted: #adadad;
+	--devclaim-modern-backend-sidebar-blue: #00adee;
+	--devclaim-modern-backend-sidebar-orange: #ff8700;
+	--devclaim-modern-backend-sidebar-red: #ff460d;
+}
+
+/* tree */
+
+[class*='_treeWrapper']:not(#\#) {
+	padding: 4px 0;
+}
+
+[class*='_treeWrapper'] [class*='_header__data']:not(#\#) {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	height: var(--devclaim-modern-backend-sidebar-row);
+	padding-top: 0;
+	padding-bottom: 0;
+	border-left: 0;
+	text-decoration: none;
+	transition: background-color 120ms ease;
+}
+
+[class*='_treeWrapper'] [class*='_header']:hover > [class*='_header__data']:not(#\#) {
+	background-color: var(--devclaim-modern-backend-sidebar-hover);
+}
+
+/* unpublished changes: an orange bar, the selection draws over it */
+[class*='_treeWrapper'] [class*='_header__data--isDirty']:not(#\#) {
+	box-shadow: inset 2px 0 0 var(--devclaim-modern-backend-sidebar-orange);
+}
+
+[class*='_treeWrapper'] [class*='_header__data--isFocused']:not(#\#) {
+	background-color: var(--devclaim-modern-backend-sidebar-selected);
+	box-shadow: inset 3px 0 0 var(--devclaim-modern-backend-sidebar-blue);
+}
+
+[class*='_treeWrapper'] [class*='_header']:hover > [class*='_header__data--isFocused']:not(#\#) {
+	background-color: var(--devclaim-modern-backend-sidebar-selected-hover);
+}
+
+[class*='_treeWrapper'] [class*='_header__data--acceptsDrop']:not(#\#) {
+	background-color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+[class*='_treeWrapper'] :is([class*='_header__data--isHidden '], [class$='_header__data--isHidden']):not(#\#) {
+	opacity: 1;
+}
+
+[class*='_treeWrapper'] [class*='_header__labelWrapper']:not(#\#) {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	margin-left: 10px;
+	padding-right: 8px;
+	line-height: var(--devclaim-modern-backend-sidebar-row);
+}
+
+[class*='_treeWrapper'] [class*='_header__iconWrapper']:not(#\#) {
+	position: relative;
+	flex: none;
+	width: 16px;
+	color: var(--devclaim-modern-backend-sidebar-muted);
+	line-height: 1;
+	transition: color 120ms ease;
+}
+
+[class*='_treeWrapper'] [class*='_header__iconWrapper'] svg:not(#\#) {
+	color: inherit;
+}
+
+[class*='_treeWrapper'] a[class*='_header__label']:not(#\#) {
+	min-width: 0;
+	margin-left: 0;
+	overflow: hidden;
+	color: #fff;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* the hover makes the icon white; selected nodes and the current page are blue */
+[class*='_treeWrapper'] [class*='_header']:hover [class*='_header__iconWrapper']:not(#\#) {
+	color: #fff;
+}
+
+[class*='_treeWrapper'] [class*='_header__data--isFocused'] [class*='_header__iconWrapper']:not(#\#),
+[class*='_treeWrapper'] [class*='_header__data--isActive'] [class*='_header__iconWrapper']:not(#\#) {
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+[class*='_treeWrapper'] [class*='_header__data--isActive'] a[class*='_header__label']:not(#\#) {
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+/* hidden nodes: dimmed with a red badge on the icon (instead of struck through) */
+[class*='_treeWrapper'] [class*='_header__data--isHidden'] [class*='_header__labelWrapper']:not(#\#),
+[class*='_treeWrapper'] [class*='_header__data--isHiddenInIndex'] [class*='_header__labelWrapper']:not(#\#) {
+	opacity: 0.5;
+}
+
+[class*='_treeWrapper'] :is([class*='_header__data--isHidden '], [class$='_header__data--isHidden']) [class*='_header__iconWrapper']::after {
+	content: '';
+	position: absolute;
+	right: -4px;
+	bottom: -4px;
+	width: 9px;
+	height: 9px;
+	border: 2px solid var(--devclaim-modern-backend-sidebar-panel);
+	border-radius: 50%;
+	background: var(--devclaim-modern-backend-sidebar-red);
+}
+
+/* the toggle: a thin chevron that turns, the spinner of the Neos UI only while loading */
+[class*='_treeWrapper'] [class*='_header__chevron']:not(#\#) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--devclaim-modern-backend-sidebar-row);
+	color: var(--devclaim-modern-backend-sidebar-muted);
+	line-height: 1;
+	opacity: 1;
+}
+
+[class*='_treeWrapper'] [class*='_header__chevron']:not([class*='_header__chevron--isLoading']) > svg:not(#\#) {
+	display: none;
+}
+
+[class*='_treeWrapper'] [class*='_header__chevron--isLoading'] > svg:not(#\#) {
+	margin-top: 0;
+	font-size: 11px;
+}
+
+[class*='_treeWrapper'] [class*='_header__chevron']:not([class*='_header__chevron--isLoading'])::before {
+	content: '';
+	width: 5px;
+	height: 5px;
+	margin-top: -3px;
+	border-right: 1.5px solid currentColor;
+	border-bottom: 1.5px solid currentColor;
+	transform: rotate(45deg);
+	transition: transform 150ms ease, margin 150ms ease;
+}
+
+[class*='_treeWrapper'] [class*='_header__chevron--isCollapsed']:not([class*='_header__chevron--isLoading'])::before {
+	margin-top: 0;
+	margin-left: -3px;
+	transform: rotate(-45deg);
+}
+
+[class*='_treeWrapper'] [class*='_header__chevron']:hover:not(#\#) {
+	color: #fff;
+}
+
+/* the sidebar (in the grid of the Neos UI: the header in the 2nd row, the sidebar in the 3rd, both in the 1st column) */
+
+.devclaim-sidebar__header {
+	grid-area: 2 / 1;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	width: 320px;
+	height: 41px;
+	min-width: 0;
+	overflow: hidden;
+	background: #141414;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.devclaim-sidebar__header--isHidden {
+	width: 46px;
+}
+
+.devclaim-sidebar__toggle:not(#\#) {
+	flex: none;
+	width: 46px;
+	height: 41px;
+	background: transparent;
+}
+
+.devclaim-sidebar {
+	grid-area: 3 / 1;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 320px;
+	overflow: hidden;
+	background: #141414;
+}
+
+.devclaim-sidebar--isHidden {
+	display: none;
+}
+
+.devclaim-sidebar__top {
+	display: flex;
+	flex: 0 1 auto;
+	flex-direction: column;
+	height: 50%;
+	min-height: 80px;
+	margin-right: 4px;
+	overflow-y: auto;
+	resize: vertical;
+	border-top: 1px solid var(--devclaim-modern-backend-sidebar-line);
+	background: var(--devclaim-modern-backend-sidebar-panel);
+}
+
+.devclaim-sidebar__top--isFullHeight {
+	flex: 1;
+	resize: none;
+}
+
+.devclaim-sidebar__bottom {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 41px;
+	margin-right: 4px;
+	background: var(--devclaim-modern-backend-sidebar-panel);
+}
+
+.devclaim-sidebar__bottom--isCollapsed {
+	flex: 0 0 41px;
+	overflow: hidden;
+}
+
+/* the trees fill their part; their borders are the ones of the panels */
+:is(.devclaim-sidebar__top, .devclaim-sidebar__bottom) > [class*='_treeWrapper']:not(#\#) {
+	flex: 1 0 0;
+	border: 0;
+	background: transparent;
+}
+
+/* header rows: title on the left, actions on the right */
+
+.devclaim-sidebar__title {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	font-weight: 700;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.devclaim-sidebar__treeHeader {
+	display: flex;
+	flex: 0 0 41px;
+	align-items: center;
+	box-sizing: border-box;
+	border-top: 1px solid var(--devclaim-modern-backend-sidebar-line);
+	background: #141414;
+	cursor: pointer;
+}
+
+.devclaim-sidebar__chevron {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 46px;
+	color: #fff;
+	transform: rotate(-90deg);
+	transition: transform 150ms ease, color 120ms ease;
+}
+
+.devclaim-sidebar__treeHeader--isOpen .devclaim-sidebar__chevron {
+	transform: none;
+}
+
+.devclaim-sidebar__treeHeader:hover .devclaim-sidebar__chevron {
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+.devclaim-sidebar__actions {
+	display: flex;
+	flex: 0 1 auto;
+	min-width: 0;
+	align-items: center;
+	padding-right: 4px;
+	cursor: default;
+}
+
+.devclaim-sidebar__button:not(#\#) {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #fff;
+	font-size: 14px;
+	cursor: pointer;
+	transition: color 120ms ease;
+}
+
+.devclaim-sidebar__button:not(#\#) :is(svg, i) {
+	background: transparent;
+	color: inherit;
+}
+
+/* white icons, blue on hover (Neos CI), no background */
+.devclaim-sidebar__button:hover:not(#\#) {
+	background: transparent;
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+/* pressed: the selection copied or cut, a filter set or its list open */
+.devclaim-sidebar__button--active:not(#\#) {
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+/* not possible for the selected node: dimmed, in place (the row does not shift) */
+.devclaim-sidebar__button:disabled:not(#\#) {
+	color: #fff;
+	opacity: 0.25;
+	cursor: default;
+}
+
+/* the actions for the selected node: a darker row of their own below the header, delete apart on the right */
+
+.devclaim-sidebar__top,
+.devclaim-sidebar__bottom {
+	position: relative;
+}
+
+.devclaim-sidebar__nodeActions {
+	display: flex;
+	flex: none;
+	align-items: center;
+	height: 36px;
+	padding: 0 4px;
+	background: #1b1b1b;
+	border-bottom: 1px solid var(--devclaim-modern-backend-sidebar-line);
+}
+
+.devclaim-sidebar__gap {
+	flex: none;
+	width: 8px;
+}
+
+.devclaim-sidebar__spacer {
+	flex: 1;
+}
+
+/* collapse all is in the header: the button of the Neos UI in the tree only does the work */
+.devclaim-sidebar button[class*='_collapseAll']:not(#\#) {
+	display: none;
+}
+
+/* the context menu: all actions as a row of icons at the pointer */
+
+.devclaim-context-menu {
+	position: fixed;
+	z-index: 1000;
+	display: flex;
+	padding: 2px;
+	background: var(--devclaim-modern-backend-sidebar-selected);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+	animation: devclaim-search-popover 150ms ease;
+}
+
+/* the search of the document tree: the header row turns into the field, the node type filter is an icon in it */
+
+.devclaim-search {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	align-self: stretch;
+	min-width: 0;
+	padding-right: 4px;
+	cursor: text;
+}
+
+.devclaim-search__icon:not(#\#) {
+	flex: none;
+	width: 46px;
+	color: #fff;
+	font-size: 14px;
+}
+
+.devclaim-search input:not(#\#) {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.devclaim-search input::placeholder {
+	color: #8a8a8a;
+}
+
+.devclaim-search input::-webkit-search-cancel-button {
+	display: none;
+}
+
+.devclaim-search__popover {
+	position: fixed;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	max-width: 320px;
+	max-height: min(360px, 60vh);
+	overflow-y: auto;
+	padding: 2px;
+	background: var(--devclaim-modern-backend-sidebar-selected);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+	font-family: 'Noto Sans', sans-serif;
+	animation: devclaim-search-popover 150ms ease;
+}
+
+@keyframes devclaim-search-popover {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+}
+
+.devclaim-search__popoverSearch {
+	flex: none;
+	width: 0;
+	min-width: 100%;
+	height: 32px;
+	margin-bottom: 2px;
+	padding: 0 10px;
+	border: 0;
+	outline: 0;
+	background: var(--devclaim-modern-backend-sidebar-hover);
+	color: #fff;
+	font-size: 13px;
+}
+
+.devclaim-search__option {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 10px;
+	height: 32px;
+	padding: 0 10px;
+	border: 0;
+	background: transparent;
+	color: #fff;
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+
+.devclaim-search__option svg {
+	flex: none;
+	width: 14px;
+	color: var(--devclaim-modern-backend-sidebar-muted);
+}
+
+.devclaim-search__option span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.devclaim-search__option:hover {
+	background: var(--devclaim-modern-backend-sidebar-selected-hover);
+}
+
+.devclaim-search__option--active,
+.devclaim-search__option--active svg {
+	color: var(--devclaim-modern-backend-sidebar-blue);
+}
+
+/* focus only for the keyboard, not after a click */
+:is(.devclaim-sidebar__button, .devclaim-sidebar__toggle, .devclaim-search__option):focus:not(#\#) {
+	outline: none;
+}
+
+:is(.devclaim-sidebar__button, .devclaim-sidebar__toggle, .devclaim-search__option):focus-visible:not(#\#) {
+	outline: 1px solid var(--devclaim-modern-backend-sidebar-blue);
+	outline-offset: -1px;
+}
+
+/* loading of a whole tree: a progress line on top; the first time the tree fades in, on reload or search it is dimmed */
+
+:is(.devclaim-sidebar__top, .devclaim-sidebar__bottom) [class*='_treeWrapper'] {
+	animation: devclaim-tree-in 260ms ease;
+	transition: opacity 260ms ease;
+}
+
+@keyframes devclaim-tree-in {
+	from {
+		opacity: 0;
+	}
+}
+
+:is(.devclaim-sidebar__top--first, .devclaim-sidebar__bottom--first) :is([class*='_treeWrapper'], [class*='_loader']):not(#\#) {
+	display: none;
+}
+
+:is(.devclaim-sidebar__top--reloading, .devclaim-sidebar__bottom--reloading) [class*='_treeWrapper']:not(#\#) {
+	opacity: 0.35;
+	pointer-events: none;
+	transition-duration: 150ms;
+}
+
+.devclaim-tree-progress {
+	position: relative;
+	z-index: 2;
+	flex: none;
+	height: 2px;
+	margin-bottom: -2px;
+	overflow: hidden;
+	background: rgba(0, 173, 238, 0.15);
+}
+
+.devclaim-tree-progress > span {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -35%;
+	width: 35%;
+	background: var(--devclaim-modern-backend-sidebar-blue);
+	animation: devclaim-tree-progress 1.1s ease-in-out infinite;
+}
+
+@keyframes devclaim-tree-progress {
+	to {
+		left: 100%;
+	}
+}

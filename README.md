@@ -12,6 +12,12 @@ the content frame. Works with any frontend (Fusion or headless).
 - **CKEditor** – its toolbar in the same dark style, on the dashed line of the edited text.
 - **Drag and drop** – drag or click the handle: the page zooms out, the node moves live, the others slide aside;
   click or release to drop, `Esc` cancels. Only where Neos allows the node.
+- **Loading screen** – the splash screen of the Neos UI stays until the page in the content frame has loaded (not only
+  until the UI started), then fades out.
+- **Steady placeholders** – the placeholders of inline editable properties are drawn by the package for their whole
+  life (rendered empty, CKEditor starting, focused, re-rendered), CKEditor's own is hidden: they never disappear, the
+  height of an empty property never changes.
+- **Sidebar** – improved modernised sidebar
 
 ## Installation
 
@@ -32,6 +38,7 @@ Neos:
           animate: true      # the outline moves from node to node
           duration: 180      # ms
           dragAndDrop: true  # false: the native drag and drop of the Neos UI
+          sidebar: true      # false: the left sidebar of the Neos UI as it is
 ```
 
 ## Development

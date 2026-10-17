@@ -165,20 +165,21 @@
 		padding: 0;
 		background: var(--devclaim-modern-backend-dark) !important;
 		border: 0 !important;
-		clip-path: inset(0);
+		opacity: 1;
 		transition:
-			clip-path var(--devclaim-modern-backend-menu-open) cubic-bezier(0.2, 0.8, 0.2, 1),
+			opacity var(--devclaim-modern-backend-menu-open) ease,
 			display var(--devclaim-modern-backend-menu-open) allow-discrete,
 			overlay var(--devclaim-modern-backend-menu-open) allow-discrete;
 	}
 
+	/* opens and closes with a fade */
 	#neos-ContextToolbar-ContextMenu:not(:popover-open) {
-		clip-path: inset(0 0 100% 0);
+		opacity: 0;
 	}
 
 	@starting-style {
 		#neos-ContextToolbar-ContextMenu:popover-open {
-			clip-path: inset(0 0 100% 0);
+			opacity: 0;
 		}
 	}
 
@@ -190,26 +191,6 @@
 		#neos-ContextToolbar-ContextMenu {
 		top: auto !important;
 		bottom: anchor(top) !important;
-	}
-
-	:is(
-			html[data-devclaim-neos-modern-backend-tab~='bottom'],
-			html[data-devclaim-neos-modern-backend-tab~='bottom-inside'],
-			html[data-devclaim-neos-modern-backend-tab~='float']
-		)
-		#neos-ContextToolbar-ContextMenu:not(:popover-open) {
-		clip-path: inset(100% 0 0 0);
-	}
-
-	@starting-style {
-		:is(
-				html[data-devclaim-neos-modern-backend-tab~='bottom'],
-				html[data-devclaim-neos-modern-backend-tab~='bottom-inside'],
-				html[data-devclaim-neos-modern-backend-tab~='float']
-			)
-			#neos-ContextToolbar-ContextMenu:popover-open {
-			clip-path: inset(100% 0 0 0);
-		}
 	}
 
 	#neos-ContextToolbar-ContextMenu [class*='btnGroupVertical'] {
