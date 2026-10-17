@@ -40,14 +40,19 @@
 	background-color: var(--devclaim-modern-backend-sidebar-hover);
 }
 
-/* unpublished changes: an orange bar, the selection draws over it */
+/* one bar on the left: orange with unpublished changes (also on the selected row), blue for the selection otherwise */
 [class*='_treeWrapper'] [class*='_header__data--isDirty']:not(#\#) {
-	box-shadow: inset 2px 0 0 var(--devclaim-modern-backend-sidebar-orange);
+	box-shadow: inset 5px 0 0 var(--devclaim-modern-backend-sidebar-orange);
 }
 
 [class*='_treeWrapper'] [class*='_header__data--isFocused']:not(#\#) {
 	background-color: var(--devclaim-modern-backend-sidebar-selected);
-	box-shadow: inset 3px 0 0 var(--devclaim-modern-backend-sidebar-blue);
+	box-shadow: inset 5px 0 0 var(--devclaim-modern-backend-sidebar-blue);
+}
+
+/* selected with unpublished changes: the orange bar, the selection shows by its background and blue icon */
+[class*='_treeWrapper'] [class*='_header__data--isFocused'][class*='_header__data--isDirty']:not(#\#) {
+	box-shadow: inset 5px 0 0 var(--devclaim-modern-backend-sidebar-orange);
 }
 
 [class*='_treeWrapper'] [class*='_header']:hover > [class*='_header__data--isFocused']:not(#\#) {
