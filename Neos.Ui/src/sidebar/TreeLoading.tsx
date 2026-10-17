@@ -7,7 +7,10 @@ import type {TreeType} from './useTreeActions';
 /** first: nothing to show yet (hidden, fades in); reloading: the tree is there and reloads or searches (dimmed) */
 export type TreeLoadingState = 'first' | 'reloading' | null;
 
-type LoadingState = {ui?: {pageTree?: {loading?: string[]}}; cr?: {nodes?: {byContextPath?: Record<string, unknown>}}};
+type LoadingState = {
+	ui?: {pageTree?: {loading?: string[]}; contentTree?: {loading?: string[]}};
+	cr?: {nodes?: {byContextPath?: Record<string, unknown>}};
+};
 type RootNode = {contextPath: string; children?: Array<{contextPath: string}>};
 
 /**
@@ -22,19 +25,22 @@ export function useTreeLoading(treeType: TreeType): TreeLoadingState {
 	const isLoading = useSelector((state: LoadingState) =>
 		isPageTree
 			? Boolean(root && state.ui?.pageTree?.loading?.includes(root.contextPath))
-			: selectors.UI.ContentTree.getIsLoading(state)
+			: selectors.UI.ContentTree.getIsLoading(state) ||
+				Boolean(root && state.ui?.contentTree?.loading?.includes(root.contextPath))
 	);
 	// the content of a document comes with the page in the frame, after the document itself
 	const hasChildren = useSelector((state: LoadingState) => {
 		const first = root?.children?.[0];
 		return !first || Boolean(state.cr?.nodes?.byContextPath?.[first.contextPath]);
 	});
-	const hasLoaded = useRef(false);
+	// A content tree is loaded for one document only. When the document changes, its node is available before its
+	// content children, so keep the completed load tied to the root instead of remembering it for the hook forever.
+	const loadedRoot = useRef<string | null>(null);
 	if (root && hasChildren && !isLoading) {
-		hasLoaded.current = true;
+		loadedRoot.current = root.contextPath;
 	}
 
-	if (!hasLoaded.current) {
+	if (!root || loadedRoot.current !== root.contextPath) {
 		return 'first';
 	}
 	return isLoading ? 'reloading' : null;
