@@ -58,22 +58,23 @@ function useSelection(treeType: TreeType, nodeTypes: Neos['nodeTypes']) {
 	}, shallowEqual);
 }
 
-export type TreeActions = {
+export type NodeActions = {
 	add: TreeAction;
 	/** hide, copy, cut, paste */
 	edit: TreeAction[];
 	remove: TreeAction;
-	refresh: TreeAction;
 };
 
+const translator = (neos: Neos) => (id: string, fallback: string) => neos.i18n.translate(`Neos.Neos.Ui:Main:${id}`, fallback);
+
 /**
- * The actions of the toolbar of a tree in the Neos UI, enabled as the toolbar enables them: `add`, `edit` and `remove`
- * for the selected node in the row below the header, `refresh` for the tree in the header
+ * The actions of the toolbar of a tree in the Neos UI for its selected node, enabled as the toolbar enables them
+ * (computed once per tree: the row below the header, its context menu)
  */
-export function useTreeActions(treeType: TreeType, neos: Neos): TreeActions {
+export function useNodeActions(treeType: TreeType, neos: Neos): NodeActions {
 	const dispatch = useDispatch();
 	const s = useSelection(treeType, neos.nodeTypes);
-	const t = (id: string, fallback: string) => neos.i18n.translate(`Neos.Neos.Ui:Main:${id}`, fallback);
+	const t = translator(neos);
 	const id = (name: string) => `neos-${treeType}-${name}`;
 	const editable = !s.isReadOnly;
 	const changeable = editable && !s.destructiveDisabled && s.canEdit;
@@ -124,19 +125,26 @@ export function useTreeActions(treeType: TreeType, neos: Neos): TreeActions {
 			label: t('delete', 'Delete'),
 			disabled: !changeable || !s.canRemove,
 			run: () => dispatch(actions.CR.Nodes.commenceRemovalMultiple(s.allFocused))
-		},
-		refresh: {
-			id: id('RefreshPageTree'),
-			icon: 'sync',
-			label: t('refresh', 'Refresh'),
-			disabled: s.isLoading,
-			spin: s.isLoading,
-			run: () =>
-				dispatch(
-					treeType === 'PageTree'
-						? actions.CR.Nodes.reloadState({merge: true})
-						: actions.UI.ContentTree.reloadTree({merge: true})
-				)
 		}
+	};
+}
+
+/** Reloading the tree (in its header): only reads whether it loads */
+export function useRefreshAction(treeType: TreeType, neos: Neos): TreeAction {
+	const dispatch = useDispatch();
+	const isLoading = useSelector(
+		treeType === 'PageTree' ? selectors.UI.PageTree.getIsLoading : selectors.UI.ContentTree.getIsLoading
+	);
+
+	return {
+		id: `neos-${treeType}-RefreshPageTree`,
+		icon: 'sync',
+		label: translator(neos)('refresh', 'Refresh'),
+		disabled: isLoading,
+		spin: isLoading,
+		run: () =>
+			dispatch(
+				treeType === 'PageTree' ? actions.CR.Nodes.reloadState({merge: true}) : actions.UI.ContentTree.reloadTree({merge: true})
+			)
 	};
 }

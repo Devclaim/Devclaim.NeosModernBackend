@@ -1,30 +1,35 @@
 /*
  * The placeholders of the inline editable properties (src/placeholders.ts): attributes set by the script, -empty while
  * a property has no text, -placeholder its text. Same height in every phase (rendered empty, CKEditor starting, focused,
- * re-rendered): one line, an empty paragraph of CKEditor without margins. The placeholder over it (it takes no room),
- * in the font and alignment of the property, grey like the one of CKEditor in the Neos UI.
+ * re-rendered): the height of the placeholder, as many lines as it needs. It floats over CKEditor's empty paragraph
+ * (without margins) without taking its width, so the caret starts at the beginning like in an input; in the font and
+ * alignment of the property, grey like the one of CKEditor in the Neos UI.
  */
 
 [data-devclaim-neos-modern-backend-empty] {
+	display: flow-root !important;
 	position: relative;
 	min-height: 1lh;
+}
+
+[data-devclaim-neos-modern-backend-empty][data-devclaim-neos-modern-backend-inline] {
+	display: inline-block !important;
 }
 
 [data-devclaim-neos-modern-backend-empty] > :only-child {
 	margin-block: 0 !important;
 }
 
+/* floats without taking width: the property is as high as the placeholder, the caret starts at the first line */
 [data-devclaim-neos-modern-backend-empty][data-devclaim-neos-modern-backend-placeholder]::before {
 	content: attr(data-devclaim-neos-modern-backend-placeholder);
-	position: absolute;
-	inset: 0 0 auto;
-	padding: inherit;
-	box-sizing: border-box;
-	overflow: hidden;
+	float: left;
+	width: 100%;
+	margin-right: -100%;
 	color: var(--ck-color-engine-placeholder-text, #707070);
 	font-style: normal;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+	white-space: pre-line;
+	overflow-wrap: break-word;
 	pointer-events: none;
 }
 

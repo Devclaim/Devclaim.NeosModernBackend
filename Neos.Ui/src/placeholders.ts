@@ -16,6 +16,8 @@ import {type Neos, nodeOf} from './neos';
 
 const PLACEHOLDER = `${ATTRIBUTE}-placeholder`;
 const EMPTY = `${ATTRIBUTE}-empty`;
+/** The property is inline (a span): an inline block while it is empty */
+const INLINE = `${ATTRIBUTE}-inline`;
 /** The placeholder is the one of the type of its node (not guessed by the name of the property) */
 const BY_TYPE = `${ATTRIBUTE}-placeholder-checked`;
 /** Content without text that still is content */
@@ -47,10 +49,12 @@ function placeholdersByName(nodeTypes: NodeTypes): Map<string, string | null> {
 	return placeholders;
 }
 
-/** Like the Neos UI: translated, without tags (a legacy placeholder may be "<p>…</p>") */
+/** Like the Neos UI: translated, without tags (a legacy placeholder may be "<p>…</p>"), its line breaks kept */
 function text(placeholder: string, doc: Document, neos: Neos): string {
 	const element = doc.createElement('div');
 	element.innerHTML = neos.i18n.translate(placeholder, placeholder);
+	element.querySelectorAll('br').forEach((br) => br.replaceWith('\n'));
+	element.querySelectorAll('p, div, li').forEach((block) => block.append('\n'));
 
 	return element.textContent?.trim() ?? '';
 }
@@ -76,6 +80,10 @@ function isEmpty(property: HTMLElement): boolean {
 export function syncPlaceholders(doc: Document, neos: Neos): void {
 	doc.querySelectorAll<HTMLElement>('[data-__neos-property]').forEach((property) => {
 		const empty = isEmpty(property);
+		// before it is a block (styles/placeholders.css): how it is displayed by itself
+		if (empty && !property.hasAttribute(EMPTY) && getComputedStyle(property).display.startsWith('inline')) {
+			property.setAttribute(INLINE, '');
+		}
 		if (property.hasAttribute(EMPTY) !== empty) {
 			property.toggleAttribute(EMPTY, empty);
 		}

@@ -3,7 +3,7 @@ import {createPortal} from 'react-dom';
 
 import type {Neos} from '../neos';
 import {Button} from './Button';
-import {type TreeAction, type TreeType, useTreeActions} from './useTreeActions';
+import {type NodeActions, type TreeAction, type TreeType, useNodeActions, useRefreshAction} from './useTreeActions';
 
 const ROW = '[class*="_header__data"]';
 const FOCUSED_ROW = '[class*="_header__data--isFocused"]';
@@ -34,7 +34,7 @@ function collapseAll(treeType: TreeType) {
 
 /** The actions for the tree in its header row: search (passed in), collapse all, refresh */
 export function TreeHeaderActions({treeType, neos, children}: {treeType: TreeType; neos: Neos; children?: React.ReactNode}) {
-	const {refresh} = useTreeActions(treeType, neos);
+	const refresh = useRefreshAction(treeType, neos);
 
 	return (
 		<div className="devclaim-sidebar__actions" onClick={(event) => event.stopPropagation()}>
@@ -50,12 +50,18 @@ export function TreeHeaderActions({treeType, neos, children}: {treeType: TreeTyp
 	);
 }
 
-/** The actions for the selected node in a row of their own below the header: `+` first, delete apart on the right */
+/**
+ * The actions for the selected node in a row of their own below the header: `+` first, delete apart on the right; the
+ * same in the context menu of the tree
+ */
 export function NodeActionBar({treeType, neos}: {treeType: TreeType; neos: Neos}) {
-	const {add, edit, remove} = useTreeActions(treeType, neos);
+	const nodeActions = useNodeActions(treeType, neos);
+	const {add, edit, remove} = nodeActions;
+	const bar = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className="devclaim-sidebar__nodeActions">
+		<div ref={bar} className="devclaim-sidebar__nodeActions">
+			<ContextMenu nodeActions={nodeActions} bar={bar} />
 			<ActionButton action={add} />
 			<span className="devclaim-sidebar__gap" />
 			{edit.map((action) => (
@@ -67,16 +73,19 @@ export function NodeActionBar({treeType, neos}: {treeType: TreeType; neos: Neos}
 	);
 }
 
-/** Right click on a row: selects it (as a click does) and opens the actions for the node as a row of icons at the pointer */
-export function ContextMenu({treeType, neos, panel}: {treeType: TreeType; neos: Neos; panel: RefObject<HTMLElement>}) {
-	const {add, edit, remove} = useTreeActions(treeType, neos);
+/**
+ * Right click on a row of the tree in the panel of the bar: selects it (as a click does) and opens the actions for the
+ * node as a row of icons at the pointer
+ */
+function ContextMenu({nodeActions, bar}: {nodeActions: NodeActions; bar: RefObject<HTMLElement>}) {
+	const {add, edit, remove} = nodeActions;
 	const [position, setPosition] = useState<{left: number; top: number} | null>(null);
 	const menu = useRef<HTMLDivElement>(null);
 	// only what concerns the node (reloading the tree is in the header)
 	const actions = [add, ...edit, remove].filter((action) => !action.disabled);
 
 	useEffect(() => {
-		const element = panel.current;
+		const element = bar.current?.closest<HTMLElement>('.devclaim-sidebar__top, .devclaim-sidebar__bottom');
 		const open = (event: MouseEvent) => {
 			const row = (event.target as Element).closest(ROW);
 			if (!row || !element?.contains(row)) {
@@ -102,12 +111,13 @@ export function ContextMenu({treeType, neos, panel}: {treeType: TreeType; neos: 
 		document.addEventListener('pointerdown', onPointer);
 		document.addEventListener('keydown', onKey);
 		window.addEventListener('resize', close);
-		panel.current?.addEventListener('scroll', close, true);
+		const panel = bar.current?.closest('.devclaim-sidebar__top, .devclaim-sidebar__bottom');
+		panel?.addEventListener('scroll', close, true);
 		return () => {
 			document.removeEventListener('pointerdown', onPointer);
 			document.removeEventListener('keydown', onKey);
 			window.removeEventListener('resize', close);
-			panel.current?.removeEventListener('scroll', close, true);
+			panel?.removeEventListener('scroll', close, true);
 		};
 	}, [position]);
 
