@@ -45,18 +45,10 @@
 	border: var(--devclaim-modern-backend-border) solid var(--devclaim-modern-backend-blue);
 }
 
-[data-devclaim-neos-modern-backend] > [data-focused][data-shine-through] {
-	border-color: var(--devclaim-modern-backend-orange);
-}
-
 [data-devclaim-neos-modern-backend] > [data-hovered],
 [data-devclaim-neos-modern-backend] > [data-hovered][data-instant] {
 	border: 1px solid rgb(63 63 63 / 50%);
 	transition: opacity var(--devclaim-modern-backend-fade) ease;
-}
-
-[data-devclaim-neos-modern-backend] > [data-hovered][data-shine-through] {
-	border-color: rgb(255 135 0 / 55%);
 }
 
 @media (prefers-reduced-motion: reduce) {

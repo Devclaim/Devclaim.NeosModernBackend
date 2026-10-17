@@ -66,7 +66,7 @@ export function createLeftSideBar(containers: Containers, neos: Neos) {
 						<>
 							<IconButton
 								id="neos-LeftSideBarToggler"
-								icon={isHidden ? 'chevron-circle-right' : 'chevron-circle-left'}
+								icon={isHidden ? 'chevron-right' : 'chevron-left'}
 								className="devclaim-sidebar__toggle"
 								hoverStyle="clean"
 								title={t('navigate', 'Navigate')}

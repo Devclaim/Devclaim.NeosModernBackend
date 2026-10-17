@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Devclaim.NeosModernBackend" source-language="en" target-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="content.shineThrough" xml:space="preserve">
+                <source>Content from a fallback dimension</source>
+                <target state="translated">Inhalt aus einer Fallback-Dimension</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

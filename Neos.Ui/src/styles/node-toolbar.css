@@ -84,7 +84,7 @@
 		display: contents !important;
 	}
 
-	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:first-child {
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:first-of-type {
 		order: 1;
 		box-sizing: content-box;
 		width: 18px !important;
@@ -94,7 +94,38 @@
 		pointer-events: none;
 	}
 
-	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > span {
+	#neos-ContextToolbar [data-shine-through-notice] {
+		order: 0;
+		display: flex;
+		flex: none;
+		align-items: center;
+		width: var(--devclaim-modern-backend-tab-inner);
+		height: var(--devclaim-modern-backend-tab-inner);
+		background: var(--devclaim-modern-backend-dark);
+	}
+
+	#neos-ContextToolbar [data-shine-through-icon] {
+		display: flex;
+		flex: 0 0 var(--devclaim-modern-backend-tab-inner);
+		align-items: center;
+		justify-content: center;
+		width: var(--devclaim-modern-backend-tab-inner);
+		height: var(--devclaim-modern-backend-tab-inner);
+		color: var(--devclaim-modern-backend-orange);
+	}
+
+	#neos-ContextToolbar [data-shine-through-icon] svg {
+		width: 17px;
+		height: 17px;
+		overflow: visible;
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 1.8;
+	}
+
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > span:not([data-shine-through-notice]) {
 		order: 2;
 		display: flex;
 		align-items: center;
@@ -113,7 +144,7 @@
 		display: flex;
 	}
 
-	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-child {
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-of-type {
 		order: 4;
 		box-sizing: border-box;
 		width: var(--devclaim-modern-backend-tab-inner) !important;
@@ -124,8 +155,8 @@
 		cursor: pointer;
 	}
 
-	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-child:hover,
-	#neos-ContextToolbar [class*='contextToolbar__nodeLabel']:has(~ :popover-open) > svg:last-child {
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-of-type:hover,
+	#neos-ContextToolbar [class*='contextToolbar__nodeLabel']:has(~ :popover-open) > svg:last-of-type {
 		background: var(--devclaim-modern-backend-dark-hover);
 		color: var(--devclaim-modern-backend-blue);
 	}
@@ -280,7 +311,7 @@
 		display: none !important;
 	}
 
-	#neos-ContextToolbar:not(:has(#neos-ContextToolbar-ContextMenu button:not(:disabled))) [class*='contextToolbar__nodeLabel'] > svg:last-child {
+	#neos-ContextToolbar:not(:has(#neos-ContextToolbar-ContextMenu button:not(:disabled))) [class*='contextToolbar__nodeLabel'] > svg:last-of-type {
 		display: none;
 	}
 
