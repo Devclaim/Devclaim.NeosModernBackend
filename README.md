@@ -20,6 +20,10 @@ the content frame. Works with any frontend (Fusion or headless).
 - **Sidebar** – improved modernised sidebar
 - **Date and time picker** – replaces the date and time picker of the Neos UI: calendar and time in one floating
   popover, also in other plugins that use it (e.g. `NeosSvelte.Events`).
+- **Steady reloads** – reloading or publishing the page keeps the content tree and the selection: Neos resets its
+  nodes on publish and loses the selection, the package keeps the nodes of the page in the frame and selects the node
+  again. One loading state from the publish until the page is there (also when the browser no longer fires `unload`),
+  and editors like the link editor do not load their previews again. Works with any frontend (Fusion or headless).
 
 ## Installation
 

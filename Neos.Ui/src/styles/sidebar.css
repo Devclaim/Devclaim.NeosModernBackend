@@ -520,8 +520,25 @@
 	}
 }
 
-:is(.devclaim-sidebar__top--first, .devclaim-sidebar__bottom--first) :is([class*='_treeWrapper'], [class*='_loader']):not(#\#) {
+:is(.devclaim-sidebar__top--first, .devclaim-sidebar__bottom--first)
+	:is([class*='_treeWrapper'], [class*='_loader']):not(.devclaim-tree-snapshot):not(#\#) {
 	display: none;
+}
+
+/* loaded again from scratch: the tree as it was stays dimmed, then fades out over the new one (TreeSnapshot.tsx) */
+:is(.devclaim-sidebar__top, .devclaim-sidebar__bottom) > .devclaim-tree-snapshot:not(#\#) {
+	opacity: 0.35;
+	pointer-events: none;
+	animation: none;
+	transition: opacity 260ms ease;
+}
+
+:is(.devclaim-sidebar__top, .devclaim-sidebar__bottom) > .devclaim-tree-snapshot--leaving:not(#\#) {
+	position: absolute;
+	box-sizing: border-box;
+	z-index: 1;
+	margin: 0;
+	overflow: hidden;
 }
 
 :is(.devclaim-sidebar__top--reloading, .devclaim-sidebar__bottom--reloading) [class*='_treeWrapper']:not(#\#) {

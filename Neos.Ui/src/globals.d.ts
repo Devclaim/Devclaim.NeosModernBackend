@@ -65,9 +65,12 @@ declare module '@neos-project/neos-ui-redux-store' {
 				showMultiple(nodes: Paths): unknown;
 				paste(reference: string | null): unknown;
 				reloadState(options: {merge: boolean}): unknown;
+				merge(nodes: Record<string, unknown>): unknown;
+				focus(contextPath: string, fusionPath: string | null): unknown;
 			};
 		};
 		UI: {
+			ContentCanvas: {startLoading(): unknown; stopLoading(): unknown};
 			ContentTree: {reloadTree(options: {merge: boolean}): unknown};
 			PageTree: {commenceSearch(contextPath: string, options: {query: string; filterNodeType: string | null}): unknown};
 			LeftSideBar: {toggle(): unknown; toggleContentTree(): unknown};

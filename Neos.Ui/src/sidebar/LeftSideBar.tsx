@@ -9,6 +9,7 @@ import {useRevealFocused} from './reveal';
 import {createSearchField} from './SearchBar';
 import {NodeActionBar, TreeHeaderActions} from './TreeActions';
 import {TreeLoading, useTreeLoading} from './TreeLoading';
+import {TreeSnapshot} from './TreeSnapshot';
 
 /** The container registry of the Neos UI ('containers') */
 export type Containers = {
@@ -92,6 +93,7 @@ export function createLeftSideBar(containers: Containers, neos: Neos) {
 					>
 						{isHidden ? null : <NodeActionBar treeType="PageTree" neos={neos} />}
 						{isHidden ? null : <TreeLoading state={pageTreeLoading} />}
+						<TreeSnapshot state={pageTreeLoading} container={top} />
 						{isHidden ? null : Top.map((Item, key) => <Item key={key} isExpanded={!isContentTreeHidden} />)}
 					</div>
 					<div
@@ -103,6 +105,7 @@ export function createLeftSideBar(containers: Containers, neos: Neos) {
 					>
 						<ContentTreeToolbar />
 						{isHidden || isContentTreeHidden ? null : <TreeLoading state={contentTreeLoading} />}
+						<TreeSnapshot state={contentTreeLoading} container={bottom} />
 						{isHidden || isContentTreeHidden ? null : Bottom.map((Item, key) => <Item key={key} />)}
 					</div>
 				</div>

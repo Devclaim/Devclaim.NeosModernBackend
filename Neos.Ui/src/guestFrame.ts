@@ -7,9 +7,13 @@ export type FrameWindow = Window & typeof globalThis;
 /**
  * Calls onLoad with the window of the content frame for every document loaded into it: as soon as there is one, while
  * it is still being parsed (before it is painted: placeholders, styles), at the latest on its load event. Not for the
- * empty document of a new frame (about:blank).
+ * empty document of a new frame (about:blank). onLeave: a document is about to go (navigation, reload), as soon as it
+ * starts (beforeunload, the request for the next one is still running) and at the latest when it goes (pagehide).
  */
-export function watchGuestFrame(onLoad: (frameWindow: FrameWindow) => void): void {
+export function watchGuestFrame(
+	onLoad: (frameWindow: FrameWindow) => void,
+	onLeave: (previous: Document) => void
+): void {
 	let current: HTMLIFrameElement | null = null;
 
 	const handle = (frame: HTMLIFrameElement) => {
@@ -18,8 +22,17 @@ export function watchGuestFrame(onLoad: (frameWindow: FrameWindow) => void): voi
 			return false;
 		}
 		onLoad(frameWindow);
+		const doc = frameWindow.document;
+		frameWindow.addEventListener('beforeunload', () => onLeave(doc), {once: true});
 		// the next document: watched from when this one goes
-		frameWindow.addEventListener('pagehide', () => waitForNextDocument(frame, frameWindow.document), {once: true});
+		frameWindow.addEventListener(
+			'pagehide',
+			() => {
+				onLeave(doc);
+				waitForNextDocument(frame, doc);
+			},
+			{once: true}
+		);
 		return true;
 	};
 

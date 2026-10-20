@@ -6,6 +6,7 @@ import manifest from '@neos-project/neos-ui-extensibility';
 
 import {attach} from './attach';
 import {type Editors, registerDateTimeEditor, replaceDateInputOfPlugins} from './dateTime';
+import {leaveFrameDocument, watchFrameContent} from './frameContent';
 import {watchGuestFrame} from './guestFrame';
 import type {Neos} from './neos';
 import {readOptions} from './options';
@@ -44,8 +45,12 @@ manifest(PACKAGE, {}, (globalRegistry, {store, frontendConfiguration}) => {
 		const inspector = globalRegistry.get('inspector') as {get(key: string): unknown};
 		registerDateTimeEditor(inspector.get('editors') as Editors, neos);
 	}
-	watchGuestFrame((frameWindow) => {
-		attach(frameWindow, options, neos);
-		whenLoaded(frameWindow, releaseSplash);
-	});
+	watchGuestFrame(
+		(frameWindow) => {
+			attach(frameWindow, options, neos);
+			whenLoaded(frameWindow, releaseSplash);
+		},
+		(previous) => leaveFrameDocument(neos, previous)
+	);
+	watchFrameContent(neos);
 });
