@@ -5,6 +5,7 @@
 import manifest from '@neos-project/neos-ui-extensibility';
 
 import {attach} from './attach';
+import {type Editors, registerDateTimeEditor, replaceDateInputOfPlugins} from './dateTime';
 import {watchGuestFrame} from './guestFrame';
 import type {Neos} from './neos';
 import {readOptions} from './options';
@@ -14,6 +15,9 @@ import nodeTypesStyles from './styles/node-types.css';
 import type {Containers} from './sidebar/LeftSideBar';
 
 const PACKAGE = 'Devclaim.NeosModernBackend';
+
+// when this script is loaded: before the plugins loaded after it read the components of the Neos UI
+replaceDateInputOfPlugins();
 
 manifest(PACKAGE, {}, (globalRegistry, {store, frontendConfiguration}) => {
 	// before the Neos UI renders its app (and removes its splash screen): kept until the first page in the frame loaded
@@ -35,6 +39,10 @@ manifest(PACKAGE, {}, (globalRegistry, {store, frontendConfiguration}) => {
 	document.head.appendChild(style);
 	if (options.sidebar) {
 		registerSidebar(globalRegistry.get('containers') as Containers, neos);
+	}
+	if (options.dateTimeEditor) {
+		const inspector = globalRegistry.get('inspector') as {get(key: string): unknown};
+		registerDateTimeEditor(inspector.get('editors') as Editors, neos);
 	}
 	watchGuestFrame((frameWindow) => {
 		attach(frameWindow, options, neos);

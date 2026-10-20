@@ -10,6 +10,8 @@ Neos:
         javascript:
           'Devclaim.NeosModernBackend:Plugin':
             resource: 'resource://Devclaim.NeosModernBackend/Public/Neos.Ui/Plugin.js'
+            # right after the Neos UI: it replaces the DateInput of the Neos UI for the plugins loaded after it
+            position: 'after Neos.Neos.UI:Host'
       frontendConfiguration:
         'Devclaim.NeosModernBackend':
           # distance between the node and its outline (px); less where the frame has no room for it
@@ -24,3 +26,6 @@ Neos:
           dragAndDrop: true
           # the document and content tree in the left sidebar in the style of the inspector
           sidebar: true
+          # the DateTimeEditor with a calendar that can be typed into (react-day-picker), instead of the one of the Neos UI;
+          # also the DateInput other plugins render in their editors (e.g. the occurrences of NeosSvelte.Events)
+          dateTimeEditor: true

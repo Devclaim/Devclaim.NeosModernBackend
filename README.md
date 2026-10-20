@@ -18,6 +18,8 @@ the content frame. Works with any frontend (Fusion or headless).
   life (rendered empty, CKEditor starting, focused, re-rendered), CKEditor's own is hidden: they never disappear, the
   height of an empty property never changes.
 - **Sidebar** – improved modernised sidebar
+- **Date and time picker** – replaces the date and time picker of the Neos UI: calendar and time in one floating
+  popover, also in other plugins that use it (e.g. `NeosSvelte.Events`).
 
 ## Installation
 
@@ -39,6 +41,7 @@ Neos:
           duration: 180      # ms
           dragAndDrop: true  # false: the native drag and drop of the Neos UI
           sidebar: true      # false: the left sidebar of the Neos UI as it is
+          dateTimeEditor: true # false: the DateTimeEditor of the Neos UI
 ```
 
 ## Development

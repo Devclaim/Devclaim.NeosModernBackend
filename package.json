@@ -15,5 +15,9 @@
 		"esbuild": "~0.27.2",
 		"typescript": "^5.9.0"
 	},
-	"packageManager": "yarn@3.2.1"
+	"packageManager": "yarn@3.2.1",
+	"dependencies": {
+		"date-fns": "^4",
+		"react-day-picker": "^9"
+	}
 }

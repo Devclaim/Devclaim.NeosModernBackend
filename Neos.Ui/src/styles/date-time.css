@@ -1,0 +1,448 @@
+/*
+ * The date and time picker (src/dateTime): a date field and a time field like the text fields of the inspector, and
+ * one popover in the top layer for both (calendar of react-day-picker, its `rdp-…` classes without its stylesheet, and
+ * the time as columns beside it). `:not(#\#)` wins against the styles of the Neos UI for buttons and inputs; the reset
+ * of the buttons is in `:where()`, so that the styles of each button win against it.
+ */
+.devclaim-date-time {
+	/* as the text inputs and buttons of the Neos UI: #323232, focused #3f3f3f */
+	--devclaim-date-time-field: #323232;
+	--devclaim-date-time-field-focus: #3f3f3f;
+	--devclaim-date-time-panel: #141414;
+	--devclaim-date-time-line: #323232;
+	--devclaim-date-time-hover: #323232;
+	--devclaim-date-time-muted: #999;
+	--devclaim-date-time-outside: #5a5a5a;
+	--devclaim-date-time-blue: #00adee;
+	--devclaim-date-time-blue-hover: #35c3f8;
+	--devclaim-date-time-red: #ff460d;
+
+	color: #fff;
+	font-family: 'Noto Sans', sans-serif;
+	font-size: 14px;
+	color-scheme: dark;
+}
+
+:where(.devclaim-date-time button):not(#\#) {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.devclaim-date-time button:focus-visible:not(#\#),
+.devclaim-date-time .rdp-dropdown:focus-visible ~ .rdp-caption_label {
+	outline: 2px solid var(--devclaim-date-time-blue);
+	outline-offset: -2px;
+}
+
+/* the fields */
+
+.devclaim-date-time__fields {
+	display: flex;
+	gap: 2px;
+}
+
+.devclaim-date-time__field {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	height: 40px;
+	padding: 0 0 0 14px;
+	border-radius: 2px;
+	background: var(--devclaim-date-time-field);
+	box-shadow: inset 0 0 0 1px transparent;
+	cursor: pointer;
+}
+
+.devclaim-date-time__field--time {
+	flex: none;
+	width: 96px;
+}
+
+.devclaim-date-time__fields .devclaim-date-time__field--time:only-child {
+	flex: 1;
+	width: auto;
+}
+
+.devclaim-date-time__field:focus-within,
+.devclaim-date-time--open .devclaim-date-time__field {
+	background: var(--devclaim-date-time-field-focus);
+}
+
+.devclaim-date-time .devclaim-date-time__field--invalid {
+	box-shadow: inset 0 0 0 1px var(--devclaim-date-time-red);
+}
+
+.devclaim-date-time__icon:not(#\#) {
+	flex: none;
+	color: var(--devclaim-date-time-muted);
+	font-size: 14px;
+}
+
+.devclaim-date-time__field:focus-within .devclaim-date-time__icon:not(#\#),
+.devclaim-date-time--open .devclaim-date-time__icon:not(#\#) {
+	color: var(--devclaim-date-time-blue);
+}
+
+.devclaim-date-time__field input:not(#\#) {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0 12px 0 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	box-shadow: none;
+	color: #fff;
+	font: inherit;
+	font-variant-numeric: tabular-nums;
+	cursor: pointer;
+}
+
+/* the date is picked in the calendar (a button in the look of a field), only the time is typed */
+.devclaim-date-time__field input[readonly]:not(#\#) {
+	caret-color: transparent;
+}
+
+.devclaim-date-time__field--typed input:not(#\#) {
+	cursor: text;
+}
+
+.devclaim-date-time__field input:not(#\#)::placeholder {
+	color: var(--devclaim-date-time-muted);
+}
+
+.devclaim-date-time__clear:not(#\#) {
+	flex: none;
+	width: 36px;
+	height: 100%;
+	margin-left: -12px;
+	border-radius: 0 2px 2px 0;
+	color: var(--devclaim-date-time-muted);
+	opacity: 0;
+}
+
+.devclaim-date-time__field:hover .devclaim-date-time__clear:not(#\#),
+.devclaim-date-time__clear:not(#\#):focus-visible {
+	opacity: 1;
+}
+
+.devclaim-date-time__clear:not(#\#):hover {
+	background: rgba(255, 255, 255, 0.08);
+	color: #fff;
+}
+
+.devclaim-date-time--disabled .devclaim-date-time__field {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+.devclaim-date-time--disabled .devclaim-date-time__field input:not(#\#) {
+	cursor: not-allowed;
+}
+
+/* the popover: in the top layer, placed by src/dateTime/DateTimePicker.tsx (fixed, at the right edge of the fields) */
+
+.devclaim-date-time__popover:not(#\#) {
+	position: fixed;
+	inset: auto;
+	z-index: 10000;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	width: max-content;
+	height: auto;
+	margin: 0;
+	padding: 12px;
+	overflow: visible;
+	border: 1px solid var(--devclaim-date-time-field-focus);
+	border-radius: 2px;
+	background: var(--devclaim-date-time-panel);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+	color: #fff;
+}
+
+.devclaim-date-time__body {
+	display: flex;
+	gap: 12px;
+}
+
+/* today (now) and apply, below calendar and time */
+.devclaim-date-time__footer {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid var(--devclaim-date-time-line);
+}
+
+.devclaim-date-time__button:not(#\#) {
+	height: 28px;
+	padding: 0 8px;
+	border-radius: 2px;
+	color: var(--devclaim-date-time-blue);
+	font-size: 13px;
+}
+
+.devclaim-date-time__button:not(#\#):first-child {
+	margin-left: -8px;
+}
+
+.devclaim-date-time__button:not(#\#):last-child {
+	margin-right: -8px;
+	margin-left: auto;
+}
+
+.devclaim-date-time__button:not(#\#):hover {
+	background: var(--devclaim-date-time-hover);
+	color: var(--devclaim-date-time-blue-hover);
+}
+
+/* the calendar */
+
+.devclaim-date-time__calendar {
+	flex: none;
+	width: 252px;
+}
+
+.devclaim-date-time .rdp-root,
+.devclaim-date-time .rdp-root * {
+	box-sizing: border-box;
+}
+
+.devclaim-date-time .rdp-months,
+.devclaim-date-time .rdp-month {
+	position: relative;
+	width: 100%;
+}
+
+.devclaim-date-time .rdp-month_caption {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 32px;
+	margin: 0 32px 6px;
+}
+
+.devclaim-date-time .rdp-button_previous:not(#\#),
+.devclaim-date-time .rdp-button_next:not(#\#) {
+	position: absolute;
+	top: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	color: var(--devclaim-date-time-muted);
+	font-size: 16px;
+}
+
+.devclaim-date-time .rdp-button_previous svg,
+.devclaim-date-time .rdp-button_next svg {
+	width: 16px;
+	height: 16px;
+}
+
+.devclaim-date-time .rdp-button_previous:not(#\#) {
+	left: 0;
+}
+
+.devclaim-date-time .rdp-button_next:not(#\#) {
+	right: 0;
+}
+
+.devclaim-date-time .rdp-button_previous:not(#\#):hover:enabled,
+.devclaim-date-time .rdp-button_next:not(#\#):hover:enabled {
+	background: var(--devclaim-date-time-hover);
+	color: #fff;
+}
+
+.devclaim-date-time .rdp-button_previous:disabled,
+.devclaim-date-time .rdp-button_next:disabled,
+.devclaim-date-time .rdp-button_previous[aria-disabled='true'],
+.devclaim-date-time .rdp-button_next[aria-disabled='true'] {
+	opacity: 0.35;
+	cursor: default;
+}
+
+/* month and year: native selects over their labels (the selects invisible, as react-day-picker intends) */
+.devclaim-date-time .rdp-dropdowns {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+}
+
+.devclaim-date-time .rdp-dropdown_root {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.devclaim-date-time .rdp-dropdown {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	opacity: 0;
+	appearance: none;
+	cursor: pointer;
+}
+
+.devclaim-date-time .rdp-caption_label {
+	position: relative;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	height: 28px;
+	padding: 0 6px;
+	border-radius: 2px;
+	font-size: 14px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.devclaim-date-time .rdp-dropdown_root:hover .rdp-caption_label {
+	background: var(--devclaim-date-time-hover);
+}
+
+/* the days */
+
+.devclaim-date-time .rdp-month_grid {
+	width: calc(100% + 4px);
+	border-collapse: separate;
+	border-spacing: 2px;
+	margin: -2px;
+	table-layout: fixed;
+}
+
+.devclaim-date-time .rdp-weekday {
+	height: 22px;
+	padding: 0;
+	color: var(--devclaim-date-time-muted);
+	font-size: 11px;
+	font-weight: 400;
+	text-align: center;
+}
+
+.devclaim-date-time .rdp-day {
+	height: 32px;
+	padding: 0;
+	text-align: center;
+}
+
+.devclaim-date-time .rdp-day_button:not(#\#) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+}
+
+.devclaim-date-time .rdp-day_button:not(#\#):hover:enabled {
+	background: var(--devclaim-date-time-hover);
+}
+
+.devclaim-date-time .rdp-outside .rdp-day_button:not(#\#) {
+	color: var(--devclaim-date-time-outside);
+}
+
+.devclaim-date-time .rdp-today .rdp-day_button:not(#\#) {
+	color: var(--devclaim-date-time-blue);
+	font-weight: 700;
+}
+
+.devclaim-date-time .rdp-selected .rdp-day_button:not(#\#),
+.devclaim-date-time .rdp-selected .rdp-day_button:not(#\#):hover {
+	background: var(--devclaim-date-time-blue);
+	color: #fff;
+	font-weight: 700;
+}
+
+.devclaim-date-time .rdp-disabled .rdp-day_button:not(#\#) {
+	opacity: 0.35;
+	cursor: default;
+}
+
+.devclaim-date-time .rdp-hidden {
+	visibility: hidden;
+}
+
+/* the time: a column for each part, as high as the calendar, each scrolling */
+
+.devclaim-date-time__time {
+	position: relative;
+	display: flex;
+	flex: none;
+	gap: 2px;
+	min-width: 92px;
+	padding-left: 10px;
+	border-left: 1px solid var(--devclaim-date-time-line);
+}
+
+.devclaim-date-time__body > .devclaim-date-time__time:only-child {
+	height: 240px;
+	padding-left: 0;
+	border-left: 0;
+}
+
+.devclaim-date-time__column {
+	position: relative;
+	flex: 1;
+	min-width: 44px;
+}
+
+.devclaim-date-time__columnLabel {
+	flex: none;
+	height: 38px;
+	color: var(--devclaim-date-time-muted);
+	font-size: 11px;
+	line-height: 32px;
+	text-align: center;
+}
+
+/* the options fill the column below its label: as high as the calendar beside it, not higher */
+.devclaim-date-time__options {
+	position: absolute;
+	inset: 38px 0 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: none;
+}
+
+.devclaim-date-time__options::-webkit-scrollbar {
+	display: none;
+}
+
+.devclaim-date-time__option:not(#\#) {
+	display: block;
+	width: 100%;
+	height: 28px;
+	margin-bottom: 2px;
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+
+.devclaim-date-time__option:not(#\#):hover {
+	background: var(--devclaim-date-time-hover);
+}
+
+.devclaim-date-time__option[aria-selected='true']:not(#\#),
+.devclaim-date-time__option[aria-selected='true']:not(#\#):hover {
+	background: var(--devclaim-date-time-blue);
+	color: #fff;
+	font-weight: 700;
+}

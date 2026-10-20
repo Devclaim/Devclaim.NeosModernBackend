@@ -6,6 +6,58 @@
                 <source>Content from a fallback dimension</source>
                 <target state="translated">Inhalt aus einer Fallback-Dimension</target>
             </trans-unit>
+            <trans-unit id="dateTime.clear" xml:space="preserve">
+                <source>Clear</source>
+                <target state="translated">Leeren</target>
+            </trans-unit>
+            <trans-unit id="dateTime.date" xml:space="preserve">
+                <source>Date</source>
+                <target state="translated">Datum</target>
+            </trans-unit>
+            <trans-unit id="dateTime.time" xml:space="preserve">
+                <source>Time</source>
+                <target state="translated">Uhrzeit</target>
+            </trans-unit>
+            <trans-unit id="dateTime.now" xml:space="preserve">
+                <source>Now</source>
+                <target state="translated">Jetzt</target>
+            </trans-unit>
+            <trans-unit id="dateTime.today" xml:space="preserve">
+                <source>Today</source>
+                <target state="translated">Heute</target>
+            </trans-unit>
+            <trans-unit id="dateTime.previousMonth" xml:space="preserve">
+                <source>Previous month</source>
+                <target state="translated">Vorheriger Monat</target>
+            </trans-unit>
+            <trans-unit id="dateTime.nextMonth" xml:space="preserve">
+                <source>Next month</source>
+                <target state="translated">Nächster Monat</target>
+            </trans-unit>
+            <trans-unit id="dateTime.month" xml:space="preserve">
+                <source>Month</source>
+                <target state="translated">Monat</target>
+            </trans-unit>
+            <trans-unit id="dateTime.year" xml:space="preserve">
+                <source>Year</source>
+                <target state="translated">Jahr</target>
+            </trans-unit>
+            <trans-unit id="dateTime.hoursShort" xml:space="preserve">
+                <source>Hr</source>
+                <target state="translated">Std</target>
+            </trans-unit>
+            <trans-unit id="dateTime.minutesShort" xml:space="preserve">
+                <source>Min</source>
+                <target state="translated">Min</target>
+            </trans-unit>
+            <trans-unit id="dateTime.secondsShort" xml:space="preserve">
+                <source>Sec</source>
+                <target state="translated">Sek</target>
+            </trans-unit>
+            <trans-unit id="dateTime.done" xml:space="preserve">
+                <source>Done</source>
+                <target state="translated">Fertig</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -5,6 +5,45 @@
             <trans-unit id="content.shineThrough" xml:space="preserve">
                 <source>Content from a fallback dimension</source>
             </trans-unit>
+            <trans-unit id="dateTime.clear" xml:space="preserve">
+                <source>Clear</source>
+            </trans-unit>
+            <trans-unit id="dateTime.date" xml:space="preserve">
+                <source>Date</source>
+            </trans-unit>
+            <trans-unit id="dateTime.time" xml:space="preserve">
+                <source>Time</source>
+            </trans-unit>
+            <trans-unit id="dateTime.now" xml:space="preserve">
+                <source>Now</source>
+            </trans-unit>
+            <trans-unit id="dateTime.today" xml:space="preserve">
+                <source>Today</source>
+            </trans-unit>
+            <trans-unit id="dateTime.previousMonth" xml:space="preserve">
+                <source>Previous month</source>
+            </trans-unit>
+            <trans-unit id="dateTime.nextMonth" xml:space="preserve">
+                <source>Next month</source>
+            </trans-unit>
+            <trans-unit id="dateTime.month" xml:space="preserve">
+                <source>Month</source>
+            </trans-unit>
+            <trans-unit id="dateTime.year" xml:space="preserve">
+                <source>Year</source>
+            </trans-unit>
+            <trans-unit id="dateTime.hoursShort" xml:space="preserve">
+                <source>Hr</source>
+            </trans-unit>
+            <trans-unit id="dateTime.minutesShort" xml:space="preserve">
+                <source>Min</source>
+            </trans-unit>
+            <trans-unit id="dateTime.secondsShort" xml:space="preserve">
+                <source>Sec</source>
+            </trans-unit>
+            <trans-unit id="dateTime.done" xml:space="preserve">
+                <source>Done</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

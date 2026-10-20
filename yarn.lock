@@ -12,6 +12,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@date-fns/tz@npm:^1.4.1":
+  version: 1.5.0
+  resolution: "@date-fns/tz@npm:1.5.0"
+  checksum: c202d96d18490b46f2caa79decaa3092a9e266816d01618c8450b59d52d75948258c53fcad0093021050edaf7dae65fea83602dc4f72c243c9e560e756cd7b8f
+  languageName: node
+  linkType: hard
+
 "@devclaim/neos-modern-backend@workspace:.":
   version: 0.0.0-use.local
   resolution: "@devclaim/neos-modern-backend@workspace:."
@@ -20,7 +27,9 @@ __metadata:
     "@types/react": ^16.14
     "@types/react-dom": ^16.9
     "@types/react-redux": ^7.1
+    date-fns: ^4
     esbuild: ~0.27.2
+    react-day-picker: ^9
     typescript: ^5.9.0
   languageName: unknown
   linkType: soft
@@ -214,6 +223,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tabby_ai/hijri-converter@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@tabby_ai/hijri-converter@npm:1.0.5"
+  checksum: dc0d50a1a05ca0bbdb91b06ffdc565f2cdf1e0762b8ce7efafac1c6d2bdab9254588508e16ef25bb0781622c89ebbb472202d720259fe852fbe7a7f4b9ef4a92
+  languageName: node
+  linkType: hard
+
 "@types/hoist-non-react-statics@npm:^3.3.0":
   version: 3.3.7
   resolution: "@types/hoist-non-react-statics@npm:3.3.7"
@@ -284,6 +300,20 @@ __metadata:
   version: 3.2.3
   resolution: "csstype@npm:3.2.3"
   checksum: cb882521b3398958a1ce6ca98c011aec0bde1c77ecaf8a1dd4db3b112a189939beae3b1308243b2fe50fc27eb3edeb0f73a5a4d91d928765dc6d5ecc7bda92ee
+  languageName: node
+  linkType: hard
+
+"date-fns-jalali@npm:4.1.0-0":
+  version: 4.1.0-0
+  resolution: "date-fns-jalali@npm:4.1.0-0"
+  checksum: cde80e4a87bfd96458ff1edfd5af5fed7ed6e04dd48574ed64d376e37e7689ddee1a7c5a6685f4b93cf3432eac73c51acd786504070a6973a140c5f15163ca39
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4, date-fns@npm:^4.1.0":
+  version: 4.4.0
+  resolution: "date-fns@npm:4.4.0"
+  checksum: 9a25020573f1aeaddfa0a41bb32411e8e1e8c81ddb870865a005c37f741778c737833baee350a90f275ae806dcd227e41bc4f26337dda189ebca796ce760ba11
   languageName: node
   linkType: hard
 
@@ -382,6 +412,20 @@ __metadata:
   dependencies:
     react-is: ^16.7.0
   checksum: b1538270429b13901ee586aa44f4cc3ecd8831c061d06cb8322e50ea17b3f5ce4d0e2e66394761e6c8e152cd8c34fb3b4b690116c6ce2bd45b18c746516cb9e8
+  languageName: node
+  linkType: hard
+
+"react-day-picker@npm:^9":
+  version: 9.14.0
+  resolution: "react-day-picker@npm:9.14.0"
+  dependencies:
+    "@date-fns/tz": ^1.4.1
+    "@tabby_ai/hijri-converter": 1.0.5
+    date-fns: ^4.1.0
+    date-fns-jalali: 4.1.0-0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 231602c2fbb063af3acaacb4a99a525f96bfee5be88c0f7e62c619a4b2b461cf5ba648b9d165fdd929caf582dbb3dcb8ee157dc6225a467315a7f59589a1b85d
   languageName: node
   linkType: hard
 
