@@ -64,11 +64,16 @@ export function syncNodeToolbar(doc: Document, selected: HTMLElement, neos: Neos
 
 	// The Neos UI (9.2) decides whether its drag handle is enabled only for the first node its toolbar shows (useMemo
 	// without dependencies): after a reload of the page (publishing) on a node that cannot move, it stays disabled for
-	// all of them. Decided here for the selected node, by the same rules: not tethered, no document, editable.
+	// all of them. Decided here for the selected node, by the same rules: not tethered, no document, editable; and not
+	// of a node type that stays where it is (ui.draggable: false).
 	const handle = doc.querySelector<HTMLButtonElement>('#neos-InlineToolbar-DragSelectedNode');
 	const node = nodeOf(selected, 'data-__neos-node-contextpath', neos);
 	if (handle && node) {
-		const canBeDragged = !node.isAutoCreated && !neos.nodeTypes.hasRole(node.nodeType, 'document') && node.policy?.canEdit !== false;
+		const canBeDragged =
+			!node.isAutoCreated &&
+			!neos.nodeTypes.hasRole(node.nodeType, 'document') &&
+			node.policy?.canEdit !== false &&
+			neos.nodeTypes.get(node.nodeType)?.ui?.draggable !== false;
 		if (handle.disabled === canBeDragged) {
 			handle.disabled = !canBeDragged;
 		}

@@ -11,7 +11,8 @@ the content frame. Works with any frontend (Fusion or headless).
   edge where the new node goes; disabled actions are hidden; moves to the bottom or floats for big nodes.
 - **CKEditor** – its toolbar in the same dark style, on the dashed line of the edited text.
 - **Drag and drop** – drag or click the handle: the page zooms out, the node moves live, the others slide aside;
-  click or release to drop, `Esc` cancels. Only where Neos allows the node.
+  click or release to drop, `Esc` cancels. Only where Neos allows the node. A node type whose nodes stay where they
+  are: `ui.draggable: false` (no drag handle).
 - **Loading screen** – the splash screen of the Neos UI stays until the page in the content frame has loaded (not only
   until the UI started), then fades out.
 - **Steady placeholders** – the placeholders of inline editable properties are drawn by the package for their whole

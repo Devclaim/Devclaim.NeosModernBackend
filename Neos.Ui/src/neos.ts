@@ -25,7 +25,8 @@ export type NeosNode = {
 type NodeType = {
 	label?: string;
 	abstract?: boolean;
-	ui?: {icon?: string};
+	/** draggable: false keeps nodes of the type where they are in the page (no drag handle) */
+	ui?: {icon?: string; draggable?: boolean};
 	properties?: Record<string, {ui?: {inline?: {editorOptions?: {placeholder?: string}}}} | undefined>;
 };
 
