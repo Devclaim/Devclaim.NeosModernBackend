@@ -21,12 +21,27 @@ the content frame. Works with any frontend (Fusion or headless).
 - **Sidebar** – improved modernised sidebar
 - **Date and time picker** – replaces the date and time picker of the Neos UI: calendar and time in one floating
   popover, also in other plugins that use it (e.g. `NeosSvelte.Events`).
+- **Number input** – integer properties get the number input of
+  [Devclaim.NeosUiEditors](https://github.com/Devclaim/Devclaim.NeosUiEditors) instead of a text field: minus and plus
+  around the value, the arrow keys count, the range of `editorOptions` `min` and `max` below; a value beyond it becomes
+  the nearest limit.
 - **Steady reloads** – reloading or publishing the page keeps the content tree and the selection: Neos resets its
   nodes on publish and loses the selection, the package keeps the nodes of the page in the frame and selects the node
   again. One loading state from the publish until the page is there (also when the browser no longer fires `unload`),
   and editors like the link editor do not load their previews again. Works with any frontend (Fusion or headless).
 
 ## Installation
+
+It requires [devclaim/neos-ui-editors](https://github.com/Devclaim/Devclaim.NeosUiEditors), which is not on
+Packagist: add both repositories to the `composer.json` of the project (Composer ignores the repositories of a
+dependency).
+
+```json
+"repositories": [
+    { "type": "vcs", "url": "https://github.com/Devclaim/Devclaim.NeosModernBackend" },
+    { "type": "vcs", "url": "https://github.com/Devclaim/Devclaim.NeosUiEditors" }
+]
+```
 
 ```bash
 composer require devclaim/neos-modern-backend
@@ -47,6 +62,18 @@ Neos:
           dragAndDrop: true  # false: the native drag and drop of the Neos UI
           sidebar: true      # false: the left sidebar of the Neos UI as it is
           dateTimeEditor: true # false: the DateTimeEditor of the Neos UI
+```
+
+The number input for integer properties (back to the text field of the Neos UI):
+
+```yaml
+Neos:
+  Neos:
+    userInterface:
+      inspector:
+        dataTypes:
+          integer:
+            editor: 'Neos.Neos/Inspector/Editors/TextFieldEditor'
 ```
 
 ## Development

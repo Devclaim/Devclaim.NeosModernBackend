@@ -4,8 +4,15 @@
 	"description": "A modern editing experience for the Neos backend: outline, node toolbar, CKEditor and drag and drop in the content frame",
 	"license": "MIT",
 	"require": {
-		"neos/neos-ui": "^9.0"
+		"neos/neos-ui": "^9.0",
+		"devclaim/neos-ui-editors": "dev-main"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/Devclaim/Devclaim.NeosUiEditors"
+		}
+	],
 	"extra": {
 		"neos": {
 			"package-key": "Devclaim.NeosModernBackend"

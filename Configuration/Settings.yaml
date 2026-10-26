@@ -1,6 +1,12 @@
 Neos:
   Neos:
     userInterface:
+      inspector:
+        dataTypes:
+          # every integer property gets the number input of Devclaim.NeosUiEditors (minus, plus, the range of
+          # editorOptions min and max); Neos.Neos/Inspector/Editors/TextFieldEditor: the text field of the Neos UI
+          integer:
+            editor: 'Devclaim.NeosUiEditors/Inspector/Editors/NumberEditor'
       translation:
         autoInclude:
           'Devclaim.NeosModernBackend':
