@@ -57,24 +57,25 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 		observed.forEach((element) => resizeObserver.observe(element));
 	};
 
-	const update = () => {
+	/** follow: after a scroll, the boxes go with their nodes at once (no movement from where they were) */
+	const update = (follow = false) => {
 		frame = 0;
 		hideStaleEditorToolbars(doc);
 		syncPlaceholders(doc, neos);
 		const focused = doc.querySelector<HTMLElement>(FOCUSED);
 		const hovered = doc.querySelector<HTMLElement>(HOVERED);
-		const placed = outline.placeFocus(focused);
+		const placed = outline.placeFocus(focused, follow);
 		if (focused && placed) {
 			toolbars.place(placed.rect, placed.toNode);
 			syncNodeToolbar(doc, focused, neos);
 		}
 		// no hover outline while dragging
-		outline.placeHover(hovered === focused || dragAndDrop?.dragging ? null : hovered);
+		outline.placeHover(hovered === focused || dragAndDrop?.dragging ? null : hovered, follow);
 		observe([focused, hovered].filter((element): element is HTMLElement => element !== null));
 	};
 	let frame = 0;
 	const schedule = () => {
-		frame ||= win.requestAnimationFrame(update);
+		frame ||= win.requestAnimationFrame(() => update());
 	};
 
 	// the marker classes, inline editing and anything else that moves the nodes (not the layer itself); the placeholders
@@ -89,8 +90,14 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 	const unsubscribe = neos.store.subscribe(() => syncPlaceholders(doc, neos));
 	win.addEventListener('pagehide', unsubscribe, {once: true});
 	syncPlaceholders(doc, neos);
-	// page coordinates: scrolling only matters for the clamp to the visible width and where the toolbars go
-	win.addEventListener('scroll', schedule, {capture: true, passive: true});
+	// page coordinates: scrolling the page only matters for the clamp to the visible width and where the toolbars go;
+	// a scrolling row (a slider) moves its nodes. Placed right away: scroll events come just before the frame is drawn,
+	// a frame later the boxes would trail behind the row; and they are not animated then, they stay on their nodes
+	const placeNow = () => {
+		win.cancelAnimationFrame(frame);
+		update(true);
+	};
+	win.addEventListener('scroll', placeNow, {capture: true, passive: true});
 	win.addEventListener('resize', schedule, {passive: true});
 	// the focus moves between texts and the toolbars of CKEditor
 	doc.addEventListener('focusin', schedule);
