@@ -47,6 +47,10 @@ the content frame. Works with any frontend (Fusion or headless).
   (`Resources/Private/Fusion/Backend/Workspaces`) and the styles (`Workspaces.css`, `Workspaces.js`) are this
   package's.
 
+- **Backend frame** – one top bar and one menu for the content module and all backend modules, a top bar component
+  for pages of their own (`TopBar.css`, used by the moderation app), module overviews as cards, and many modern UI and
+  UX optimisations across the backend (menu, inspector, focus, fields).
+
 ## Installation
 
 It requires [devclaim/neos-ui-editors](https://github.com/Devclaim/Devclaim.NeosUiEditors), which is not on

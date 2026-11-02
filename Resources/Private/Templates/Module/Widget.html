@@ -1,0 +1,25 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:comment>
+	A module on the overview of its group (setting Neos.Neos.moduleConfiguration.widgetTemplatePathAndFileName): a card,
+	the whole of it a link to the module (Chrome.css). Its actions, if it has any, as links below it.
+</f:comment>
+<div class="dc-module-card">
+	<neos:link.module path="{moduleConfiguration.path}/{submoduleIdentifier}" class="dc-module-card__link">
+		<span class="dc-module-card__head">
+			<span class="dc-module-card__icon"><i class="{f:if(condition: submoduleConfiguration.icon, then: submoduleConfiguration.icon, else: 'fas fa-puzzle-piece')}"></i></span>
+			<span class="dc-module-card__title"><neos:backend.translate source="Modules" id="{submoduleConfiguration.label}" /></span>
+		</span>
+		<f:if condition="{submoduleConfiguration.description}">
+			<span class="dc-module-card__description"><neos:backend.translate source="Modules" id="{submoduleConfiguration.description}" /></span>
+		</f:if>
+	</neos:link.module>
+	<f:if condition="{submoduleConfiguration.actions}">
+		<div class="dc-module-card__actions">
+			<f:for each="{submoduleConfiguration.actions}" as="actionConfiguration" key="submoduleAction">
+				<neos:link.module title="{neos:backend.translate(id: actionConfiguration.title, source: 'Modules')}" class="dc-module-card__action" path="{f:if(condition: actionConfiguration.path, then: actionConfiguration.path, else: '{moduleConfiguration.path}/{submoduleIdentifier}/{submoduleAction -> f:format.case(mode: \'lower\')}')}">
+					<neos:backend.translate source="Modules" id="{actionConfiguration.label}" />
+				</neos:link.module>
+			</f:for>
+		</div>
+	</f:if>
+</div>

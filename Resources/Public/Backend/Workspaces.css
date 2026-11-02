@@ -20,9 +20,9 @@
 	--dc-ws-warning-soft: rgba(255, 135, 0, 0.14);
 	display: grid;
 	grid-template-columns: 280px minmax(0, 1fr);
-	height: calc(100vh - 150px);
+	height: calc(100vh - 134px);
 	min-height: 480px;
-	margin-top: 16px;
+	margin-top: 0;
 	background: var(--dc-ws-bg);
 	color: var(--dc-ws-text);
 	font-size: 14px;
@@ -167,7 +167,7 @@
 /* the workspaces: a tree by base workspace */
 .dc-ws__rail {
 	overflow-y: auto;
-	padding: 16px 8px 16px 0;
+	padding: 0 8px 16px 0;
 	background: var(--dc-ws-pane);
 }
 
@@ -305,7 +305,7 @@ a.dc-ws-item:hover {
 	grid-template-columns: minmax(0, 1fr) auto;
 	align-items: end;
 	gap: 6px 16px;
-	padding: 20px 24px 14px;
+	padding: 0 24px 14px;
 	background: var(--dc-ws-pane);
 }
 
@@ -390,7 +390,7 @@ a.dc-ws-item:hover {
 
 .dc-ws-review__detail {
 	overflow-y: auto;
-	padding: 24px 32px 48px;
+	padding: 0 32px 48px;
 	background: var(--dc-ws-pane);
 }
 
@@ -954,6 +954,10 @@ a.dc-ws-item:hover {
 	.dc-ws__tabs {
 		padding-right: 16px;
 		padding-left: 16px;
+	}
+
+	.dc-ws__head {
+		padding-top: 12px;
 	}
 
 	/* edge to edge: the tree keeps a margin to the screen */

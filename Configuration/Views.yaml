@@ -9,3 +9,8 @@
       - 'resource://Neos.Fusion.Form/Private/Fusion'
       - 'resource://Neos.Workspace.Ui/Private/Fusion'
       - 'resource://Devclaim.NeosModernBackend/Private/Fusion/Backend'
+
+# the page of every backend module: one menu instead of two (Templates/Backend/Module/Index.html)
+- requestFilter: 'isPackage("Neos.Neos") && isController("Backend\\Module") && isAction("index")'
+  options:
+    templatePathAndFilename: 'resource://Devclaim.NeosModernBackend/Private/Templates/Backend/Module/Index.html'

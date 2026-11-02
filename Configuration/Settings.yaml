@@ -1,4 +1,9 @@
 Devclaim:
+  NeosModeration:
+    app:
+      styleSheets:
+        # the moderation app at /neos/moderation with the top bar of the backend (Resources/Public/Backend/TopBar.css)
+        'Devclaim.NeosModernBackend:TopBar': 'resource://Devclaim.NeosModernBackend/Public/Backend/TopBar.css'
   NeosStyleguide:
     # the node previews of the workspace review: "workspace:before|after:<node address>" (Compare.fusion)
     nodeReferences:
@@ -12,9 +17,16 @@ Neos:
   Neos:
     # focus marked for the keyboard only (Resources/Public/Backend/Focus.css): all backend modules
     moduleConfiguration:
+      # the overview of a group of modules: a card per module (Resources/Private/Templates/Module/Widget.html)
+      widgetTemplatePathAndFileName: 'resource://Devclaim.NeosModernBackend/Private/Templates/Module/Widget.html'
       additionalResources:
         styleSheets:
           'Devclaim.NeosModernBackend:Focus': 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.css'
+          # the menu button, the chevrons, one menu (Resources/Public/Backend/Chrome.css)
+          'Devclaim.NeosModernBackend:Chrome': 'resource://Devclaim.NeosModernBackend/Public/Backend/Chrome.css'
+        javaScripts:
+          # the menu closes with Escape and a click beside it (Resources/Public/Backend/Menu.js)
+          'Devclaim.NeosModernBackend:Menu': 'resource://Devclaim.NeosModernBackend/Public/Backend/Menu.js'
     modules:
       management:
         submodules:
@@ -46,10 +58,16 @@ Neos:
             resource: 'resource://Devclaim.NeosModernBackend/Public/Neos.Ui/Plugin.js'
             # right after the Neos UI: it replaces the DateInput of the Neos UI for the plugins loaded after it
             position: 'after Neos.Neos.UI:Host'
+          # a section of the menu opens and closes with its chevron only, not with its link (Public/Backend/Drawer.js)
+          'Devclaim.NeosModernBackend:Drawer':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Drawer.js'
         stylesheets:
           # focus marked for the keyboard only, as in the backend modules
           'Devclaim.NeosModernBackend:Focus':
             resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.css'
+          # the menu button and the chevrons, as in the backend modules
+          'Devclaim.NeosModernBackend:Chrome':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Chrome.css'
       frontendConfiguration:
         'Devclaim.NeosModernBackend':
           # distance between the node and its outline (px); less where the frame has no room for it

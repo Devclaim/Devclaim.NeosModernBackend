@@ -21,7 +21,7 @@
  * (Neos turns them white with dark text). Checkboxes, radios and buttons are left as they are.
  */
 .neos.neos-module :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='file'], [type='range'], [type='color']), textarea, select):focus,
-#neos-backend-container :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='file'], [type='range'], [type='color']), textarea):focus {
+#appContainer :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='file'], [type='range'], [type='color']), textarea):focus {
 	border-color: #3f3f3f !important;
 	outline: none !important;
 	background-color: #3f3f3f !important;

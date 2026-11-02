@@ -1,0 +1,735 @@
+/*
+ * The frame of the backend, in the backend modules and the content module: the menu button, the chevrons, one menu.
+ * The Neos UI hashes the start of its class names, its elements are matched by the readable part ([class*='_name']);
+ * ":not(#\#)" wins against its own selectors.
+ */
+
+/*
+ * The top bar of the content module: dark, its items on it without backgrounds, lines or gaps between them (the Neos
+ * UI sets some of them on their own grey with a gap of 1px, the buttons of plugins draw a line at their left), the icon blue
+ * when pointed at, no background. "Veröffentlichen", the last item, stays as Neos has it; the workspace keeps its line on
+ * top. Actions are icons only (their title names them), what shows a state keeps its text (language, workspace).
+ */
+[class*='_primaryToolbar']:not([class*='_primaryToolbar__']):not(#\#) {
+	border-bottom-color: #0b0b0b;
+	background-color: #0b0b0b;
+}
+
+[class*='_primaryToolbar__']:not(#\#) {
+	background-color: transparent;
+}
+
+:is([class*='_primaryToolbar__leftSidedActions'], [class*='_primaryToolbar__actions']):not(#\#) > *,
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child, [class*='_dropDownContents']),
+:is([class*='_primaryToolbar__leftSidedActions'], [class*='_primaryToolbar__actions']):not(#\#) > * :is(button, a),
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child, [class*='_dropDownContents']) :is(button, a, [class*='_dropDown__header']) {
+	margin-right: 0 !important;
+	margin-left: 0 !important;
+	border-right: 0 !important;
+	border-left: 0 !important;
+	background-color: transparent !important;
+}
+
+:is([class*='_primaryToolbar__leftSidedActions'], [class*='_primaryToolbar__actions']):not(#\#) > * :is(button, a):hover,
+[class*='_primaryToolbar__leftSidedActions']:not(#\#) > :is(button, a):hover,
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child, [class*='_dropDownContents']) :is(button, a, [class*='_dropDown__header']):hover,
+#neos-moderation-toggle a:hover,
+#neos-styleguide-toggle button:hover {
+	background-color: transparent !important;
+	color: #00adee !important;
+}
+
+/* The workspace is a direct toolbar button and keeps its green state rule on hover; only its label and icons turn blue. */
+[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:hover:not(#\#) {
+	background-color: transparent !important;
+	color: #00adee !important;
+}
+
+[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:hover:not(#\#) :is(span, svg) {
+	color: #00adee !important;
+}
+
+[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:hover:not(#\#)::before {
+	display: block;
+	opacity: 1;
+	background-color: #00a338 !important;
+}
+
+/* the language without an icon, its name says what it is (one dimension: a select box with the icon of the dimension) */
+[class*='_singleDimensionDropdown'] [class*='_listPreviewElement__iconWrapper']:not(#\#) {
+	display: none;
+}
+
+[class*='_primaryToolbar'] [class*='_dropDown__btnIcon']:not(#\#) {
+	margin-right: 6px;
+}
+
+/*
+ * The language and the edit mode: their text blue when pointed at, not their background (Neos: blue; the preview mode
+ * keeps its blue, it is a state)
+ */
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child) :is([class*='_dimensionSwitcherDropDown'], [class*='_selectBoxHeader'] [class*='_listPreviewElement'], [class*='_dropDown__header']),
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child) [class*='_dropDown__btn']:not([class*='_dropDown__btn--isPreviewMode'], [class*='_dropDown__btnIcon']) {
+	background-color: transparent !important;
+	background-image: none !important;
+}
+
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child) :is([class*='_selectBoxHeader'], [class*='_dropDown__header'], [class*='_dropDown__btn']:not([class*='_dropDown__btn--isPreviewMode'])):hover,
+[class*='_primaryToolbar__rightSidedActions']:not(#\#) > :not(:last-child) :is([class*='_selectBoxHeader'], [class*='_dropDown__header'], [class*='_dropDown__btn']:not([class*='_dropDown__btn--isPreviewMode'])):hover :is(span, svg, div) {
+	color: #00adee !important;
+}
+
+/*
+ * The edit mode in the second bar: its icon and current mode are enough; the long "Bearbeitungsmodus:" prefix stays
+ * in the accessible name only. The edit mode, preview and full-screen actions use the same blue text/icon hover as
+ * the actions in the primary bar, without Neos' blue background.
+ */
+[class*='_secondaryToolbar__rightHandedActions'] [class*='_dropDown__modeBadge']:not(#\#) {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	width: 14px;
+	overflow: hidden;
+	padding: 0 !important;
+	font-size: 0;
+	white-space: nowrap;
+}
+
+[class*='_secondaryToolbar__rightHandedActions'] [class*='_dropDown__modeBadge'] > svg:not(#\#) {
+	width: 14px;
+	margin-right: 0 !important;
+	font-size: 14px;
+}
+
+[class*='_secondaryToolbar__rightHandedActions'] :is([class*='_dropDown__btn'], #neos-PreviewButton, #neos-FullScreenButton):not(#\#) {
+	background-color: transparent !important;
+	color: #fff !important;
+}
+
+[class*='_secondaryToolbar__rightHandedActions'] :is([class*='_dropDown__btn'], #neos-PreviewButton, #neos-FullScreenButton):not(#\#):hover,
+[class*='_secondaryToolbar__rightHandedActions'] :is([class*='_dropDown__btn'], #neos-PreviewButton, #neos-FullScreenButton):not(#\#):hover :is(span, svg) {
+	background-color: transparent !important;
+	color: #00adee !important;
+}
+
+/* Moderation and Styleguide (the buttons of their packages): the icon, the number of open cases stays */
+#neos-moderation-toggle a,
+#neos-styleguide-toggle button {
+	gap: 0 !important;
+	padding: 0 13px !important;
+	border-left: 0 !important;
+	font-size: 0 !important;
+}
+
+/*
+ * Resources belongs with the add-on actions. Keep Shortcuts first, then Resources, Moderation and Styleguide. Both
+ * direct Neos UI buttons need their own hover rule because they are not wrapped like the package actions.
+ */
+[class*='_primaryToolbar__rightSidedActions'] > button:has(svg[data-icon='keyboard']):not(#\#) {
+	order: -2;
+}
+
+[class*='_primaryToolbar__rightSidedActions'] > button:has(svg[data-icon='box-archive']):not(#\#) {
+	order: -1;
+}
+
+[class*='_primaryToolbar__rightSidedActions'] > button:has(svg:is([data-icon='keyboard'], [data-icon='box-archive'])):hover:not(#\#),
+[class*='_primaryToolbar__rightSidedActions'] > button:has(svg:is([data-icon='keyboard'], [data-icon='box-archive'])):hover:not(#\#) svg {
+	background-color: transparent !important;
+	color: #00adee !important;
+}
+
+/* the styleguide open: replace its palette with a clear close icon, without colouring the button background */
+#neos-styleguide-toggle button[aria-pressed='true'] {
+	background: transparent !important;
+	color: #fff !important;
+}
+
+#neos-styleguide-toggle button[aria-pressed='true'] > svg {
+	display: none;
+}
+
+#neos-styleguide-toggle button[aria-pressed='true']::before {
+	display: block;
+	width: 15px;
+	height: 15px;
+	background:
+		linear-gradient(45deg, transparent 44%, currentColor 44%, currentColor 56%, transparent 56%) center / 9px 9px no-repeat,
+		linear-gradient(-45deg, transparent 44%, currentColor 44%, currentColor 56%, transparent 56%) center / 9px 9px no-repeat;
+	content: '';
+}
+
+#neos-styleguide-toggle button[aria-pressed='true']:hover {
+	color: #00adee !important;
+}
+
+#neos-moderation-toggle .neos-moderation-count {
+	margin-left: 6px;
+	font-size: 11px;
+}
+
+/* the logo of Neos, centred in the height of the bar (its wrapper in the Neos UI sits on top with padding) */
+[class*='_primaryToolbar__leftSidedActions'] > [class*='_wrapper']:has([class*='_logo']):not(#\#) {
+	display: inline-flex;
+	align-items: center;
+	align-self: stretch;
+	padding: 0 16px 0 0;
+	vertical-align: middle;
+}
+
+[class*='_primaryToolbar__leftSidedActions'] [class*='_logo']:not(#\#) {
+	display: flex;
+	align-items: center;
+	background: url('NeosPrimary.svg?v=8') center / contain no-repeat;
+}
+
+[class*='_primaryToolbar__leftSidedActions'] [class*='_logo']:not(#\#) > svg {
+	display: block;
+	height: 22px;
+	visibility: hidden;
+}
+
+/* the page of a backend module in its grey down to the bottom, also when its content is short (Neos greys only the
+   wrapper of the content, on a darker page) */
+.neos.neos-module {
+	background-color: #222;
+}
+
+.neos.neos-module > .neos-module-wrap {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	min-height: 100vh;
+	padding-top: 64px;
+}
+
+/* A tighter, quieter breadcrumb with an actual hierarchy chevron instead of the legacy slash. */
+.neos.neos-module .neos-breadcrumb {
+	display: flex;
+	align-items: center;
+	min-height: 36px;
+	margin-bottom: 16px;
+	border-bottom-color: #323232;
+}
+
+.neos.neos-module .neos-breadcrumb > li {
+	display: inline-flex;
+	align-items: center;
+}
+
+.neos.neos-module .neos-breadcrumb > li > a {
+	line-height: 36px;
+}
+
+.neos.neos-module .neos-breadcrumb .neos-divider {
+	display: inline-flex;
+	align-items: center;
+	height: 36px;
+	padding: 0 10px;
+	color: #777;
+	font-size: 0;
+}
+
+.neos.neos-module .neos-breadcrumb .neos-divider::before {
+	content: '>';
+	font-size: 12px;
+	line-height: 1;
+}
+
+/* Short modules grow to the viewport and keep their action footer at the bottom; long modules continue naturally. */
+.neos.neos-module > .neos-module-wrap > .neos-content:has(> .neos-footer) {
+	display: flex;
+	flex: 1 0 auto;
+	flex-direction: column;
+}
+
+/*
+ * The shared action footer of backend modules. Keep it sticky and full-width, but replace the legacy 72px strip and
+ * solid semantic slabs with a compact action bar that reads as part of the module chrome.
+ */
+.neos.neos-module .neos-footer {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 8px;
+	height: 56px;
+	margin-top: auto;
+	padding: 10px 54px;
+	overflow: hidden;
+	border-top: 1px solid #323232;
+	background: #141414;
+	box-shadow: 0 -8px 24px rgb(0 0 0 / 16%);
+}
+
+.neos.neos-module .neos-footer > .neos-button,
+.neos.neos-module .neos-footer > form > .neos-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	height: 36px;
+	margin: 0;
+	padding: 0 14px;
+	border: 1px solid #3f3f3f;
+	border-radius: 2px;
+	background: #282828;
+	color: #eee;
+	line-height: 34px;
+	text-decoration: none;
+	transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+}
+
+.neos.neos-module .neos-footer > .neos-button:not([disabled], .neos-disabled):hover,
+.neos.neos-module .neos-footer > form > .neos-button:not([disabled], .neos-disabled):hover {
+	border-color: #00adee;
+	background: #2c2c2c;
+	color: #35c3f8;
+}
+
+.neos.neos-module .neos-footer > .neos-button:focus-visible,
+.neos.neos-module .neos-footer > form > .neos-button:focus-visible {
+	outline: 1px solid #00adee;
+	outline-offset: 2px;
+}
+
+.neos.neos-module .neos-footer > .neos-button-success {
+	border-color: rgb(0 163 56 / 70%);
+	background: rgb(0 163 56 / 14%);
+}
+
+.neos.neos-module .neos-footer > .neos-button-success:not([disabled], .neos-disabled):hover {
+	border-color: #00a338;
+	background: rgb(0 163 56 / 22%);
+	color: #fff;
+}
+
+.neos.neos-module .neos-footer > .neos-button-danger {
+	border-color: rgb(255 70 13 / 70%);
+	background: rgb(255 70 13 / 12%);
+}
+
+.neos.neos-module .neos-footer > .neos-button-danger:not([disabled], .neos-disabled):hover {
+	border-color: #ff460d;
+	background: rgb(255 70 13 / 20%);
+	color: #fff;
+}
+
+/* the top bar of the backend modules: as dark, as high as the one of the content module */
+.neos #neos-top-bar {
+	height: 41px;
+	border-bottom: 0;
+	background-color: #0b0b0b;
+}
+
+/* the logo in the top bar of the backend modules, the same */
+.neos #neos-top-bar .neos-top-bar-left {
+	align-items: stretch;
+}
+
+.neos #neos-top-bar .neos-branding {
+	display: flex;
+	align-items: center;
+	padding: 0 16px 0 0;
+}
+
+.neos #neos-top-bar .neos-branding a {
+	display: flex;
+	align-items: center;
+	background: url('NeosPrimary.svg?v=8') left center / auto 22px no-repeat;
+}
+
+/* "#neos-top-bar": stronger than Neos, which sets the logo there 24px high */
+.neos #neos-top-bar .neos-top-bar-left .neos-branding svg.neos-branding-logo {
+	display: block;
+	width: auto;
+	height: 22px;
+	visibility: hidden;
+}
+
+/*
+ * The menu button, the same in both top bars: a box of 54 × 41 with the icon of a sidebar in its middle, a cross while
+ * the menu is open; white, blue when pointed at. The same box in every state, so nothing beside it moves (Neos makes
+ * its button 1px higher while pressed).
+ */
+.neos #neos-top-bar .neos-menu-button,
+.neos #neos-top-bar .neos-menu-button:is(:hover, .neos-pressed),
+[class*='_menuToggler']:not([class*='_menuToggler_']):not(#\#) {
+	position: relative;
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 54px;
+	height: 41px;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background-color: transparent !important;
+	box-shadow: none;
+	color: #fff !important;
+}
+
+.neos #neos-top-bar .neos-menu-button:hover,
+[class*='_menuToggler']:not([class*='_menuToggler_']):not(#\#):hover,
+[class*='_menuToggler']:not([class*='_menuToggler_']):not(#\#):hover [class*='_menuToggler__icon']:not(#\#):not(#\#) {
+	color: #00adee !important;
+}
+
+.neos #neos-top-bar .neos-menu-button::before,
+.neos #neos-top-bar .neos-menu-button:is(:hover, .neos-pressed)::before,
+[class*='_menuToggler__icon']:not(#\#):not(#\#)::before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin: -10px 0 0 -10px;
+	border: 0;
+	background-color: currentColor;
+	box-shadow: none;
+	content: '';
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='4.5' width='17' height='15' rx='2'/%3E%3Cpath d='M9.5 4.5v15'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.neos #neos-top-bar .neos-menu-button.neos-pressed::before,
+[class*='_menuToggler--isActive'] [class*='_menuToggler__icon']:not(#\#):not(#\#)::before {
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+}
+
+.neos #neos-top-bar .neos-menu-button::after,
+[class*='_menuToggler__icon']:not(#\#):not(#\#)::after {
+	display: none;
+}
+
+/* the icon of the Neos UI: a box of its own inside the button, the size of the icon */
+[class*='_menuToggler__icon']:not(#\#):not(#\#),
+[class*='_menuToggler--isActive'] [class*='_menuToggler__icon']:not(#\#):not(#\#),
+[class*='_menuToggler__icon']:not(#\#):not(#\#):hover {
+	position: relative;
+	width: 20px;
+	height: 20px;
+	color: inherit;
+}
+
+/*
+ * The menu of the backend modules (one, in the top bar: Templates/Backend/Module/Index.html) like the one of the
+ * content module: it slides in and out (Neos only shows and hides it); a subtle line at the side of both
+ */
+.neos #neos-top-bar .neos-menu-panel {
+	display: block;
+	left: 0;
+	border-right: 0;
+	font-size: 14px;
+	visibility: hidden;
+	transform: translateX(-100%);
+	transition: transform 0.25s ease, visibility 0.25s;
+}
+
+.neos-menu-panel-open #neos-top-bar .neos-menu-panel {
+	visibility: visible;
+	transform: none;
+}
+
+.neos-menu-panel-open #neos-top-bar .neos-menu-panel,
+[class*='_drawer']:not([class*='_drawer_'], [class*='_drawer--isHidden']):not(#\#) {
+	box-shadow: 1px 0 0 #2c2c2c;
+}
+
+/* the second menu of the page of Neos, if its template is not the one of this package */
+.neos #neos-application > .neos-menu {
+	display: none;
+}
+
+/* a section without entries (Moderation) without a chevron: there is nothing to open (marked by Drawer.js) */
+.neos #neos-top-bar .neos-menu-section:not(:has(.neos-menu-section-content)) .neos-menu-panel-toggle,
+section[data-dc-empty] [class*='_panel__toggleBtn']:not(#\#) {
+	display: none;
+}
+
+/*
+ * The sections of both menus, like the groups of the inspector: their headers (the parent items, with a chevron) on
+ * a darker ground instead of lines between the sections; a gap of the menu between two sections; room above and
+ * below the entries of an open one
+ */
+.neos #neos-top-bar .neos-menu-section + .neos-menu-section,
+[class*='_drawer__menuItem'] + [class*='_drawer__menuItem']:not(#\#) {
+	margin-top: 1px;
+}
+
+.neos #neos-top-bar .neos-menu-section .neos-menu-headline,
+[class*='_drawer__menuItem']:not(#\#) {
+	border-top: 0 !important;
+}
+
+.neos #neos-top-bar .neos-menu-section-header,
+[class*='_drawer__menuItem__header']:not(#\#) {
+	background-color: #1a1a1a;
+	box-shadow: none;
+}
+
+.neos #neos-top-bar .neos-menu-section-header :is(.neos-menu-headline, .neos-menu-headline i, .neos-menu-panel-toggle),
+[class*='_drawer__menuItem__header'] :is(button, h2, [class*='_panel__toggleBtn']):not(#\#) {
+	background-color: transparent !important;
+}
+
+/*
+ * A section header holds two things: its link (the overview of the section) and the chevron that opens and closes
+ * it. They are pointed at apart (each blue on its own), the chevron in a square of its own, a gap of the menu between
+ * it and the link
+ */
+.neos #neos-top-bar .neos-menu-section-header .neos-menu-panel-toggle,
+[class*='_drawer__menuItem__header'] [class*='_panel__toggleBtn']:not(#\#) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	box-shadow: -1px 0 0 #222;
+}
+
+/* room above and below the entries of an open section */
+.neos #neos-top-bar .neos-menu-section.neos-open .neos-menu-section-content,
+[class*='_drawer'] [class*='_panel--isOpen'] > [class*='_panel__contents']:not(#\#),
+[class*='_drawer'] [class*='_panel--isOpen'] > * > [class*='_panel__contents']:not(#\#) {
+	padding-top: 6px;
+	padding-bottom: 10px;
+}
+
+/*
+ * The groups of the inspector (Allgemein, Bild): the same as the sections of the menus, their header on a darker
+ * ground instead of a line below each group; text, icon and chevron blue when pointed at
+ */
+[class*='_rightSideBar__section']:not(#\#) {
+	border-bottom: 0;
+}
+
+[class*='_rightSideBar__section'] + [class*='_rightSideBar__section']:not(#\#) {
+	margin-top: 1px;
+}
+
+[class*='_rightSideBar__section'] > [role='button']:not(#\#) {
+	background-color: #1a1a1a;
+}
+
+[class*='_rightSideBar__section'] > [role='button'] :is(h2, button):not(#\#) {
+	background-color: transparent !important;
+}
+
+[class*='_rightSideBar__section'] > [role='button']:not(#\#) :is(h2, svg, button) {
+	color: #fff;
+}
+
+[class*='_rightSideBar__section'] > [role='button']:hover:not(#\#) :is(h2, svg, button) {
+	color: #00adee !important;
+}
+
+/*
+ * The same room above the first field as below the last one: below, every field has its space of 16px (the envelope
+ * of the inspector), above, the group gets as much (the contents sit two wrappers deep in the panel)
+ */
+[class*='_rightSideBar__section'][class*='_panel--isOpen'] [class*='_panel__contents']:not(#\#) {
+	padding-top: 16px;
+	padding-bottom: 0;
+}
+
+/*
+ * The entries of both menus (backend modules, content module): white, text and icon blue when pointed at, also in
+ * the menu of the user. Only the colour: their backgrounds stay (the darker user at the bottom), the blue ones of the
+ * entries of the user menu are left out.
+ */
+.neos #neos-top-bar .neos-menu-panel :is(a, button, .neos-menu-item),
+.neos #neos-top-bar .neos-menu-panel :is(a, button) :is(i, span),
+[class*='_drawer'] :is(a, button, [role='button']):not(#\#),
+[class*='_drawer'] :is(a, button, [role='button']):not(#\#) :is(span, svg, i) {
+	color: #fff !important;
+}
+
+.neos #neos-top-bar .neos-menu-panel :is(a, button, .neos-menu-item):is(:hover, .neos-active),
+.neos #neos-top-bar .neos-menu-panel :is(a, button):is(:hover, .neos-active) :is(i, span),
+[class*='_drawer'] :is(a, button):not(#\#):hover,
+[class*='_drawer'] :is(a, button):not(#\#):hover :is(span, svg, i),
+[class*='_drawer'] a:hover > button:not(#\#),
+[class*='_drawer'] a:hover > button:not(#\#) :is(span, svg, i),
+[class*='_drawer'] [class*='_dropDown__item']:hover :is(a, button):not(#\#),
+[class*='_drawer'] [class*='_dropDown__item']:hover :is(a, button):not(#\#) :is(span, svg, i) {
+	color: #00adee !important;
+}
+
+.neos #neos-top-bar #neos-user-actions .neos-dropdown-menu li :is(a, button):hover,
+[class*='_drawer'] [class*='_dropDown__item']:hover:not(#\#) {
+	background-color: transparent !important;
+}
+
+/* the initials of the user stay white on their circle */
+.neos #neos-top-bar .neos-user-image,
+[class*='_user__image']:not(#\#) {
+	color: #fff !important;
+}
+
+/*
+ * The chevrons in circles of Font Awesome (the sections of the menu, toggles of the Neos UI) as plain chevrons, the
+ * line icons of the moderation app: the glyph left out, the chevron drawn in the colour of the text
+ */
+.neos :is(.fa-chevron-circle-down, .fa-chevron-circle-up, .fa-chevron-circle-left, .fa-chevron-circle-right, .fa-circle-chevron-down, .fa-circle-chevron-up, .fa-circle-chevron-left, .fa-circle-chevron-right)::before {
+	content: '';
+}
+
+.neos :is(.fa-chevron-circle-down, .fa-chevron-circle-up, .fa-chevron-circle-left, .fa-chevron-circle-right, .fa-circle-chevron-down, .fa-circle-chevron-up, .fa-circle-chevron-left, .fa-circle-chevron-right),
+svg:is([class*='fa-chevron-circle-'], [class*='fa-circle-chevron-']) {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	background-color: currentColor;
+	vertical-align: middle;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+svg:is([class*='fa-chevron-circle-'], [class*='fa-circle-chevron-']) path {
+	display: none;
+}
+
+.neos :is(.fa-chevron-circle-up, .fa-circle-chevron-up),
+svg:is([class*='fa-chevron-circle-up'], [class*='fa-circle-chevron-up']) {
+	transform: rotate(180deg);
+}
+
+.neos :is(.fa-chevron-circle-left, .fa-circle-chevron-left),
+svg:is([class*='fa-chevron-circle-left'], [class*='fa-circle-chevron-left']) {
+	transform: rotate(90deg);
+}
+
+.neos :is(.fa-chevron-circle-right, .fa-circle-chevron-right),
+svg:is([class*='fa-chevron-circle-right'], [class*='fa-circle-chevron-right']) {
+	transform: rotate(-90deg);
+}
+
+/*
+ * The overview of a group of modules (Inhaltsverwaltung, Verwaltung): a card per module (Templates/Module/Widget.html),
+ * the rows of three of Neos as one grid; a card lighter when pointed at, never blue
+ */
+/* Neos puts three modules in a row: the rows dissolved into one grid on their parent, as many columns as fit */
+.neos :has(> .neos-row-fluid > [class*='neos-span'] > .dc-module-card) {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+	gap: 16px;
+}
+
+.neos :has(> .neos-row-fluid > [class*='neos-span'] > .dc-module-card) > :not(.neos-row-fluid) {
+	grid-column: 1 / -1;
+}
+
+.neos .neos-row-fluid:has(> [class*='neos-span'] > .dc-module-card) {
+	display: contents;
+}
+
+/* the clearfix of the rows would be cells of the grid, empty ones */
+.neos .neos-row-fluid:has(> [class*='neos-span'] > .dc-module-card)::before,
+.neos .neos-row-fluid:has(> [class*='neos-span'] > .dc-module-card)::after {
+	display: none;
+}
+
+.neos .neos-row-fluid > [class*='neos-span']:has(> .dc-module-card) {
+	float: none;
+	width: auto;
+	min-height: 0;
+	margin: 0;
+}
+
+.dc-module-card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	height: 100%;
+}
+
+.neos .dc-module-card__link,
+.neos .dc-module-card__link:hover,
+.neos .dc-module-card__link:focus {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 14px;
+	padding: 24px;
+	background: #2a2a2a;
+	color: #f2f2f2;
+	text-decoration: none;
+	transition: background 0.12s;
+}
+
+.neos .dc-module-card__link:hover {
+	background: #333;
+}
+
+.dc-module-card__head {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.dc-module-card__icon {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	background: #323232;
+	color: #f2f2f2;
+	font-size: 19px;
+}
+
+.neos .dc-module-card__link:hover .dc-module-card__title {
+	color: #fff;
+}
+
+.dc-module-card__link:hover .dc-module-card__icon {
+	background: #3f3f3f;
+}
+
+.dc-module-card__title {
+	font-size: 19px;
+	font-weight: 500;
+}
+
+/* the description of Neos runs long: three lines of it */
+.dc-module-card__description {
+	display: -webkit-box;
+	overflow: hidden;
+	color: #a3a3a3;
+	font-size: 14px;
+	line-height: 1.6;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+
+/* the actions (Benutzer erstellen, Website erstellen): quiet links under the card, not buttons in it */
+.dc-module-card__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+	padding: 0 2px;
+}
+
+.neos .dc-module-card__action,
+.neos .dc-module-card__action:focus {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: #a3a3a3;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.neos .dc-module-card__action::before {
+	content: '+';
+	font-size: 14px;
+	line-height: 1;
+}
+
+.neos .dc-module-card__action:hover {
+	color: #fff;
+	text-decoration: none;
+}
