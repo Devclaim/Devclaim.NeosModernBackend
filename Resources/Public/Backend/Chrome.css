@@ -450,8 +450,7 @@ section[data-dc-empty] [class*='_panel__toggleBtn']:not(#\#) {
 
 /*
  * The sections of both menus, like the groups of the inspector: their headers (the parent items, with a chevron) on
- * a darker ground instead of lines between the sections; a gap of the menu between two sections; room above and
- * below the entries of an open one
+ * a darker ground instead of lines between the sections; a gap of the menu between two sections
  */
 .neos #neos-top-bar .neos-menu-section + .neos-menu-section,
 [class*='_drawer__menuItem'] + [class*='_drawer__menuItem']:not(#\#) {
@@ -488,14 +487,6 @@ section[data-dc-empty] [class*='_panel__toggleBtn']:not(#\#) {
 	height: 40px;
 	padding: 0;
 	box-shadow: -1px 0 0 #222;
-}
-
-/* room above and below the entries of an open section */
-.neos #neos-top-bar .neos-menu-section.neos-open .neos-menu-section-content,
-[class*='_drawer'] [class*='_panel--isOpen'] > [class*='_panel__contents']:not(#\#),
-[class*='_drawer'] [class*='_panel--isOpen'] > * > [class*='_panel__contents']:not(#\#) {
-	padding-top: 6px;
-	padding-bottom: 10px;
 }
 
 /*
