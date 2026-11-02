@@ -12,6 +12,10 @@ prototype(Devclaim.NeosModernBackend:Compare) < prototype(Neos.Fusion:Component)
     after = null
     # the site whose theme the previews use (its node name); empty: the first one
     site = ''
+    # the element is removed: "after" shows it as it is now, faded (no before)
+    removed = false
+    # the text next to the views; empty: "as it looks on the website" or, without a before, "new on the website"
+    hint = ''
     # the base URL of the styleguide adapter's API, whose manifest names the page of the node previews
     adapter = ${Configuration.setting('Neos.Neos.Ui.frontendConfiguration')['Devclaim.NeosStyleguide'].adapter}
 
@@ -19,10 +23,13 @@ prototype(Devclaim.NeosModernBackend:Compare) < prototype(Neos.Fusion:Component)
         before = ${I18n.translate('before', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
         after = ${I18n.translate('after', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
         slider = ${I18n.translate('view.slider', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+        zoom = ${I18n.translate('zoom', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+        zoomIn = ${I18n.translate('zoom.in', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+        zoomOut = ${I18n.translate('zoom.out', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
     }
 
     renderer = afx`
-        <div class={['dc-compare', props.before ? null : 'dc-compare--new']} data-compare data-adapter={props.adapter} data-site={props.site} @if.shown={props.adapter && props.after}>
+        <div class={['dc-compare', props.before ? null : 'dc-compare--new', props.removed ? 'dc-compare--removed' : null]} data-compare data-adapter={props.adapter} data-site={props.site} @if.shown={props.adapter && props.after}>
             <div class="dc-compare__bar">
                 <div class="dc-compare__views" role="tablist" @if.shown={props.before}>
                     <button type="button" class="dc-compare__view dc-compare__view--active" data-view="side">
@@ -31,23 +38,33 @@ prototype(Devclaim.NeosModernBackend:Compare) < prototype(Neos.Fusion:Component)
                     <button type="button" class="dc-compare__view" data-view="slider">{private.slider}</button>
                 </div>
                 <span class="dc-compare__hint">
-                    {I18n.translate(props.before ? 'hint.change' : 'hint.new', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+                    {props.hint || I18n.translate(props.before ? 'hint.change' : 'hint.new', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
                 </span>
+                <!-- the website at the width of a desktop, scaled into the frame (Compare.js) -->
+                <div class="dc-compare__zoom" role="group" aria-label={private.zoom}>
+                    <button type="button" class="dc-compare__zoom-button" data-zoom="-1" aria-label={private.zoomOut} title={private.zoomOut}>−</button>
+                    <span class="dc-compare__zoom-value" data-zoom-value>50 %</span>
+                    <button type="button" class="dc-compare__zoom-button" data-zoom="1" aria-label={private.zoomIn} title={private.zoomIn}>+</button>
+                </div>
             </div>
 
             <div class="dc-compare__side" data-pane="side">
                 <figure class="dc-compare__figure" data-figure="before" @if.shown={props.before}>
                     <figcaption><span class="dc-compare__dot"></span>{private.before}</figcaption>
-                    <iframe class="dc-compare__frame" data-ref={props.before} data-side="before" title={private.before}></iframe>
+                    <div class="dc-compare__viewport">
+                        <iframe class="dc-compare__frame" data-ref={props.before} data-side="before" title={private.before}></iframe>
+                    </div>
                 </figure>
                 <figure class="dc-compare__figure" data-figure="after">
                     <figcaption @if.shown={props.before}><span class="dc-compare__dot dc-compare__dot--after"></span>{private.after}</figcaption>
-                    <iframe class="dc-compare__frame" data-ref={props.after} data-side="after" title={private.after}></iframe>
+                    <div class="dc-compare__viewport">
+                        <iframe class="dc-compare__frame" data-ref={props.after} data-side="after" title={private.after}></iframe>
+                    </div>
                 </figure>
             </div>
 
             <div class="dc-compare__slider" data-pane="slider" hidden @if.shown={props.before}>
-                <div class="dc-compare__stack">
+                <div class="dc-compare__stack dc-compare__viewport">
                     <iframe class="dc-compare__frame" data-ref={props.after} title={private.after}></iframe>
                     <div class="dc-compare__clip">
                         <iframe class="dc-compare__frame" data-ref={props.before} title={private.before}></iframe>

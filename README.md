@@ -33,10 +33,19 @@ the content frame. Works with any frontend (Fusion or headless).
 - **Compare of changes** – a change shown as the website shows it: the node before and after, rendered by the
   frontend through the node previews of [Devclaim.NeosStyleguide](https://github.com/Devclaim/Devclaim.NeosStyleguide)
   (its adapter, any frontend), side by side or one over the other with a line to drag, the changed words marked. In
-  the review of the workspace module above the diff of each change (the node in the workspace against its base
-  workspace, node references `workspace:before|after:<node address>`); as a Fusion component
+  the review of the workspace module for each change (the node in the workspace against its base workspace, node
+  references `workspace:before|after:<node address>`); as a Fusion component
   (`Devclaim.NeosModernBackend:Compare`, `Resources/Public/Backend/Compare.js` and `.css`) for other backend modules,
   e.g. the activity log of Devclaim.NeosActivity.
+
+- **Workspace module** – the workspace module of Neos (Neos.Workspace.Ui) in three panes, in the look of the
+  backend: the workspaces as a tree by base workspace (their changes in short, outdated ones marked), the selected one
+  with its header (who and what it is, edit, permissions, delete, synchronise when outdated), its changes by page
+  (pages with their changes below them, each named by its kind of element; a selection mode like the moderation app
+  for publishing or discarding pages) and its trash, and the selected change with the compare and its changed
+  fields. Its controller, actions and dialogs stay those of Neos; only its Fusion
+  (`Resources/Private/Fusion/Backend/Workspaces`) and the styles (`Workspaces.css`, `Workspaces.js`) are this
+  package's.
 
 ## Installation
 

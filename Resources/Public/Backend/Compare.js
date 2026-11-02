@@ -128,14 +128,110 @@
 
 	const isUnavailable = (frame) => frame.contentDocument?.querySelector('[data-node-preview-unavailable]') != null;
 
-	/** a frame as high as the node in it; the frames of one view as high as the highest */
+	/**
+	 * The zoom of the previews: the website renders at the width of the frame divided by it (at 50 % a frame of 650px
+	 * shows the website at 1300px, its desktop layout) and is scaled down into the frame. One zoom for all compares of
+	 * the page, remembered in the browser.
+	 */
+	const ZOOMS = [0.33, 0.5, 0.67, 0.75, 1];
+	const ZOOM_KEY = 'devclaim-compare-zoom';
+	let zoom = 0.5;
+	try {
+		const saved = Number(localStorage.getItem(ZOOM_KEY));
+		if (ZOOMS.includes(saved)) {
+			zoom = saved;
+		}
+	} catch {
+		// no storage: the default
+	}
+
+	/** the frames of a view at the zoom: as wide as their viewport allows, as high as the highest node, scaled */
 	function fit(frames) {
 		const heights = frames.map((frame) => {
 			const root = rootOf(frame.contentDocument);
 			return root ? Math.ceil(root.getBoundingClientRect().bottom) : 0;
 		});
 		const height = Math.max(120, ...heights);
-		frames.forEach((frame) => (frame.style.height = `${height}px`));
+		for (const frame of frames) {
+			const viewport = frame.closest('.dc-compare__viewport');
+			const width = viewport ? viewport.clientWidth : frame.parentElement.clientWidth;
+			frame.style.width = `${Math.round(width / zoom)}px`;
+			frame.style.height = `${height}px`;
+			frame.style.transform = `scale(${zoom})`;
+			if (viewport) {
+				viewport.style.height = `${Math.ceil(height * zoom)}px`;
+			}
+		}
+	}
+
+	/** all loaded frames of the page again, after the zoom or the width changed */
+	function refitAll() {
+		document.querySelectorAll('[data-compare] [data-pane]').forEach((pane) => {
+			const frames = [...pane.querySelectorAll('iframe[data-ref][src]')].filter((frame) => !frame.closest('[hidden]'));
+			if (frames.length > 0) {
+				fit(frames);
+			}
+		});
+		document.querySelectorAll('[data-zoom-value]').forEach((value) => (value.textContent = `${Math.round(zoom * 100)} %`));
+	}
+
+	function setZoom(step) {
+		const index = ZOOMS.indexOf(zoom) + step;
+		if (index < 0 || index >= ZOOMS.length) {
+			return;
+		}
+		zoom = ZOOMS[index];
+		try {
+			localStorage.setItem(ZOOM_KEY, String(zoom));
+		} catch {
+			// not remembered
+		}
+		refitAll();
+	}
+
+	/**
+	 * The element outlined in the colour of what happened to it: in its container (an entry of an accordion) the page
+	 * of the adapter marks it with the attribute of its node (data-__neos-node-contextpath); rendered alone, a removed
+	 * or new element is the whole preview (a changed one shows its changed words, an outline would add nothing)
+	 */
+	function markFocus(compare, document) {
+		const removed = compare.classList.contains('dc-compare--removed');
+		const added = !removed && compare.classList.contains('dc-compare--new');
+		const inContainer = document?.querySelector('[data-__neos-node-contextpath]');
+		const focus = inContainer ?? (removed || added ? rootOf(document) : null);
+		if (!focus || !document?.head) {
+			return;
+		}
+		const colour = removed ? '#e5484d' : added ? '#30a46c' : '#00adee';
+		focus.setAttribute('data-dc-compare-focus', '');
+		const style = document.createElement('style');
+		// alone: inside the edge of the frame, which cuts off what lies outside
+		style.textContent =
+			`[data-dc-compare-focus]{outline:3px solid ${colour}!important;outline-offset:${inContainer ? '6px' : '-3px'};` +
+			`background-color:color-mix(in srgb, ${colour} 8%, transparent)}`;
+		document.head.append(style);
+	}
+
+	/**
+	 * A preview is a picture of the website, not the website: nothing in it reacts to the pointer or submits (links,
+	 * buttons, forms), as in the previews of the styleguide
+	 */
+	function makeInert(document) {
+		if (!document?.head) {
+			return;
+		}
+		const style = document.createElement('style');
+		style.textContent = '*{cursor:default!important}a,button,input,select,textarea,label,summary,[role="button"]{pointer-events:none!important}';
+		document.head.append(style);
+		const stop = (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+		};
+		document.addEventListener('click', stop, true);
+		document.addEventListener('submit', stop, true);
+		document.querySelectorAll('a, button, input, select, textarea, [tabindex]').forEach((element) => {
+			element.setAttribute('tabindex', '-1');
+		});
 	}
 
 	/** the page of the node previews of an adapter: its manifest (nodePreview), asked once per adapter */
@@ -173,6 +269,8 @@
 		let loaded = 0;
 		for (const frame of pending) {
 			frame.addEventListener('load', () => {
+				makeInert(frame.contentDocument);
+				markFocus(compare, frame.contentDocument);
 				const root = rootOf(frame.contentDocument);
 				if (root) {
 					new ResizeObserver(() => fit(frames)).observe(root);
@@ -282,11 +380,19 @@
 		}
 	});
 
+	/** the width of the viewports: a narrower window, a pane that opened */
+	const widths = new ResizeObserver(() => refitAll());
+
 	function init(compare) {
 		if (compare.dataset.compareReady) {
 			return;
 		}
 		compare.dataset.compareReady = 'true';
+		compare.querySelectorAll('[data-zoom]').forEach((button) => {
+			button.addEventListener('click', () => setZoom(Number(button.dataset.zoom)));
+		});
+		compare.querySelectorAll('[data-zoom-value]').forEach((value) => (value.textContent = `${Math.round(zoom * 100)} %`));
+		compare.querySelectorAll('.dc-compare__viewport').forEach((viewport) => widths.observe(viewport));
 		compare.querySelectorAll('[data-view]').forEach((button) => {
 			button.addEventListener('click', () => show(compare, button.dataset.view));
 		});

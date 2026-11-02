@@ -1,0 +1,30 @@
+/*
+ * Focus marked for the keyboard only, in all backend modules and the content module: the styles of Neos mark every
+ * focused link and button, also after a click with the mouse (and keep links underlined). Text fields keep their focus:
+ * that is where one types.
+ */
+:where(a, button, summary, [role='button'], [role='menuitem'], [role='tab'], [tabindex]):focus:not(:focus-visible) {
+	outline: none !important;
+}
+
+.neos a:focus:not(:focus-visible) {
+	text-decoration: none;
+}
+
+:where(a, button, summary, [role='button'], [role='menuitem'], [role='tab'], [tabindex]):focus-visible {
+	outline: 2px solid #00adee;
+	outline-offset: 2px;
+}
+
+/*
+ * Text fields: focused they stay dark and get a blue line at the bottom, in the backend modules and the content module
+ * (Neos turns them white with dark text). Checkboxes, radios and buttons are left as they are.
+ */
+.neos.neos-module :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='file'], [type='range'], [type='color']), textarea, select):focus,
+#neos-backend-container :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='file'], [type='range'], [type='color']), textarea):focus {
+	border-color: #3f3f3f !important;
+	outline: none !important;
+	background-color: #3f3f3f !important;
+	box-shadow: inset 0 -2px 0 #00adee !important;
+	color: #fff !important;
+}

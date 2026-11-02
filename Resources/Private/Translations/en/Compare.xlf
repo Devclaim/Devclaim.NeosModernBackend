@@ -8,6 +8,9 @@
             <trans-unit id="view.slider" xml:space="preserve"><source>Slider</source></trans-unit>
             <trans-unit id="hint.change" xml:space="preserve"><source>As it looks on the website</source></trans-unit>
             <trans-unit id="hint.new" xml:space="preserve"><source>New on the website</source></trans-unit>
+            <trans-unit id="zoom" xml:space="preserve"><source>Zoom</source></trans-unit>
+            <trans-unit id="zoom.in" xml:space="preserve"><source>Zoom in</source></trans-unit>
+            <trans-unit id="zoom.out" xml:space="preserve"><source>Zoom out</source></trans-unit>
         </body>
     </file>
 </xliff>

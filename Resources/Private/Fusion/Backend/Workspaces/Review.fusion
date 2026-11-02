@@ -1,0 +1,544 @@
+##
+# The review of a workspace: its changes by page (a card per page, a row per change), the bar to publish or discard
+# all or the selected pages, and the selected change on the right (the compare and the diff of Neos). Selecting is per
+# page, as the actions of the workspace module work; the form and its fields stay those of Neos, so its dialogs
+# (confirm…Changes, hx-include="#publishOrDiscardNodesForm") work unchanged.
+#
+Neos.Workspace.Ui.WorkspaceController.review {
+    renderer = afx`
+        <Neos.Workspace.Ui:Component.ModuleWrapper flashMessages={props.flashMessages}>
+            <div class="dc-ws-review" data-dc-ws-review>
+                <div class="dc-ws-review__list">
+                    <Devclaim.NeosModernBackend:WorkspaceReviewBar
+                        @if.hasChanges={props.siteChanges}
+                        siteChanges={props.siteChanges}
+                        selectedWorkspaceName={props.selectedWorkspaceName}
+                        baseWorkspaceLabel={props.baseWorkspaceLabel}
+                        canPublishToBaseWorkspace={props.canPublishToBaseWorkspace}
+                        canPublishToWorkspace={props.canPublishToWorkspace}
+                    />
+                    <Neos.Fusion.Form:Form
+                        form.target.action="publishOrDiscardNodes"
+                        form.target.format="htmx"
+                        form.target.arguments.workspaceName={props.selectedWorkspaceName}
+                        attributes.hx-post={form.getTarget()}
+                        attributes.id="publishOrDiscardNodesForm"
+                    >
+                        <Neos.Fusion:Loop items={props.siteChanges} itemName="site">
+                            <Neos.Fusion:Loop items={site.documents} itemKey="documentPath" itemName="document">
+                                <Devclaim.NeosModernBackend:WorkspaceReviewPage
+                                    document={document}
+                                    documentPath={documentPath}
+                                    selectedWorkspaceName={props.selectedWorkspaceName}
+                                    canPublishToBaseWorkspace={props.canPublishToBaseWorkspace}
+                                    canPublishToWorkspace={props.canPublishToWorkspace}
+                                />
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion:Loop>
+                    </Neos.Fusion.Form:Form>
+                    <p class="dc-ws__empty" @if.noChanges={!props.siteChanges}>
+                        {I18n.id('nothing').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                    </p>
+                    <Devclaim.NeosModernBackend:WorkspaceSelectionBar
+                        @if.hasChanges={props.siteChanges}
+                        selectedWorkspaceName={props.selectedWorkspaceName}
+                        baseWorkspaceLabel={props.baseWorkspaceLabel}
+                        canPublishToBaseWorkspace={props.canPublishToBaseWorkspace}
+                        canPublishToWorkspace={props.canPublishToWorkspace}
+                    />
+                </div>
+                <div class="dc-ws-review__detail" @if.hasChanges={props.siteChanges}>
+                    <p class="dc-ws__empty" data-dc-ws-placeholder>
+                        {I18n.id('select.change').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                    </p>
+                    <Neos.Fusion:Loop items={props.siteChanges} itemName="site">
+                        <Neos.Fusion:Loop items={site.documents} itemName="document">
+                            <Neos.Fusion:Loop items={document.changes} itemName="dimensions">
+                                <Neos.Fusion:Loop items={dimensions} itemName="change">
+                                    <Devclaim.NeosModernBackend:WorkspaceReviewDetail change={change} document={document}/>
+                                </Neos.Fusion:Loop>
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion:Loop>
+                    </Neos.Fusion:Loop>
+                </div>
+            </div>
+        </Neos.Workspace.Ui:Component.ModuleWrapper>
+    `
+}
+
+##
+# Above the changes, like the list of the moderation app: how many, "select several", discard or publish all. In
+# selection mode (Workspaces.js) the pages get their checkboxes and the bar at the bottom shows what is selected and
+# what can be done with it. Selecting is per page, as the actions of the workspace module work; the confirm dialogs of
+# Neos read the checkboxes from the form (hx-include="#publishOrDiscardNodesForm").
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceReviewBar) < prototype(Neos.Fusion:Component) {
+    siteChanges = null
+    selectedWorkspaceName = ''
+    baseWorkspaceLabel = ''
+    canPublishToBaseWorkspace = false
+    canPublishToWorkspace = false
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        neos = ${I18n.id('').source('Main').package('Neos.Workspace.Ui')}
+        changes = Neos.Fusion:Reduce {
+            items = ${props.siteChanges}
+            initialValue = 0
+            itemReducer = ${carry + Array.reduce(item.documents, (sum, document) => sum + Array.reduce(document.changes, (inner, dimensions) => inner + Array.length(dimensions), 0), 0)}
+        }
+        pages = Neos.Fusion:Reduce {
+            items = ${props.siteChanges}
+            initialValue = 0
+            itemReducer = ${carry + Array.length(item.documents)}
+        }
+        confirmDiscardAllChanges = Neos.Fusion:ActionUri {
+            action = 'confirmDiscardAllChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmPublishAllChanges = Neos.Fusion:ActionUri {
+            action = 'confirmPublishAllChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmDiscardSelectedChanges = Neos.Fusion:ActionUri {
+            action = 'confirmDiscardSelectedChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmPublishSelectedChanges = Neos.Fusion:ActionUri {
+            action = 'confirmPublishSelectedChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+    }
+
+    renderer = afx`
+        <div class="dc-ws-listhead">
+            <h2 class="dc-ws-listhead__title">
+                {private.i18n.id('summary').arguments([private.pages, private.changes])}
+            </h2>
+            <button
+                type="button"
+                class="dc-ws-icon"
+                aria-pressed="false"
+                data-dc-ws-select-toggle
+                aria-label={private.i18n.id('select.start')}
+                title={private.i18n.id('select.start')}
+                data-label-on={private.i18n.id('select.end')}
+                data-label-off={private.i18n.id('select.start')}
+            >
+                <Devclaim.NeosModernBackend:Icon name="select"/>
+            </button>
+            <button
+                type="button"
+                class="dc-ws-icon dc-ws-icon--danger"
+                aria-label={private.i18n.id('discardAll')}
+                title={private.i18n.id('discardAll')}
+                disabled={props.canPublishToWorkspace ? null : true}
+                hx-get={private.confirmDiscardAllChanges}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request="document.getElementById('confirm-discard-all-changes-popover').showPopover()"
+            >
+                <Devclaim.NeosModernBackend:Icon name="trash"/>
+            </button>
+            <button
+                type="button"
+                class="dc-ws-button"
+                title={private.neos.id('workspaces.publishAllChangesTo').arguments([props.baseWorkspaceLabel])}
+                disabled={props.canPublishToBaseWorkspace ? null : true}
+                hx-get={private.confirmPublishAllChanges}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request="document.getElementById('confirm-publish-all-changes-popover').showPopover()"
+            >
+                {private.i18n.id('publishAll')}
+            </button>
+        </div>
+    `
+}
+
+prototype(Devclaim.NeosModernBackend:WorkspaceSelectionBar) < prototype(Neos.Fusion:Component) {
+    selectedWorkspaceName = ''
+    baseWorkspaceLabel = ''
+    canPublishToBaseWorkspace = false
+    canPublishToWorkspace = false
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        neos = ${I18n.id('').source('Main').package('Neos.Workspace.Ui')}
+        confirmDiscardAllChanges = Neos.Fusion:ActionUri {
+            action = 'confirmDiscardAllChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmPublishAllChanges = Neos.Fusion:ActionUri {
+            action = 'confirmPublishAllChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmDiscardSelectedChanges = Neos.Fusion:ActionUri {
+            action = 'confirmDiscardSelectedChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+        confirmPublishSelectedChanges = Neos.Fusion:ActionUri {
+            action = 'confirmPublishSelectedChanges'
+            format = 'htmx'
+            arguments.workspaceName = ${props.selectedWorkspaceName}
+        }
+    }
+
+    renderer = afx`
+        <div class="dc-ws-selection" data-dc-ws-selection hidden>
+            <span
+                class="dc-ws-selection__count"
+                aria-live="polite"
+                data-dc-ws-count
+                data-none={private.i18n.id('select.hint')}
+                data-some={private.i18n.id('selected').arguments(['{0}']).translate()}
+            >
+                {private.i18n.id('select.hint')}
+            </span>
+            <button type="button" class="dc-ws-icon" data-dc-ws-select-all aria-label={private.i18n.id('select.all')} title={private.i18n.id('select.all')}>
+                <Devclaim.NeosModernBackend:Icon name="selectAll"/>
+            </button>
+            <button type="button" class="dc-ws-icon" data-dc-ws-select-none aria-label={private.i18n.id('select.none')} title={private.i18n.id('select.none')}>
+                <Devclaim.NeosModernBackend:Icon name="selectNone"/>
+            </button>
+            <button
+                type="button"
+                class="dc-ws-icon dc-ws-icon--danger"
+                data-dc-ws-needs-selection
+                aria-label={private.i18n.id('discardSelected')}
+                title={private.i18n.id('discardSelected')}
+                disabled
+                data-allowed={props.canPublishToWorkspace ? 'true' : null}
+                hx-get={private.confirmDiscardSelectedChanges}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request="document.getElementById('confirm-discard-selected-changes-popover').showPopover()"
+            >
+                <Devclaim.NeosModernBackend:Icon name="trash"/>
+            </button>
+            <button
+                type="button"
+                class="dc-ws-button dc-ws-button--primary"
+                data-dc-ws-needs-selection
+                title={private.neos.id('workspaces.publishSelectedChangesTo').arguments([props.baseWorkspaceLabel])}
+                disabled
+                data-allowed={props.canPublishToBaseWorkspace ? 'true' : null}
+                hx-get={private.confirmPublishSelectedChanges}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request="document.getElementById('confirm-publish-selected-changes-popover').showPopover()"
+            >
+                {private.i18n.id('publishSelected')}
+            </button>
+        </div>
+    `
+}
+
+##
+# A page with its changes: its checkbox (the field of the form of Neos: the page and what is new or moved below it is
+# published together), its name and path, open, publish or discard it; a row per change, which selects it
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceReviewPage) < prototype(Neos.Fusion:Component) {
+    document = null
+    documentPath = ''
+    selectedWorkspaceName = ''
+    canPublishToBaseWorkspace = false
+    canPublishToWorkspace = false
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        crumbs = ${props.document.document.documentBreadCrumb}
+        count = ${Array.reduce(props.document.changes, (sum, dimensions) => sum + Array.length(dimensions), 0)}
+        openUri = Neos.Fusion:ActionUri {
+            request = ${request.mainRequest}
+            package = 'Neos.Neos.Ui'
+            controller = 'Backend'
+            action = 'index'
+            arguments.node = ${props.document.document.documentNodeAddress}
+        }
+        discardUri = Neos.Fusion:ActionUri {
+            action = 'discardDocument'
+            format = 'htmx'
+            arguments {
+                nodeAddress = ${props.document.document.documentNodeAddress}
+                selectedWorkspace = ${props.selectedWorkspaceName}
+            }
+        }
+        publishUri = Neos.Fusion:ActionUri {
+            action = 'publishDocument'
+            format = 'htmx'
+            arguments {
+                nodeAddress = ${props.document.document.documentNodeAddress}
+                selectedWorkspace = ${props.selectedWorkspaceName}
+            }
+        }
+    }
+
+    renderer = afx`
+        <section
+            class="dc-ws-page"
+            data-dc-ws-page
+            data-path={props.documentPath}
+            data-new={props.document.documentChanges.isNew ? 'true' : null}
+            data-moved={props.document.documentChanges.isMoved ? 'true' : null}
+        >
+            <div class="dc-ws-page__head" data-dc-ws-page-head>
+                <label class="dc-ws-page__select">
+                    <input
+                        type="checkbox"
+                        class="dc-ws-check"
+                        name="moduleArguments[nodes][]"
+                        value={props.document.document.documentNodeAddress}
+                        data-dc-ws-check-page
+                        aria-label={Array.last(private.crumbs)}
+                    />
+                </label>
+                <span class="dc-ws-page__icon">
+                    <Neos.Workspace.Ui:Component.Icon icon={props.document.document.documentIcon || 'fas fa-file'}/>
+                </span>
+                <span class="dc-ws-page__text">
+                    <span class="dc-ws-page__title">
+                        {Array.last(private.crumbs)}
+                        <span class="dc-ws-tag dc-ws-tag--new" @if.new={props.document.documentChanges.isNew}>{private.i18n.id('change.new')}</span>
+                        <span class="dc-ws-tag dc-ws-tag--removed" @if.removed={props.document.documentChanges.isRemoved}>{private.i18n.id('change.removed')}</span>
+                        <span class="dc-ws-tag dc-ws-tag--moved" @if.moved={props.document.documentChanges.isMoved}>{private.i18n.id('change.moved')}</span>
+                    </span>
+                    <span class="dc-ws-page__sub">
+                        {Array.join(Array.slice(private.crumbs, 0, -1), ' / ')}{Array.length(private.crumbs) > 1 ? ' · ' : ''}{private.i18n.id('page.changes').arguments([private.count])}
+                    </span>
+                </span>
+                <span class="dc-ws-page__actions">
+                    <a href={private.openUri} target="_blank" class="dc-ws-mini" @if.notRemoved={!props.document.documentChanges.isRemoved}>
+                        {private.i18n.id('page.open')}
+                    </a>
+                    <button
+                        type="button"
+                        class="dc-ws-mini"
+                        disabled={props.canPublishToBaseWorkspace ? null : true}
+                        hx-get={private.publishUri}
+                        hx-select="#workspace-module-content"
+                        hx-target="#workspace-module-content"
+                        hx-swap="outerHTML"
+                    >
+                        {private.i18n.id('page.publish')}
+                    </button>
+                    <button
+                        type="button"
+                        class="dc-ws-mini dc-ws-mini--danger"
+                        disabled={props.canPublishToWorkspace ? null : true}
+                        hx-get={private.discardUri}
+                        hx-select="#workspace-module-content"
+                        hx-target="#workspace-module-content"
+                        hx-swap="outerHTML"
+                    >
+                        {private.i18n.id('page.discard')}
+                    </button>
+                </span>
+            </div>
+            <div class="dc-ws-page__changes">
+                <Neos.Fusion:Loop items={props.document.changes} itemName="dimensions">
+                    <Neos.Fusion:Loop items={dimensions} itemName="change">
+                        <Devclaim.NeosModernBackend:WorkspaceReviewChange change={change}/>
+                    </Neos.Fusion:Loop>
+                </Neos.Fusion:Loop>
+            </div>
+        </section>
+    `
+}
+
+prototype(Devclaim.NeosModernBackend:WorkspaceReviewChange) < prototype(Neos.Fusion:Component) {
+    change = null
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        # new, removed, moved or changed
+        kind = ${props.change.isNew ? 'new' : (props.change.isRemoved ? 'removed' : (props.change.isMoved ? 'moved' : 'changed'))}
+        # what kind of element ("Hero", "Text"); its label (e.g. its headline) below it
+        type = ${I18n.translate(Devclaim.Change.nodeTypeLabel(props.change.serializedNodeAddress) || 'Element')}
+        # the changed fields (a removal has none: its only "field" is the tag of the soft removal)
+        fields = ${props.change.isRemoved ? '' : Array.join(Array.map(props.change.contentChanges, (contentChange) => contentChange.properties.propertyLabel), ', ')}
+    }
+
+    renderer = afx`
+        <button type="button" class="dc-ws-change" data-dc-ws-change={String.md5(props.change.serializedNodeAddress)}>
+            <Neos.Workspace.Ui:Component.Icon icon={props.change.icon || 'fas fa-cube'}/>
+            <span class="dc-ws-change__text">
+                <span class="dc-ws-change__title">
+                    {private.type}
+                    <span class="dc-ws-change__label" @if.label={props.change.label}>{'„' + props.change.label + '“'}</span>
+                </span>
+                <span class="dc-ws-change__sub">
+                    {private.fields}{private.fields && props.change.dimensions ? ' · ' : ''}{Array.join(props.change.dimensions, ', ')}{props.change.hidden ? ' · ' + private.i18n.id('change.hidden').translate() : ''}
+                </span>
+            </span>
+            <span class={['dc-ws-tag', 'dc-ws-tag--' + private.kind]}>{private.i18n.id('change.' + private.kind)}</span>
+        </button>
+    `
+}
+
+##
+# The selected change on the right (hidden until selected, Workspaces.js), like an entry of the activity log: what and
+# where, the change as the website shows it (Compare: the node in the base workspace against the node in this one,
+# WorkspaceNodeReferenceResolver), and the changed fields
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceReviewDetail) < prototype(Neos.Fusion:Component) {
+    change = null
+    document = null
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        kind = ${props.change.isNew ? 'new' : (props.change.isRemoved ? 'removed' : (props.change.isMoved ? 'moved' : 'changed'))}
+        type = ${I18n.translate(Devclaim.Change.nodeTypeLabel(props.change.serializedNodeAddress) || 'Element')}
+        page = ${Array.last(props.document.document.documentBreadCrumb)}
+        openUri = Neos.Fusion:ActionUri {
+            request = ${request.mainRequest}
+            package = 'Neos.Neos.Ui'
+            controller = 'Backend'
+            action = 'index'
+            arguments.node = ${props.document.document.documentNodeAddress}
+        }
+    }
+
+    renderer = afx`
+        <article class="dc-ws-detail" data-dc-ws-detail={String.md5(props.change.serializedNodeAddress)} hidden>
+            <header class="dc-ws-detail__head">
+                <div class="dc-ws-detail__text">
+                    <div class="dc-ws-detail__kicker">
+                        {private.type + ' · ' + private.i18n.id('change.onPage').arguments([private.page]).translate()}{props.change.dimensions ? ' · ' + Array.join(props.change.dimensions, ', ') : ''}
+                    </div>
+                    <h2 class="dc-ws-detail__title">{props.change.label || private.type}</h2>
+                    <div class="dc-ws-detail__meta">
+                        <span class={['dc-ws-tag', 'dc-ws-tag--' + private.kind]}>{private.i18n.id('change.' + private.kind)}</span>
+                        <span @if.hidden={props.change.hidden}>{private.i18n.id('change.hidden')}</span>
+                        <span @if.modified={props.change.lastModificationDateTime}>
+                            {private.i18n.id('change.modified').arguments([Date.format(Date.parse(props.change.lastModificationDateTime, 'Y-m-d H:i'), 'd.m.Y H:i')])}
+                        </span>
+                    </div>
+                </div>
+                <a href={private.openUri} target="_blank" class="dc-ws-button" @if.notRemoved={!props.document.documentChanges.isRemoved}>
+                    <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                    {private.i18n.id('page.open')}
+                </a>
+            </header>
+            <Devclaim.NeosModernBackend:Compare
+                @if.notRemoved={!props.change.isRemoved}
+                before={props.change.isNew ? null : 'workspace:before:' + props.change.serializedNodeAddress}
+                after={'workspace:after:' + props.change.serializedNodeAddress}
+            />
+            <!-- removed: how it looks live until the publish takes it away (the node in the base workspace) -->
+            <Devclaim.NeosModernBackend:Compare
+                @if.removed={props.change.isRemoved}
+                after={'workspace:before:' + props.change.serializedNodeAddress}
+                removed={true}
+                hint={private.i18n.id('change.removedNote').translate()}
+            />
+            <!-- removed: its only "field" is the tag of the soft removal of Neos, not a change of its content -->
+            <Devclaim.NeosModernBackend:WorkspaceChangeFields
+                @if.changes={props.change.contentChanges && !props.change.isRemoved}
+                contentChanges={props.change.contentChanges}
+                isNew={props.change.isNew}
+            />
+        </article>
+    `
+}
+
+##
+# The changed fields of a change, like the field list of the activity log: per field its old and its new value, the
+# changed words of texts marked (the diff of Neos: removed words in <del>, added in <ins>), images side by side, dates
+# formatted, tags added and removed
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceChangeFields) < prototype(Neos.Fusion:Component) {
+    contentChanges = null
+    isNew = false
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+    }
+
+    renderer = afx`
+        <section class="dc-ws-fields">
+            <h3 class="dc-ws-fields__heading">{private.i18n.id(props.isNew ? 'fields.content' : 'fields.changed')}</h3>
+            <dl>
+                <Neos.Fusion:Loop items={props.contentChanges} itemName="contentChange">
+                    <div class="dc-ws-field">
+                        <dt>{contentChange.properties.propertyLabel}</dt>
+                        <dd>
+                            <Devclaim.NeosModernBackend:WorkspaceChangeValue contentChange={contentChange} isNew={props.isNew}/>
+                        </dd>
+                    </div>
+                </Neos.Fusion:Loop>
+            </dl>
+        </section>
+    `
+}
+
+##
+# The old and the new value of one changed field, by the kind of its change (the review of Neos names every field
+# "text", the class of its change tells them apart)
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceChangeValue) < prototype(Neos.Fusion:Component) {
+    contentChange = null
+    isNew = false
+
+    @private {
+        namespace = 'Neos\\Workspace\\Ui\\ViewModel\\Review\\ContentChanges\\'
+        changes = ${props.contentChange.changes}
+    }
+
+    renderer = Neos.Fusion:Case {
+        text {
+            condition = ${Type.instance(private.changes, private.namespace + 'TextContentChange')}
+            renderer = afx`
+                <Neos.Fusion:Loop items={private.changes.diff} itemName="blocks">
+                    <Neos.Fusion:Loop items={blocks} itemName="block">
+                        <div class="dc-ws-field__old" @if.changed={block.tag != 'equal' && !props.isNew && Array.join(block.base.lines, '') != ''}>
+                            <Neos.Fusion:Loop items={block.base.lines} itemName="line">{line + ' '}</Neos.Fusion:Loop>
+                        </div>
+                        <div class="dc-ws-field__new">
+                            <Neos.Fusion:Loop items={block.changed.lines} itemName="line">{line + ' '}</Neos.Fusion:Loop>
+                        </div>
+                    </Neos.Fusion:Loop>
+                </Neos.Fusion:Loop>
+            `
+        }
+        image {
+            condition = ${Type.instance(private.changes, private.namespace + 'ImageContentChange')}
+            renderer = afx`
+                <div class="dc-ws-field__images">
+                    <Neos.Neos:ImageTag @if.old={private.changes.original} asset={private.changes.original} maximumWidth="320" maximumHeight="240" allowCropping="false" alt="" attributes.class="dc-ws-field__image dc-ws-field__image--old"/>
+                    <Neos.Neos:ImageTag @if.new={private.changes.changed} asset={private.changes.changed} maximumWidth="320" maximumHeight="240" allowCropping="false" alt="" attributes.class="dc-ws-field__image"/>
+                </div>
+            `
+        }
+        asset {
+            condition = ${Type.instance(private.changes, private.namespace + 'AssetContentChange')}
+            renderer = afx`
+                <del @if.old={private.changes.original}>{private.changes.original.resource.filename}</del>
+                {' '}
+                <ins @if.new={private.changes.changed}>{private.changes.changed.resource.filename}</ins>
+            `
+        }
+        date {
+            condition = ${Type.instance(private.changes, private.namespace + 'DateTimeContentChange')}
+            renderer = afx`
+                <del @if.old={private.changes.original}>{Date.format(private.changes.original, 'd.m.Y H:i')}</del>
+                {' '}
+                <ins @if.new={private.changes.changed}>{Date.format(private.changes.changed, 'd.m.Y H:i')}</ins>
+            `
+        }
+        tags {
+            condition = ${Type.instance(private.changes, private.namespace + 'TagContentChange')}
+            renderer = afx`
+                <Neos.Fusion:Loop items={private.changes.removedTags} itemName="tag"><del>{tag}</del>{' '}</Neos.Fusion:Loop>
+                <Neos.Fusion:Loop items={private.changes.addedTags} itemName="tag"><ins>{tag}</ins>{' '}</Neos.Fusion:Loop>
+            `
+        }
+    }
+}

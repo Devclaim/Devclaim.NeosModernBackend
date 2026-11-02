@@ -5,17 +5,29 @@ Devclaim:
       workspace: Devclaim\NeosModernBackend\NodeReferences\WorkspaceNodeReferenceResolver
 
 Neos:
+  Fusion:
+    defaultContext:
+      # what kind of element a change of the workspace review is (Resources/Private/Fusion/Backend/Workspaces)
+      'Devclaim.Change': Devclaim\NeosModernBackend\Eel\ChangeHelper
   Neos:
+    # focus marked for the keyboard only (Resources/Public/Backend/Focus.css): all backend modules
+    moduleConfiguration:
+      additionalResources:
+        styleSheets:
+          'Devclaim.NeosModernBackend:Focus': 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.css'
     modules:
       management:
         submodules:
-          # the review shows each change as the website shows it (Resources/Private/Fusion/Backend, Views.yaml)
+          # three panes like the activity log, the review with each change as the website shows it
+          # (Resources/Private/Fusion/Backend, Views.yaml)
           workspace:
             additionalResources:
               javaScripts:
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.js'
+                'Devclaim.NeosModernBackend:Workspaces': 'resource://Devclaim.NeosModernBackend/Public/Backend/Workspaces.js'
               styleSheets:
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.css'
+                'Devclaim.NeosModernBackend:Workspaces': 'resource://Devclaim.NeosModernBackend/Public/Backend/Workspaces.css'
     userInterface:
       inspector:
         dataTypes:
@@ -34,6 +46,10 @@ Neos:
             resource: 'resource://Devclaim.NeosModernBackend/Public/Neos.Ui/Plugin.js'
             # right after the Neos UI: it replaces the DateInput of the Neos UI for the plugins loaded after it
             position: 'after Neos.Neos.UI:Host'
+        stylesheets:
+          # focus marked for the keyboard only, as in the backend modules
+          'Devclaim.NeosModernBackend:Focus':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.css'
       frontendConfiguration:
         'Devclaim.NeosModernBackend':
           # distance between the node and its outline (px); less where the frame has no room for it

@@ -1,0 +1,988 @@
+/*
+ * The workspace module in three panes, in the look of the activity log: the workspaces, the selected one with its
+ * changes by page, the selected change. Neos greys, the Neos blue for what is selected, square corners, no borders.
+ * The parts that stay those of Neos (its diff, the table of the trash, its dialogs) are only restyled.
+ */
+.dc-ws {
+	--dc-ws-bg: #1b1b1b;
+	--dc-ws-pane: #222;
+	--dc-ws-row: #2a2a2a;
+	--dc-ws-raised: #323232;
+	--dc-ws-hover: #3a3a3a;
+	--dc-ws-text: #f2f2f2;
+	--dc-ws-muted: #a3a3a3;
+	--dc-ws-faint: #6f6f6f;
+	--dc-ws-blue: #00adee;
+	--dc-ws-blue-soft: rgba(0, 173, 238, 0.14);
+	--dc-ws-new: #7fd8a0;
+	--dc-ws-removed: #ff9b8f;
+	--dc-ws-moved: #ffb35c;
+	--dc-ws-warning-soft: rgba(255, 135, 0, 0.14);
+	display: grid;
+	grid-template-columns: 280px minmax(0, 1fr);
+	height: calc(100vh - 150px);
+	min-height: 480px;
+	margin-top: 16px;
+	background: var(--dc-ws-bg);
+	color: var(--dc-ws-text);
+	font-size: 14px;
+}
+
+/* the Neos backend sizes boxes without their padding, and gives buttons a font of their own */
+.dc-ws *,
+.dc-ws *::before,
+.dc-ws *::after {
+	box-sizing: border-box;
+}
+
+.dc-ws button,
+.dc-ws input {
+	font-family: inherit;
+	line-height: 1.4;
+}
+
+/* no underline and no ring after a click: the backend of Neos sets both on a:focus (".neos": as strong as it) */
+.neos .dc-ws a,
+.neos .dc-ws a:hover,
+.neos .dc-ws a:focus {
+	text-decoration: none;
+}
+
+.neos .dc-ws :focus:not(:focus-visible) {
+	outline: none;
+}
+
+.dc-ws [hidden] {
+	display: none !important;
+}
+
+.dc-ws button:focus-visible,
+.dc-ws a:focus-visible,
+.dc-ws input:focus-visible {
+	outline: 2px solid var(--dc-ws-blue);
+	outline-offset: -2px;
+}
+
+.dc-ws__empty {
+	margin: 0;
+	padding: 24px;
+	color: var(--dc-ws-muted);
+}
+
+/* buttons: the actions of the header, the bar and the detail */
+.dc-ws .dc-ws-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	height: 32px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 0;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-text);
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-button:hover {
+	background: var(--dc-ws-hover);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws .dc-ws-button[disabled] {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.dc-ws .dc-ws-button--primary,
+.dc-ws .dc-ws-button--primary:hover {
+	background: var(--dc-ws-blue);
+	color: #fff;
+}
+
+.dc-ws .dc-ws-button--danger {
+	color: var(--dc-ws-removed);
+}
+
+.dc-ws .dc-ws-button--warning {
+	background: rgba(255, 135, 0, 0.25);
+	color: #fff;
+}
+
+.dc-ws .dc-ws-mini {
+	display: inline-flex;
+	align-items: center;
+	height: 26px;
+	padding: 0 8px;
+	border: 0;
+	border-radius: 0;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-text);
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-mini:hover {
+	background: var(--dc-ws-hover);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws .dc-ws-mini[disabled] {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.dc-ws .dc-ws-mini--danger {
+	color: var(--dc-ws-removed);
+}
+
+.dc-ws-check {
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: var(--dc-ws-blue);
+}
+
+.dc-ws-tag {
+	padding: 2px 6px;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-muted);
+	font-size: 11px;
+	font-weight: 400;
+	white-space: nowrap;
+}
+
+.dc-ws-tag--new {
+	color: var(--dc-ws-new);
+}
+
+.dc-ws-tag--removed {
+	color: var(--dc-ws-removed);
+}
+
+.dc-ws-tag--moved {
+	color: var(--dc-ws-moved);
+}
+
+/* the workspaces: a tree by base workspace */
+.dc-ws__rail {
+	overflow-y: auto;
+	padding: 16px 8px 16px 0;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws__loading {
+	padding: 8px;
+	color: var(--dc-ws-faint);
+	font-size: 12px;
+}
+
+.dc-ws-tree {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.dc-ws-tree__heading {
+	margin: 0 8px 6px;
+	color: var(--dc-ws-faint);
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.dc-ws-item {
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 8px 8px calc(8px + (var(--dc-ws-level, 0) - 1) * 18px);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws-item--live {
+	padding-left: 8px;
+}
+
+a.dc-ws-item:hover {
+	background: var(--dc-ws-row);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws-item--selected,
+.dc-ws-item--selected:hover {
+	background: var(--dc-ws-blue-soft);
+}
+
+.dc-ws-item__icon {
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+.dc-ws-item--selected .dc-ws-item__icon {
+	color: var(--dc-ws-blue);
+}
+
+.dc-ws-item__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.dc-ws-item__title,
+.dc-ws-item__sub {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dc-ws-item__title {
+	font-size: 13px;
+}
+
+.dc-ws-item__sub {
+	color: var(--dc-ws-faint);
+	font-size: 11px;
+}
+
+.dc-ws-item__counts {
+	display: flex;
+	gap: 6px;
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+
+.dc-ws-item__new {
+	color: var(--dc-ws-new);
+}
+
+.dc-ws-item__changed {
+	color: var(--dc-ws-blue);
+}
+
+.dc-ws-item__removed {
+	color: var(--dc-ws-removed);
+}
+
+.dc-ws-item__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--dc-ws-moved);
+}
+
+.dc-ws .dc-ws-tree__create {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 36px;
+	margin-top: 16px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 0;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-tree__create:hover {
+	background: var(--dc-ws-hover);
+}
+
+/* the selected workspace: header, tabs, its page */
+.dc-ws__main {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+}
+
+.dc-ws__head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: end;
+	gap: 6px 16px;
+	padding: 20px 24px 14px;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws__kicker {
+	grid-column: 1 / -1;
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+}
+
+.dc-ws__title {
+	margin: 0;
+	color: var(--dc-ws-text);
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 1.3;
+	text-transform: none;
+}
+
+.dc-ws__actions {
+	display: flex;
+	gap: 1px;
+}
+
+.dc-ws__stale {
+	display: flex;
+	grid-column: 1 / -1;
+	align-items: center;
+	gap: 12px;
+	margin-top: 8px;
+	padding: 8px 12px;
+	background: var(--dc-ws-warning-soft);
+	color: var(--dc-ws-moved);
+	font-size: 12px;
+}
+
+.dc-ws__stale .dc-ws-button {
+	margin-left: auto;
+}
+
+.dc-ws__tabs {
+	display: flex;
+	gap: 1px;
+	padding: 0 24px;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws .dc-ws__tab {
+	display: inline-flex;
+	align-items: center;
+	height: 36px;
+	padding: 0 14px;
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+}
+
+.dc-ws .dc-ws__tab:hover {
+	color: var(--dc-ws-text);
+}
+
+.dc-ws .dc-ws__tab--active {
+	box-shadow: inset 0 -2px 0 var(--dc-ws-blue);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws__page {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+/* the review: the pages and their changes | the selected change */
+.dc-ws-review {
+	display: grid;
+	grid-template-columns: minmax(340px, 480px) minmax(0, 1fr);
+	height: 100%;
+}
+
+.dc-ws-review__list {
+	overflow-y: auto;
+	padding-bottom: 40px;
+}
+
+.dc-ws-review__detail {
+	overflow-y: auto;
+	padding: 24px 32px 48px;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws-review__list {
+	display: flex;
+	flex-direction: column;
+}
+
+/* above a list: its title and its actions, like the list of the moderation app */
+.dc-ws-listhead {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 12px 12px 8px 16px;
+}
+
+.dc-ws-listhead__title {
+	flex: 1;
+	margin: 0;
+	color: var(--dc-ws-muted);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.4;
+	text-transform: none;
+}
+
+.dc-ws-listhead .dc-ws-button {
+	margin-left: 8px;
+}
+
+/* icon buttons: select several, all, none, discard */
+.dc-ws .dc-ws-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--dc-ws-muted);
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-icon:hover {
+	background: var(--dc-ws-hover);
+	color: var(--dc-ws-text);
+}
+
+.dc-ws .dc-ws-icon[aria-pressed='true'] {
+	background: var(--dc-ws-blue);
+	color: #fff;
+}
+
+.dc-ws .dc-ws-icon--danger,
+.dc-ws .dc-ws-icon--danger:hover {
+	color: var(--dc-ws-removed);
+}
+
+.dc-ws .dc-ws-icon[disabled] {
+	opacity: 0.4;
+	cursor: default;
+	pointer-events: none;
+}
+
+/* the selection: what is picked and what can be done with it, at the bottom of the list */
+.dc-ws-selection {
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: auto;
+	padding: 4px 8px 4px 16px;
+	background: var(--dc-ws-raised);
+}
+
+.dc-ws-selection__count {
+	flex: 1;
+	color: var(--dc-ws-text);
+	font-size: 13px;
+}
+
+.dc-ws-selection .dc-ws-button--primary {
+	margin-left: 8px;
+}
+
+.dc-ws-review__list > form {
+	flex: 0 0 auto;
+}
+
+/* the checkbox of a page only while selecting; a selected page tinted */
+.dc-ws .dc-ws-page__select {
+	display: none;
+	align-items: center;
+	margin: 0;
+	padding: 0 4px 0 0;
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-review--selecting .dc-ws-page__select {
+	display: flex;
+}
+
+.dc-ws-review--selecting .dc-ws-page__head {
+	cursor: pointer;
+}
+
+.dc-ws-page[data-selected] {
+	background: var(--dc-ws-blue-soft);
+}
+
+.dc-ws-page {
+	margin: 0 12px 10px;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws-page__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 12px 12px 16px;
+}
+
+.dc-ws-page__text {
+	flex: 1;
+}
+
+/* the page: its icon, its name stronger than its changes */
+.dc-ws-page__icon {
+	width: 20px;
+	color: var(--dc-ws-muted);
+	font-size: 13px;
+	text-align: center;
+}
+
+/* the changes of a page: indented below it, on a line that ties them to it */
+.dc-ws-page__changes {
+	margin: 0 0 8px 25px;
+	padding-left: 8px;
+	box-shadow: inset 1px 0 0 var(--dc-ws-hover);
+}
+
+.dc-ws-page__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.dc-ws-page__title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	overflow: hidden;
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.dc-ws-page__sub {
+	overflow: hidden;
+	color: var(--dc-ws-faint);
+	font-size: 11px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* the actions of a page while it is pointed at (always on touch screens) */
+.dc-ws-page__actions {
+	display: flex;
+	gap: 1px;
+	opacity: 0;
+	transition: opacity 0.12s;
+}
+
+.dc-ws-page:hover .dc-ws-page__actions,
+.dc-ws-page:focus-within .dc-ws-page__actions {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.dc-ws-page__actions {
+		opacity: 1;
+	}
+}
+
+.dc-ws .dc-ws-change {
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	min-height: 40px;
+	padding: 6px 12px 6px 8px;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	color: var(--dc-ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+
+.dc-ws .dc-ws-change:hover {
+	background: var(--dc-ws-row);
+}
+
+.dc-ws .dc-ws-change--selected,
+.dc-ws .dc-ws-change--selected:hover {
+	background: var(--dc-ws-blue-soft);
+}
+
+.dc-ws-change > i {
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+.dc-ws-change--selected > i {
+	color: var(--dc-ws-blue);
+}
+
+.dc-ws-change__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.dc-ws-change__title,
+.dc-ws-change__sub {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dc-ws-change__title {
+	font-size: 13px;
+}
+
+.dc-ws-change__label {
+	margin-left: 6px;
+	color: var(--dc-ws-muted);
+}
+
+.dc-ws-change__sub {
+	color: var(--dc-ws-faint);
+	font-size: 11px;
+}
+
+/* the selected change */
+.dc-ws-detail__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 24px;
+}
+
+.dc-ws-detail__text {
+	flex: 1;
+	min-width: 240px;
+}
+
+.dc-ws-detail__kicker {
+	margin-bottom: 6px;
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+}
+
+.dc-ws-detail__title {
+	margin: 0;
+	color: var(--dc-ws-text);
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 1.3;
+	text-transform: none;
+}
+
+.dc-ws-detail__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 14px;
+	margin-top: 10px;
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+}
+
+.dc-ws-detail__note {
+	margin: 0 0 20px;
+	padding: 14px 16px;
+	background: var(--dc-ws-row);
+	color: var(--dc-ws-muted);
+	font-size: 13px;
+}
+
+/* the changed fields, like the field list of the activity log */
+.dc-ws-fields {
+	margin-top: 32px;
+}
+
+.dc-ws-fields__heading {
+	margin: 0 0 10px;
+	color: var(--dc-ws-muted);
+	font-size: 13px;
+	font-weight: 500;
+	text-transform: none;
+}
+
+.dc-ws-fields dl {
+	display: grid;
+	gap: 1px;
+	margin: 0;
+}
+
+.dc-ws-field {
+	display: grid;
+	grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+	gap: 1px;
+}
+
+.dc-ws-field dt,
+.dc-ws-field dd {
+	margin: 0;
+	padding: 10px 14px;
+	background: var(--dc-ws-row);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.dc-ws-field dt {
+	color: var(--dc-ws-muted);
+	font-weight: 400;
+}
+
+.dc-ws-field dd {
+	overflow-wrap: anywhere;
+}
+
+.dc-ws-field ins {
+	background: rgba(0, 163, 56, 0.32);
+	color: var(--dc-ws-text);
+	text-decoration: none;
+}
+
+.dc-ws-field del {
+	color: var(--dc-ws-faint);
+}
+
+/* the old text above the new one, faint; its removed words struck through */
+.dc-ws-field__old {
+	margin-bottom: 4px;
+	color: var(--dc-ws-faint);
+}
+
+.dc-ws-field__old del {
+	background: rgba(255, 70, 13, 0.22);
+	color: var(--dc-ws-muted);
+}
+
+.dc-ws-field__images {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+
+.dc-ws-field__image {
+	max-width: 100%;
+	height: auto;
+}
+
+.dc-ws-field__image--old {
+	opacity: 0.5;
+}
+
+/* the trash: the deleted elements, restorable */
+.dc-ws-trash {
+	max-width: 960px;
+	padding-bottom: 40px;
+}
+
+/* the search: the field itself is the grey box (its focus as of every field, Focus.css), the icons lie on it */
+.dc-ws .dc-ws-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+
+.dc-ws-search > svg {
+	position: absolute;
+	left: 12px;
+	color: var(--dc-ws-muted);
+	pointer-events: none;
+}
+
+.neos.neos-module .dc-ws .dc-ws-search input[type='search'] {
+	width: 260px;
+	height: 36px;
+	margin: 0;
+	padding: 0 36px 0 38px;
+	border: 0;
+	border-radius: 0;
+	background: #3f3f3f;
+	box-shadow: none;
+	color: var(--dc-ws-text);
+	font-size: 13px;
+	line-height: 36px;
+}
+
+.dc-ws-search .dc-ws-icon {
+	position: absolute;
+	right: 4px;
+	width: 28px;
+	height: 28px;
+}
+
+.dc-ws-trash__note {
+	margin: 0 12px 8px;
+	padding: 10px 12px;
+	background: var(--dc-ws-warning-soft);
+	color: var(--dc-ws-moved);
+	font-size: 12px;
+}
+
+.dc-ws-trash__list {
+	display: grid;
+	gap: 1px;
+	margin: 0 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.dc-ws-trash__item {
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 12px 12px 16px;
+	background: var(--dc-ws-pane);
+}
+
+.dc-ws-trash__item > i {
+	color: var(--dc-ws-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+.dc-ws-trash__text {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	min-width: 0;
+}
+
+.dc-ws-trash__title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+}
+
+.dc-ws-trash__language {
+	padding: 1px 6px;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-muted);
+	font-size: 11px;
+}
+
+.dc-ws-trash__sub,
+.dc-ws-trash__meta {
+	overflow: hidden;
+	color: var(--dc-ws-faint);
+	font-size: 11px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dc-ws-trash__meta {
+	color: var(--dc-ws-muted);
+}
+
+.dc-ws-trash__empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	margin: 48px 12px;
+	color: var(--dc-ws-faint);
+	text-align: center;
+}
+
+.dc-ws-trash__empty p {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 420px;
+	margin: 0;
+	color: var(--dc-ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.dc-ws-trash__empty strong {
+	color: var(--dc-ws-text);
+	font-weight: 500;
+}
+
+/* the paging of Neos below the list */
+.dc-ws-trash__paging {
+	margin: 12px;
+}
+
+.dc-ws-trash__paging ul {
+	display: flex;
+	gap: 1px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dc-ws-trash__paging a,
+.dc-ws-trash__paging span {
+	display: inline-flex;
+	align-items: center;
+	min-width: 32px;
+	height: 32px;
+	padding: 0 10px;
+	background: var(--dc-ws-raised);
+	color: var(--dc-ws-text);
+	font-size: 12px;
+}
+
+/* narrow: the panes one below the other */
+@media (max-width: 1100px) {
+	.dc-ws-review {
+		grid-template-columns: 1fr;
+		height: auto;
+	}
+}
+
+@media (max-width: 800px) {
+	/*
+	 * Edge to edge: Neos pads every module page 54px on each side (.neos-module-wrap). The module reaches over that
+	 * padding instead of removing it, the breadcrumb keeps 16px; the page itself stays as Neos lays it out.
+	 */
+	.neos-module-management-workspace .neos-breadcrumb {
+		margin-right: -38px;
+		margin-left: -38px;
+	}
+
+	.dc-ws {
+		grid-template-columns: 1fr;
+		height: auto;
+		margin: 8px -54px 0;
+	}
+
+	.dc-ws__head,
+	.dc-ws__tabs {
+		padding-right: 16px;
+		padding-left: 16px;
+	}
+
+	/* edge to edge: the tree keeps a margin to the screen */
+	.dc-ws__rail {
+		padding: 12px 8px;
+	}
+
+	.dc-ws-review__detail {
+		padding: 20px 16px 40px;
+	}
+
+	.dc-ws-page,
+	.dc-ws-trash__list {
+		margin-right: 0;
+		margin-left: 0;
+	}
+
+	.dc-ws__rail,
+	.dc-ws__page,
+	.dc-ws-review__list,
+	.dc-ws-review__detail {
+		overflow: visible;
+	}
+
+	.dc-ws__head {
+		grid-template-columns: 1fr;
+	}
+
+	.dc-ws__actions {
+		flex-wrap: wrap;
+	}
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Devclaim.NeosModernBackend" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="workspaces" xml:space="preserve"><source>Workspaces</source></trans-unit>
+            <trans-unit id="live" xml:space="preserve"><source>Live</source></trans-unit>
+            <trans-unit id="live.sub" xml:space="preserve"><source>The website</source></trans-unit>
+            <trans-unit id="access.personal" xml:space="preserve"><source>Personal</source></trans-unit>
+            <trans-unit id="access.shared" xml:space="preserve"><source>Shared</source></trans-unit>
+            <trans-unit id="basedOn" xml:space="preserve"><source>on {0}</source></trans-unit>
+            <trans-unit id="owner" xml:space="preserve"><source>of {0}</source></trans-unit>
+            <trans-unit id="outdated" xml:space="preserve"><source>Outdated</source></trans-unit>
+            <trans-unit id="outdated.text" xml:space="preserve"><source>{0} has changed since.</source></trans-unit>
+            <trans-unit id="rebase" xml:space="preserve"><source>Synchronise</source></trans-unit>
+            <trans-unit id="tab.changes" xml:space="preserve"><source>Changes</source></trans-unit>
+            <trans-unit id="tab.trash" xml:space="preserve"><source>Trash</source></trans-unit>
+            <trans-unit id="summary" xml:space="preserve"><source>{0} pages · {1} changes</source></trans-unit>
+            <trans-unit id="summary.none" xml:space="preserve"><source>No unpublished changes</source></trans-unit>
+            <trans-unit id="select.workspace" xml:space="preserve"><source>Select a workspace on the left.</source></trans-unit>
+            <trans-unit id="select.change" xml:space="preserve"><source>Select a change.</source></trans-unit>
+            <trans-unit id="select.all" xml:space="preserve"><source>Select all</source></trans-unit>
+            <trans-unit id="selected" xml:space="preserve"><source>{0} pages selected</source></trans-unit>
+            <trans-unit id="selected.none" xml:space="preserve"><source>All {0} changes</source></trans-unit>
+            <trans-unit id="nothing" xml:space="preserve"><source>Nothing to publish here.</source></trans-unit>
+            <trans-unit id="change.new" xml:space="preserve"><source>New</source></trans-unit>
+            <trans-unit id="change.changed" xml:space="preserve"><source>Changed</source></trans-unit>
+            <trans-unit id="change.removed" xml:space="preserve"><source>Deleted</source></trans-unit>
+            <trans-unit id="change.moved" xml:space="preserve"><source>Moved</source></trans-unit>
+            <trans-unit id="change.hidden" xml:space="preserve"><source>hidden</source></trans-unit>
+            <trans-unit id="change.onPage" xml:space="preserve"><source>on {0}</source></trans-unit>
+            <trans-unit id="change.modified" xml:space="preserve"><source>changed {0}</source></trans-unit>
+            <trans-unit id="change.removedNote" xml:space="preserve"><source>Removed from the website when published.</source></trans-unit>
+            <trans-unit id="page.open" xml:space="preserve"><source>Open</source></trans-unit>
+            <trans-unit id="page.publish" xml:space="preserve"><source>Publish</source></trans-unit>
+            <trans-unit id="page.discard" xml:space="preserve"><source>Discard</source></trans-unit>
+            <trans-unit id="page.changes" xml:space="preserve"><source>{0} changes</source></trans-unit>
+            <trans-unit id="create" xml:space="preserve"><source>New workspace</source></trans-unit>
+            <trans-unit id="edit" xml:space="preserve"><source>Edit</source></trans-unit>
+            <trans-unit id="permissions" xml:space="preserve"><source>Permissions</source></trans-unit>
+            <trans-unit id="delete" xml:space="preserve"><source>Delete</source></trans-unit>
+            <trans-unit id="publishAll" xml:space="preserve"><source>Publish all</source></trans-unit>
+            <trans-unit id="publishSelected" xml:space="preserve"><source>Publish selection</source></trans-unit>
+            <trans-unit id="discardAll" xml:space="preserve"><source>Discard all</source></trans-unit>
+            <trans-unit id="discardSelected" xml:space="preserve"><source>Discard selection</source></trans-unit>
+            <trans-unit id="loading" xml:space="preserve"><source>Loading …</source></trans-unit>
+            <trans-unit id="select.start" xml:space="preserve"><source>Select several</source></trans-unit>
+            <trans-unit id="select.end" xml:space="preserve"><source>End selection</source></trans-unit>
+            <trans-unit id="select.hint" xml:space="preserve"><source>Click pages to select them</source></trans-unit>
+            <trans-unit id="select.none" xml:space="preserve"><source>Select none</source></trans-unit>
+            <trans-unit id="trash.title" xml:space="preserve"><source>Deleted elements</source></trans-unit>
+            <trans-unit id="trash.search" xml:space="preserve"><source>Search the trash</source></trans-unit>
+            <trans-unit id="trash.empty" xml:space="preserve"><source>The trash is empty.</source></trans-unit>
+            <trans-unit id="trash.empty.text" xml:space="preserve"><source>What is deleted in this workspace can be restored here until it is published.</source></trans-unit>
+            <trans-unit id="trash.noResults" xml:space="preserve"><source>Nothing deleted matches "{0}".</source></trans-unit>
+            <trans-unit id="trash.deleted" xml:space="preserve"><source>deleted {0}</source></trans-unit>
+            <trans-unit id="trash.deletedBy" xml:space="preserve"><source>by {0}</source></trans-unit>
+            <trans-unit id="trash.restore" xml:space="preserve"><source>Restore</source></trans-unit>
+            <trans-unit id="trash.outdated" xml:space="preserve"><source>Synchronise the workspace first, then elements can be restored.</source></trans-unit>
+            <trans-unit id="fields.changed" xml:space="preserve"><source>Changed fields</source></trans-unit>
+            <trans-unit id="fields.content" xml:space="preserve"><source>Content</source></trans-unit>
+        </body>
+    </file>
+</xliff>

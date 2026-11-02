@@ -1,0 +1,108 @@
+##
+# The frame of every page of the workspace module (Neos.Workspace.Ui), in three panes like the activity log: the
+# workspaces as a tree on the left (rendered by the overview, loaded once by htmx on the other pages), the selected
+# workspace with its header and tabs (changes, trash) and the page itself. Its controller, its actions and its dialogs
+# stay as they are; Workspaces.js fills the header from the tree (meta, actions) and drives the review.
+#
+prototype(Neos.Workspace.Ui:Component.ModuleWrapper) {
+    # the tree of workspaces, when the page has it (the overview); else it is loaded from the overview
+    rail = null
+
+    renderer = afx`
+        <Devclaim.NeosModernBackend:WorkspaceFrame flashMessages={props.flashMessages} rail={props.rail} content={props.content}/>
+    `
+}
+
+prototype(Devclaim.NeosModernBackend:WorkspaceFrame) < prototype(Neos.Fusion:Component) {
+    flashMessages = ${[]}
+    rail = null
+    content = ''
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        # the workspace of the page: the review (selectedWorkspaceName) or the trash (workspaceName)
+        workspaceName = ${selectedWorkspaceName || workspaceName || ''}
+        workspaceLabel = ${selectedWorkspaceLabel || workspaceLabel || ''}
+        isTrash = ${request.controllerName == 'Restore'}
+        indexUri = Neos.Fusion:ActionUri {
+            action = 'index'
+            controller = 'Workspace'
+            format = 'html'
+        }
+        reviewUri = Neos.Fusion:ActionUri {
+            action = 'review'
+            controller = 'Workspace'
+            format = 'html'
+            arguments.workspace = ${private.workspaceName}
+            @if.selected = ${private.workspaceName}
+        }
+        trashUri = Neos.Fusion:ActionUri {
+            action = 'show'
+            controller = 'Restore'
+            format = 'html'
+            arguments.workspaceName = ${private.workspaceName}
+            @if.selected = ${private.workspaceName}
+        }
+    }
+
+    renderer = afx`
+        <Neos.Workspace.Ui:Component.HTMXConfig/>
+        <Neos.Workspace.Ui:Component.FlashMessages flashMessages={props.flashMessages}/>
+        <Neos.Workspace.Ui:Component.Indicator/>
+        <section id="workspace-module-content" hx-indicator="#indicator" hx-boost="true">
+            <div class="dc-ws" data-dc-ws>
+                <aside class="dc-ws__rail" data-dc-ws-rail>
+                    {props.rail}
+                    <div
+                        class="dc-ws__loading"
+                        hx-get={private.indexUri}
+                        hx-trigger="load"
+                        hx-select="[data-dc-ws-tree]"
+                        hx-swap="outerHTML"
+                        @if.noRail={!props.rail}
+                    >
+                        {private.i18n.id('loading')}
+                    </div>
+                </aside>
+                <div class="dc-ws__main" id="dc-ws-main" data-selected={private.workspaceName}>
+                    <header class="dc-ws__head" @if.selected={private.workspaceName}>
+                        <div class="dc-ws__kicker" data-dc-ws-meta></div>
+                        <h1 class="dc-ws__title">{private.workspaceLabel}</h1>
+                        <div class="dc-ws__actions" data-dc-ws-actions></div>
+                        <div class="dc-ws__stale" data-dc-ws-stale hidden></div>
+                    </header>
+                    <nav class="dc-ws__tabs" @if.selected={private.workspaceName}>
+                        <a
+                            href={private.reviewUri}
+                            class={['dc-ws__tab', private.isTrash ? null : 'dc-ws__tab--active']}
+                            data-dc-ws-tab="changes"
+                            hx-get={private.reviewUri}
+                            hx-target="#dc-ws-page"
+                            hx-select="#dc-ws-page"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                        >
+                            {private.i18n.id('tab.changes')}
+                        </a>
+                        <a
+                            href={private.trashUri}
+                            class={['dc-ws__tab', private.isTrash ? 'dc-ws__tab--active' : null]}
+                            data-dc-ws-tab="trash"
+                            hx-get={private.trashUri}
+                            hx-target="#dc-ws-page"
+                            hx-select="#dc-ws-page"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                        >
+                            {private.i18n.id('tab.trash')}
+                        </a>
+                    </nav>
+                    <div class="dc-ws__page" id="dc-ws-page" data-tab={private.isTrash ? 'trash' : 'changes'}>
+                        {props.content}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div @if.isNotHTMX={request.format != 'htmx'} id="popover-container"></div>
+    `
+}

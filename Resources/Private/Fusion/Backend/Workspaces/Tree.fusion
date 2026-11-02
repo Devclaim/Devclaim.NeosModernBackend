@@ -1,0 +1,210 @@
+##
+# The overview of the workspace module: the tree of workspaces on the left (by base workspace, under "Live"), nothing
+# selected yet. The tree is also what the other pages load into their left pane (data-dc-ws-tree).
+#
+Neos.Workspace.Ui.WorkspaceController.index {
+    renderer = afx`
+        <Neos.Workspace.Ui:Component.ModuleWrapper flashMessages={props.flashMessages}>
+            <Devclaim.NeosModernBackend:WorkspaceTree
+                @path="rail"
+                workspaceListItems={props.workspaceListItems}
+                newAction={props.newAction}
+                createNewPopoverId={props.createNewPopoverId}
+            />
+            <p class="dc-ws__empty">{I18n.id('select.workspace').source('Workspaces').package('Devclaim.NeosModernBackend')}</p>
+        </Neos.Workspace.Ui:Component.ModuleWrapper>
+    `
+}
+
+prototype(Devclaim.NeosModernBackend:WorkspaceTree) < prototype(Neos.Fusion:Component) {
+    workspaceListItems = null
+    newAction = null
+    createNewPopoverId = ''
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+    }
+
+    renderer = afx`
+        <div class="dc-ws-tree" data-dc-ws-tree>
+            <h3 class="dc-ws-tree__heading">{private.i18n.id('workspaces')}</h3>
+            <div class="dc-ws-item dc-ws-item--live">
+                <i class="fas fa-globe dc-ws-item__icon" aria-hidden="true"></i>
+                <span class="dc-ws-item__text">
+                    <span class="dc-ws-item__title">{private.i18n.id('live')}</span>
+                    <span class="dc-ws-item__sub">{private.i18n.id('live.sub')}</span>
+                </span>
+            </div>
+            <Neos.Fusion:Loop
+                items={Array.filter(props.workspaceListItems, (entry) =>
+                    entry.baseWorkspaceName == 'live'
+                    || !Array.some(props.workspaceListItems, (workspace) => entry.baseWorkspaceName == workspace.name)
+                )}
+                itemName="workspaceListItem"
+            >
+                <Devclaim.NeosModernBackend:WorkspaceTreeItem
+                    item={workspaceListItem}
+                    items={props.workspaceListItems}
+                    level={1}
+                />
+            </Neos.Fusion:Loop>
+            <button
+                type="button"
+                class="dc-ws-tree__create"
+                hx-get={props.newAction}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request={'document.getElementById("' + props.createNewPopoverId + '").showPopover()'}
+                @if={props.newAction && Security.hasAccess('Neos.Workspace.Ui:Backend.CreateWorkspaces')}
+            >
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                {private.i18n.id('create')}
+            </button>
+        </div>
+    `
+}
+
+##
+# A workspace of the tree: a link to its review, its changes in short (+new ~changed −deleted) or a dot when it is
+# outdated; its sub-workspaces below it. The template holds what the header of its pages shows (Workspaces.js): who
+# and what it is, whether it is outdated, and the actions of the workspace module (edit, permissions, delete, rebase).
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceTreeItem) < prototype(Neos.Fusion:Component) {
+    item = null
+    items = null
+    level = 1
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        neos = ${I18n.id('').source('Main').package('Neos.Workspace.Ui')}
+        isOutdated = ${props.item.status == 'OUTDATED'}
+        changes = ${props.item.pendingChanges}
+        # the base workspace: in the list when the user may read it, else by its name
+        baseItem = ${Array.first(Array.filter(props.items, (workspace) => workspace.name == props.item.baseWorkspaceName))}
+        baseLabel = ${props.item.baseWorkspaceName == 'live' ? 'Live' : (private.baseItem ? private.baseItem.title : props.item.baseWorkspaceName)}
+        access = ${props.item.personal ? I18n.id('access.personal').source('Workspaces').package('Devclaim.NeosModernBackend').translate() : I18n.id('access.shared').source('Workspaces').package('Devclaim.NeosModernBackend').translate()}
+        sub = ${private.access + ' · ' + I18n.id('basedOn').source('Workspaces').package('Devclaim.NeosModernBackend').arguments([private.baseLabel]).translate()}
+        reviewUri = Neos.Fusion:ActionUri {
+            action = 'review'
+            controller = 'Workspace'
+            format = 'html'
+            arguments.workspace = ${props.item.name}
+        }
+        editUri = Neos.Fusion:ActionUri {
+            action = 'edit'
+            controller = 'Workspace'
+            format = 'htmx'
+            arguments.workspaceName = ${props.item.name}
+        }
+        rolesUri = Neos.Fusion:ActionUri {
+            action = 'editWorkspaceRoleAssignments'
+            controller = 'Workspace'
+            format = 'htmx'
+            arguments.workspaceName = ${props.item.name}
+        }
+        deleteUri = Neos.Fusion:ActionUri {
+            action = 'delete'
+            controller = 'Workspace'
+            format = 'htmx'
+            arguments.workspaceName = ${props.item.name}
+        }
+        rebaseUri = Neos.Fusion:ActionUri {
+            action = 'rebase'
+            controller = 'Workspace'
+            format = 'htmx'
+            arguments {
+                workspaceName = ${props.item.name}
+                force = false
+            }
+        }
+        canManage = ${!props.item.personal && props.item.permissions.manage}
+    }
+
+    renderer = afx`
+        <a
+            href={private.reviewUri}
+            class="dc-ws-item"
+            style={'--dc-ws-level:' + props.level}
+            data-dc-ws-item={props.item.name}
+            hx-get={private.reviewUri}
+            hx-target="#dc-ws-main"
+            hx-select="#dc-ws-main"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+        >
+            <i class={['fas', props.item.personal ? 'fa-user' : 'fa-users', 'dc-ws-item__icon']} aria-hidden="true"></i>
+            <span class="dc-ws-item__text">
+                <span class="dc-ws-item__title">{props.item.title}</span>
+                <span class="dc-ws-item__sub">{private.sub}</span>
+            </span>
+            <span class="dc-ws-item__dot" title={private.i18n.id('outdated')} @if.outdated={private.isOutdated}></span>
+            <span class="dc-ws-item__counts" @if.current={!private.isOutdated && private.changes.total > 0}>
+                <span class="dc-ws-item__new" @if.any={private.changes.new}>{'+' + private.changes.new}</span>
+                <span class="dc-ws-item__changed" @if.any={private.changes.changed}>{'~' + private.changes.changed}</span>
+                <span class="dc-ws-item__removed" @if.any={private.changes.removed}>{'−' + private.changes.removed}</span>
+            </span>
+        </a>
+        <template data-dc-ws-template={props.item.name}>
+            <span data-part="meta">
+                {private.sub}{props.item.personal && props.item.owner ? ' · ' + I18n.id('owner').source('Workspaces').package('Devclaim.NeosModernBackend').arguments([props.item.owner]).translate() : ''}{props.item.description ? ' · ' + props.item.description : ''}
+            </span>
+            <span data-part="stale" @if.outdated={private.isOutdated}>
+                <span>{I18n.id('outdated.text').source('Workspaces').package('Devclaim.NeosModernBackend').arguments([private.baseLabel]).translate()}</span>
+                <button
+                    type="button"
+                    class="dc-ws-button dc-ws-button--warning"
+                    hx-get={private.rebaseUri}
+                    hx-target="#workspace-module-content"
+                    hx-swap="outerHTML"
+                    hx-on--after-request="document.getElementById('workspace-rebase-modal')?.showPopover()"
+                    disabled={props.item.permissions.write ? null : true}
+                >
+                    {private.i18n.id('rebase')}
+                </button>
+            </span>
+            <span data-part="actions">
+                <button
+                    type="button"
+                    class="dc-ws-button"
+                    hx-get={private.editUri}
+                    hx-target="#popover-container"
+                    hx-swap="innerHTML"
+                    hx-on--after-request="document.getElementById('workspace-edit-modal').showPopover()"
+                    @if.canManage={private.canManage}
+                >
+                    {private.i18n.id('edit')}
+                </button>
+                <button
+                    type="button"
+                    class="dc-ws-button"
+                    hx-get={private.rolesUri}
+                    hx-target="#popover-container"
+                    hx-swap="innerHTML"
+                    hx-on--after-request="document.getElementById('workspace-edit-role-assignments-modal').showPopover()"
+                    @if.canManage={private.canManage}
+                >
+                    {private.i18n.id('permissions')}
+                </button>
+                <button
+                    type="button"
+                    class="dc-ws-button dc-ws-button--danger"
+                    title={private.neos.id('workspaces.deleteWorkspace').arguments([props.item.title])}
+                    hx-get={private.deleteUri}
+                    hx-target="#popover-container"
+                    hx-swap="innerHTML"
+                    hx-on--after-request="document.getElementById('workspace-delete-modal').showPopover()"
+                    disabled={private.changes.total > 0 || props.item.hasDependantWorkspaces ? true : null}
+                    @if.canManage={private.canManage}
+                >
+                    {private.i18n.id('delete')}
+                </button>
+            </span>
+        </template>
+        <Neos.Fusion:Loop
+            items={Array.filter(props.items, (workspace) => workspace.baseWorkspaceName == props.item.name)}
+            itemName="child"
+        >
+            <Devclaim.NeosModernBackend:WorkspaceTreeItem item={child} items={props.items} level={props.level + 1}/>
+        </Neos.Fusion:Loop>
+    `
+}

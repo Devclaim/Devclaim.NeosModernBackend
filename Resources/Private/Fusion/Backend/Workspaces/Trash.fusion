@@ -1,0 +1,141 @@
+##
+# The trash of a workspace (the tab "Papierkorb", RestoreController of Neos.Workspace.Ui): the deleted elements as a
+# list like the changes (what, where, in which language, deleted when and by whom), each restorable through the
+# confirm dialog of Neos; search and paging of Neos. An outdated workspace cannot restore: its header offers to
+# synchronise it.
+#
+Neos.Workspace.Ui.RestoreController.show {
+    renderer = afx`
+        <Neos.Workspace.Ui:Component.ModuleWrapper flashMessages={props.flashMessages}>
+            <div class="dc-ws-trash">
+                <div class="dc-ws-listhead">
+                    <h2 class="dc-ws-listhead__title">
+                        {I18n.id('trash.title').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                    </h2>
+                    <form
+                        class="dc-ws-search"
+                        role="search"
+                        hx-get={props.searchTermUri}
+                        hx-target="#dc-ws-page"
+                        hx-select="#dc-ws-page"
+                        hx-swap="outerHTML"
+                        hx-push-url="true"
+                        @if.searchable={props.restoreListItems || props.searchTerm}
+                    >
+                        <Devclaim.NeosModernBackend:Icon name="search"/>
+                        <input
+                            type="search"
+                            name="moduleArguments[searchTerm]"
+                            value={props.searchTerm}
+                            placeholder={I18n.id('trash.search').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                            aria-label={I18n.id('trash.search').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                        />
+                        <a
+                            href={props.clearSearchTermUri}
+                            class="dc-ws-icon"
+                            hx-get={props.clearSearchTermUri}
+                            hx-target="#dc-ws-page"
+                            hx-select="#dc-ws-page"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                            @if.searching={props.searchTerm}
+                        >
+                            <Devclaim.NeosModernBackend:Icon name="close"/>
+                        </a>
+                    </form>
+                </div>
+
+                <p class="dc-ws-trash__note" @if.outdated={props.workspaceIsOutdated && props.restoreListItems}>
+                    {I18n.id('trash.outdated').source('Workspaces').package('Devclaim.NeosModernBackend')}
+                </p>
+
+                <ul class="dc-ws-trash__list" @if.hasItems={props.restoreListItems}>
+                    <Neos.Fusion:Loop items={props.restoreListItems} itemName="item">
+                        <Devclaim.NeosModernBackend:WorkspaceTrashItem
+                            item={item}
+                            workspaceName={props.workspaceName}
+                            canRestore={props.enableRestoreButtons && !props.workspaceIsOutdated}
+                        />
+                    </Neos.Fusion:Loop>
+                </ul>
+
+                <div class="dc-ws-trash__paging" @if.hasItems={props.restoreListItems}>
+                    <Neos.Workspace.Ui:Component.Pagination
+                        workspaceName={props.workspaceName}
+                        pagination={props.pagination}
+                        searchTerm={props.searchTerm}
+                        sorting={props.sorting}
+                    />
+                </div>
+
+                <div class="dc-ws-trash__empty" @if.empty={!props.restoreListItems}>
+                    <Devclaim.NeosModernBackend:Icon name="inbox" size="28"/>
+                    <p @if.noSearch={!props.searchTerm}>
+                        <strong>{I18n.id('trash.empty').source('Workspaces').package('Devclaim.NeosModernBackend')}</strong>
+                        <span>{I18n.id('trash.empty.text').source('Workspaces').package('Devclaim.NeosModernBackend')}</span>
+                    </p>
+                    <p @if.search={props.searchTerm}>
+                        {I18n.id('trash.noResults').source('Workspaces').package('Devclaim.NeosModernBackend').arguments([props.searchTerm])}
+                    </p>
+                </div>
+            </div>
+        </Neos.Workspace.Ui:Component.ModuleWrapper>
+    `
+}
+
+##
+# A deleted element: its name (per language, when it was deleted in several), its type and where it was, when and by
+# whom it was deleted, and "Wiederherstellen" (the confirm dialog of Neos)
+#
+prototype(Devclaim.NeosModernBackend:WorkspaceTrashItem) < prototype(Neos.Fusion:Component) {
+    item = null
+    workspaceName = ''
+    canRestore = true
+
+    @private {
+        i18n = ${I18n.id('').source('Workspaces').package('Devclaim.NeosModernBackend')}
+        restoreUri = Neos.Fusion:ActionUri {
+            action = 'restoreNodeConfirmation'
+            controller = 'Restore'
+            format = 'htmx'
+            arguments {
+                workspaceName = ${props.workspaceName}
+                nodeAggregateId = ${props.item.nodeAggregateId}
+            }
+        }
+    }
+
+    renderer = afx`
+        <li class="dc-ws-trash__item">
+            <Neos.Workspace.Ui:Component.Icon icon={props.item.icon || 'fas fa-cube'}/>
+            <div class="dc-ws-trash__text">
+                <Neos.Fusion:Loop items={props.item.details} itemName="detail">
+                    <span class="dc-ws-trash__title">
+                        {detail.label}
+                        <span class="dc-ws-trash__language" @if.languages={detail.dimensionValueLabels}>
+                            {Array.join(detail.dimensionValueLabels, ', ')}
+                        </span>
+                    </span>
+                    <span class="dc-ws-trash__sub">
+                        {props.item.nodeTypeLabel}{Array.length(detail.ancestorLabels) > 2 ? ' · ' + Array.join(Array.slice(detail.ancestorLabels, 2), ' / ') : ''}
+                    </span>
+                </Neos.Fusion:Loop>
+                <span class="dc-ws-trash__meta">
+                    {props.item.deleteTime ? private.i18n.id('trash.deleted').arguments([Date.format(props.item.deleteTime, 'd.m.Y H:i')]).translate() : ''}{props.item.deletionUserName ? ' ' + private.i18n.id('trash.deletedBy').arguments([props.item.deletionUserName]).translate() : ''}
+                </span>
+            </div>
+            <button
+                type="button"
+                class="dc-ws-button"
+                disabled={props.canRestore ? null : true}
+                hx-get={private.restoreUri}
+                hx-target="#popover-container"
+                hx-swap="innerHTML"
+                hx-on--after-request="document.getElementById('restore-confirm-modal')?.showPopover()"
+            >
+                <Devclaim.NeosModernBackend:Icon name="restore"/>
+                {private.i18n.id('trash.restore')}
+            </button>
+        </li>
+    `
+}
