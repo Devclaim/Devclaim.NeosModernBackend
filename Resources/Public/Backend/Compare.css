@@ -1,0 +1,210 @@
+/*
+ * The compare of a change (Compare.fusion, Compare.js) in the look of the Neos backend: its greys, the Neos blue for
+ * what is active, square corners, no borders. The website in it is white: its own look in the dark backend.
+ */
+.dc-compare {
+	--dc-compare-raised: #323232;
+	--dc-compare-hover: #3a3a3a;
+	--dc-compare-text: #f2f2f2;
+	--dc-compare-muted: #a3a3a3;
+	--dc-compare-faint: #6f6f6f;
+	--dc-compare-blue: #00adee;
+	color: var(--dc-compare-text);
+	font-size: 14px;
+}
+
+.dc-compare *,
+.dc-compare *::before,
+.dc-compare *::after {
+	box-sizing: border-box;
+}
+
+.dc-compare[hidden],
+.dc-compare [hidden] {
+	display: none;
+}
+
+.dc-compare__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 16px;
+	margin-bottom: 14px;
+}
+
+.dc-compare__views {
+	display: flex;
+	gap: 1px;
+}
+
+/* ".dc-compare": stronger than the button styles of the Neos backend */
+.dc-compare .dc-compare__view {
+	height: 32px;
+	padding: 0 14px;
+	border: 0;
+	border-radius: 0;
+	background: var(--dc-compare-raised);
+	color: var(--dc-compare-text);
+	font-family: inherit;
+	font-size: 12px;
+	line-height: 1.4;
+	cursor: pointer;
+}
+
+.dc-compare .dc-compare__view:hover {
+	background: var(--dc-compare-hover);
+}
+
+.dc-compare .dc-compare__view--active,
+.dc-compare .dc-compare__view--active:hover {
+	background: var(--dc-compare-blue);
+}
+
+.dc-compare .dc-compare__view:focus-visible,
+.dc-compare__handle:focus-visible {
+	outline: 2px solid var(--dc-compare-blue);
+	outline-offset: 2px;
+}
+
+.dc-compare__hint {
+	color: var(--dc-compare-faint);
+	font-size: 12px;
+}
+
+/* side by side; new content: one, not wider than a page column needs */
+.dc-compare__side {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 16px;
+}
+
+.dc-compare--new .dc-compare__side {
+	grid-template-columns: minmax(0, 960px);
+}
+
+.dc-compare__figure {
+	min-width: 0;
+	margin: 0;
+}
+
+.dc-compare__figure figcaption {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+	color: var(--dc-compare-muted);
+	font-size: 12px;
+}
+
+.dc-compare__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--dc-compare-faint);
+}
+
+.dc-compare__dot--after {
+	background: var(--dc-compare-blue);
+}
+
+.dc-compare__frame {
+	display: block;
+	width: 100%;
+	height: 160px;
+	border: 0;
+	background: #fff;
+}
+
+/* one over the other: after below, before above it up to the line */
+.dc-compare__stack {
+	position: relative;
+	max-width: 960px;
+}
+
+.dc-compare__clip {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	clip-path: inset(0 50% 0 0);
+}
+
+.dc-compare__clip .dc-compare__frame {
+	height: 100%;
+}
+
+.dc-compare__shield {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	cursor: ew-resize;
+}
+
+/* the line between before and after, dragged directly; wider than it looks, so it is easy to grab */
+.dc-compare__handle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	z-index: 3;
+	width: 24px;
+	margin-left: -12px;
+	cursor: ew-resize;
+	touch-action: none;
+}
+
+.dc-compare__handle::before {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 11px;
+	width: 2px;
+	background: var(--dc-compare-blue);
+	content: '';
+}
+
+.dc-compare__grip {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--dc-compare-blue);
+	color: #fff;
+	font-size: 13px;
+	transform: translate(-50%, -50%);
+}
+
+/* which side is which, in the corners of the frames */
+.dc-compare__corner {
+	position: absolute;
+	top: 8px;
+	z-index: 1;
+	padding: 2px 8px;
+	background: rgba(0, 0, 0, 0.6);
+	color: #fff;
+	font-size: 11px;
+	pointer-events: none;
+}
+
+.dc-compare__corner--before {
+	left: 8px;
+}
+
+.dc-compare__corner--after {
+	right: 8px;
+}
+
+/* in the review of the workspace module: above the diff of a change */
+.dc-review-compare {
+	padding: 16px 0 20px;
+}
+
+@media (max-width: 1000px) {
+	.dc-compare__side {
+		grid-template-columns: 1fr;
+	}
+}

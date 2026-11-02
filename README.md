@@ -30,6 +30,14 @@ the content frame. Works with any frontend (Fusion or headless).
   again. One loading state from the publish until the page is there (also when the browser no longer fires `unload`),
   and editors like the link editor do not load their previews again. Works with any frontend (Fusion or headless).
 
+- **Compare of changes** – a change shown as the website shows it: the node before and after, rendered by the
+  frontend through the node previews of [Devclaim.NeosStyleguide](https://github.com/Devclaim/Devclaim.NeosStyleguide)
+  (its adapter, any frontend), side by side or one over the other with a line to drag, the changed words marked. In
+  the review of the workspace module above the diff of each change (the node in the workspace against its base
+  workspace, node references `workspace:before|after:<node address>`); as a Fusion component
+  (`Devclaim.NeosModernBackend:Compare`, `Resources/Public/Backend/Compare.js` and `.css`) for other backend modules,
+  e.g. the activity log of Devclaim.NeosActivity.
+
 ## Installation
 
 It requires [devclaim/neos-ui-editors](https://github.com/Devclaim/Devclaim.NeosUiEditors), which is not on

@@ -5,7 +5,14 @@
 	"license": "MIT",
 	"require": {
 		"neos/neos-ui": "^9.0",
-		"devclaim/neos-ui-editors": "dev-main"
+		"devclaim/neos-ui-editors": "dev-main",
+		"devclaim/neos-styleguide": "*",
+		"neos/workspace-ui": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Devclaim\\NeosModernBackend\\": "Classes"
+		}
 	},
 	"repositories": [
 		{

@@ -1,0 +1,11 @@
+# the workspace module (Neos.Workspace.Ui) with the parts of this package (Resources/Private/Fusion/Backend): the
+# same request filter as its own Views.yaml, loaded later, so this one is used; its Fusion stays as it is
+- requestFilter: 'isPackage("Neos.Workspace.Ui") && (isController("Workspace")|| isController("Restore"))'
+  viewObjectName: 'Neos\Fusion\View\FusionView'
+  options:
+    fusionPathPatterns:
+      - 'resource://Neos.Neos/Private/Fusion'
+      - 'resource://Neos.Fusion/Private/Fusion'
+      - 'resource://Neos.Fusion.Form/Private/Fusion'
+      - 'resource://Neos.Workspace.Ui/Private/Fusion'
+      - 'resource://Devclaim.NeosModernBackend/Private/Fusion/Backend'

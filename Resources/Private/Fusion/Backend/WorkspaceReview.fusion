@@ -1,0 +1,16 @@
+##
+# The review of the workspace module (Neos.Workspace.Ui): above the diff of each change, the change as the website
+# shows it (Compare), the node in the workspace against the node in its base workspace
+# (WorkspaceNodeReferenceResolver). The module itself stays as it is; Views.yaml adds this Fusion to its own.
+#
+prototype(Neos.Workspace.Ui:Component.ReviewChangeDiff) {
+    renderer.@process.compare = afx`
+        <div class="dc-review-compare" @if.notRemoved={!props.change.isRemoved}>
+            <Devclaim.NeosModernBackend:Compare
+                before={props.change.isNew ? null : 'workspace:before:' + props.change.serializedNodeAddress}
+                after={'workspace:after:' + props.change.serializedNodeAddress}
+            />
+        </div>
+        {value}
+    `
+}

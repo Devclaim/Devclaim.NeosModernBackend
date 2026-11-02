@@ -1,5 +1,21 @@
+Devclaim:
+  NeosStyleguide:
+    # the node previews of the workspace review: "workspace:before|after:<node address>" (Compare.fusion)
+    nodeReferences:
+      workspace: Devclaim\NeosModernBackend\NodeReferences\WorkspaceNodeReferenceResolver
+
 Neos:
   Neos:
+    modules:
+      management:
+        submodules:
+          # the review shows each change as the website shows it (Resources/Private/Fusion/Backend, Views.yaml)
+          workspace:
+            additionalResources:
+              javaScripts:
+                'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.js'
+              styleSheets:
+                'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.css'
     userInterface:
       inspector:
         dataTypes:

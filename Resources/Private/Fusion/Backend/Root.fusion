@@ -1,0 +1,5 @@
+##
+# The parts of the backend modules: the compare of a change (the activity log, the workspace review)
+#
+include: Compare.fusion
+include: WorkspaceReview.fusion

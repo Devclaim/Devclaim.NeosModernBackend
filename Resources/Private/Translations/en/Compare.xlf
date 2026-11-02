@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Devclaim.NeosModernBackend" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="before" xml:space="preserve"><source>Before</source></trans-unit>
+            <trans-unit id="after" xml:space="preserve"><source>After</source></trans-unit>
+            <trans-unit id="view.side" xml:space="preserve"><source>Side by side</source></trans-unit>
+            <trans-unit id="view.slider" xml:space="preserve"><source>Slider</source></trans-unit>
+            <trans-unit id="hint.change" xml:space="preserve"><source>As it looks on the website</source></trans-unit>
+            <trans-unit id="hint.new" xml:space="preserve"><source>New on the website</source></trans-unit>
+        </body>
+    </file>
+</xliff>

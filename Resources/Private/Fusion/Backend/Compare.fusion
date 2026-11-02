@@ -1,0 +1,65 @@
+##
+# A change as the website shows it: the node before and after, each rendered by the frontend in a frame (the node
+# preview of the styleguide adapter, Devclaim.NeosStyleguide PROTOCOL.md), side by side or one over the other with a
+# line to drag; the changed words marked in both. New content (no before): how it looks. Compare.js loads the frames
+# when the compare comes into view and hides a side the website cannot show (a deleted node, a part of the layout).
+#
+#   <Devclaim.NeosModernBackend:Compare before="activity:123:before" after="activity:123:after" site="my-site"/>
+#
+prototype(Devclaim.NeosModernBackend:Compare) < prototype(Neos.Fusion:Component) {
+    # node references (resolvers registered in Devclaim.NeosStyleguide.nodeReferences); no before: new content
+    before = null
+    after = null
+    # the site whose theme the previews use (its node name); empty: the first one
+    site = ''
+    # the base URL of the styleguide adapter's API, whose manifest names the page of the node previews
+    adapter = ${Configuration.setting('Neos.Neos.Ui.frontendConfiguration')['Devclaim.NeosStyleguide'].adapter}
+
+    @private {
+        before = ${I18n.translate('before', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+        after = ${I18n.translate('after', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+        slider = ${I18n.translate('view.slider', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+    }
+
+    renderer = afx`
+        <div class={['dc-compare', props.before ? null : 'dc-compare--new']} data-compare data-adapter={props.adapter} data-site={props.site} @if.shown={props.adapter && props.after}>
+            <div class="dc-compare__bar">
+                <div class="dc-compare__views" role="tablist" @if.shown={props.before}>
+                    <button type="button" class="dc-compare__view dc-compare__view--active" data-view="side">
+                        {I18n.translate('view.side', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+                    </button>
+                    <button type="button" class="dc-compare__view" data-view="slider">{private.slider}</button>
+                </div>
+                <span class="dc-compare__hint">
+                    {I18n.translate(props.before ? 'hint.change' : 'hint.new', null, [], 'Compare', 'Devclaim.NeosModernBackend')}
+                </span>
+            </div>
+
+            <div class="dc-compare__side" data-pane="side">
+                <figure class="dc-compare__figure" data-figure="before" @if.shown={props.before}>
+                    <figcaption><span class="dc-compare__dot"></span>{private.before}</figcaption>
+                    <iframe class="dc-compare__frame" data-ref={props.before} data-side="before" title={private.before}></iframe>
+                </figure>
+                <figure class="dc-compare__figure" data-figure="after">
+                    <figcaption @if.shown={props.before}><span class="dc-compare__dot dc-compare__dot--after"></span>{private.after}</figcaption>
+                    <iframe class="dc-compare__frame" data-ref={props.after} data-side="after" title={private.after}></iframe>
+                </figure>
+            </div>
+
+            <div class="dc-compare__slider" data-pane="slider" hidden @if.shown={props.before}>
+                <div class="dc-compare__stack">
+                    <iframe class="dc-compare__frame" data-ref={props.after} title={private.after}></iframe>
+                    <div class="dc-compare__clip">
+                        <iframe class="dc-compare__frame" data-ref={props.before} title={private.before}></iframe>
+                    </div>
+                    <div class="dc-compare__shield" hidden></div>
+                    <div class="dc-compare__handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label={private.slider}>
+                        <span class="dc-compare__grip"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
+                    </div>
+                    <span class="dc-compare__corner dc-compare__corner--before">{private.before}</span>
+                    <span class="dc-compare__corner dc-compare__corner--after">{private.after}</span>
+                </div>
+            </div>
+        </div>
+    `
+}
