@@ -1,0 +1,89 @@
+/*
+ * The change between the content module and the backend modules (Transition.js): the splash screen of the Neos UI
+ * over the page, from the click until the next page has loaded. Drawn by the root element itself (no element of its
+ * own), so a module page has it from its first paint, before its body: data-devclaim-transition on <html>, "in" fades
+ * it in (the page being left), "on" shows it at once (the page arriving, set in its head:
+ * Templates/Backend/Module/Index.html), "out" fades it out. The same backdrop and logo as the splash of the Neos UI
+ * (Neos.Neos.Ui ApplicationView), so going to the content module, which shows that one, changes nothing.
+ */
+
+/* the content module dark before its splash is painted (a module page: its head, Index.html) */
+:root:has(> body > #appContainer) {
+	background-color: #222;
+}
+
+html[data-devclaim-transition]::before,
+html[data-devclaim-transition]::after {
+	content: '';
+	position: fixed;
+	z-index: 2147483647;
+}
+
+html[data-devclaim-transition]::before {
+	inset: 0;
+	background-color: #222;
+}
+
+/* the logo of the splash: 90px high in the middle, glowing */
+html[data-devclaim-transition]::after {
+	top: 50%;
+	left: 50%;
+	width: 90px;
+	height: 90px;
+	margin: -45px 0 0 -45px;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 456 512'%3E%3Cpath fill='%2300adee' d='M387.44 512h-95.11L184.12 357.46v91.1L97.69 512H0V29.82L40.47 0h108.05l123.74 176.13V63.45L358.69 0h97.69v461.5L387.44 512zM10.77 35.27v460.72l72.01-52.88V193.95l215.49 307.69h84.79l52.35-38.17h-78.27L40.96 12.98 10.77 35.27zm82.54 466.61l80.04-58.78V342.06L93.55 227.7v220.94l-72.58 53.25h72.34zM52.63 10.77l310.6 442.57h82.37V10.77h-79.75v317.56L142.91 10.77H52.63zm230.4 180.88l72.01 102.81V15.93l-72.01 52.96v122.76z'/%3E%3C/svg%3E") center / contain no-repeat;
+	animation: devclaim-transition-glow 1.2s ease-in-out infinite alternate;
+}
+
+html[data-devclaim-transition='in']::before {
+	animation: devclaim-transition-in 150ms ease both;
+}
+
+html[data-devclaim-transition='in']::after {
+	animation: devclaim-transition-in 150ms ease both, devclaim-transition-glow 1.2s ease-in-out infinite alternate;
+}
+
+/* fading out: the page below can be used again */
+html[data-devclaim-transition='out']::before {
+	animation: devclaim-transition-out 300ms ease both;
+	pointer-events: none;
+}
+
+html[data-devclaim-transition='out']::after {
+	animation: devclaim-transition-out 300ms ease both, devclaim-transition-glow 1.2s ease-in-out infinite alternate;
+	pointer-events: none;
+}
+
+@keyframes devclaim-transition-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes devclaim-transition-out {
+	to {
+		opacity: 0;
+	}
+}
+
+/* as the loading icon of the splash of the Neos UI */
+@keyframes devclaim-transition-glow {
+	0% {
+		filter: drop-shadow(0 0 0 #00adee) opacity(25%);
+	}
+	100% {
+		filter: drop-shadow(0 0 5px #00adee) opacity(100%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html[data-devclaim-transition]::before,
+	html[data-devclaim-transition]::after {
+		animation: none !important;
+	}
+
+	html[data-devclaim-transition='out']::before,
+	html[data-devclaim-transition='out']::after {
+		opacity: 0;
+	}
+}

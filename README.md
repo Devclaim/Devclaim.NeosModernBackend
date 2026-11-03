@@ -8,13 +8,18 @@ the content frame. Works with any frontend (Fusion or headless).
 - **Outline** – the selected and hovered node get an outline of their own: never cut off by `overflow`, the frame or
   positioned content; moves from node to node, the hover fades.
 - **Node toolbar** – a tab on the outline (node type, drag handle, `⋯` menu with icon buttons); the `+` sits on the
-  edge where the new node goes; disabled actions are hidden; moves to the bottom or floats for big nodes.
+  edge where the new node goes; disabled actions are hidden, a node the user may not edit (its policy) has no
+  controls at all, only the tab with its type; moves to the bottom or floats for big nodes.
 - **CKEditor** – its toolbar in the same dark style, on the dashed line of the edited text.
 - **Drag and drop** – drag or click the handle: the page zooms out, the node moves live, the others slide aside;
   click or release to drop, `Esc` cancels. Only where Neos allows the node. A node type whose nodes stay where they
   are: `ui.draggable: false` (no drag handle).
 - **Loading screen** – the splash screen of the Neos UI stays until the page in the content frame has loaded (not only
   until the UI started), then fades out.
+- **Change between the modules** – going from the content module to a backend module, from one module to another or
+  back, the page stays as it is when the next one is there soon (an instant change, dark from its first paint, no
+  white in between); only when it takes longer, the splash screen fades in after the click and the next page keeps it
+  until it has loaded (`Resources/Public/Backend/Transition.js` and `.css`).
 - **Steady placeholders** – the placeholders of inline editable properties are drawn by the package for their whole
   life (rendered empty, CKEditor starting, focused, re-rendered), CKEditor's own is hidden: they never disappear, the
   height of an empty property never changes.
@@ -47,9 +52,16 @@ the content frame. Works with any frontend (Fusion or headless).
   (`Resources/Private/Fusion/Backend/Workspaces`) and the styles (`Workspaces.css`, `Workspaces.js`) are this
   package's.
 
-- **Backend frame** – one top bar and one menu for the content module and all backend modules, a top bar component
-  for pages of their own (`TopBar.css`, used by the moderation app), module overviews as cards, and many modern UI and
-  UX optimisations across the backend (menu, inspector, focus, fields).
+- **Roles in the user module** – every role of an account with what it is for, the roles it contains and what it
+  allows (the modules it opens and the labels of its privileges from the policy, or texts of the project in the setting
+  `Devclaim.NeosModernBackend.userRoles`); a ticked role ticks and locks the roles it contains, below them what the
+  roles allow altogether. The same form field as Neos', so its controller and rules stay as they are
+  (`Resources/Private/Partials/UserModule`, `Classes/UserRoles`, `Users.js` and `.css`).
+
+- **Backend frame** – one top bar and one menu for the content module and all backend modules, module overviews as
+  cards, and many modern UI and UX optimisations across the backend (menu, inspector, focus, fields). A module made
+  for phones as well sets its viewport (`viewport` in its module settings, e.g. the moderation module): the module page
+  of Neos has none.
 
 ## Installation
 
@@ -83,6 +95,20 @@ Neos:
           dragAndDrop: true  # false: the native drag and drop of the Neos UI
           sidebar: true      # false: the left sidebar of the Neos UI as it is
           dateTimeEditor: true # false: the DateTimeEditor of the Neos UI
+```
+
+The roles in the user module, per role identifier (all optional):
+
+```yaml
+Devclaim:
+  NeosModernBackend:
+    userRoles:
+      'Neos.Neos:Editor':
+        label: 'Redaktion'
+        description: 'Bearbeitet und veröffentlicht die Website.'
+        can: ['Inhalte bearbeiten', 'Live veröffentlichen']   # what it allows
+        derive: false   # leave out what the policy grants (its modules and the labels of its privileges)
+        position: 20    # the order: smaller first, the rest by name
 ```
 
 The number input for integer properties (back to the text field of the Neos UI):

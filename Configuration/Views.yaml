@@ -14,3 +14,12 @@
 - requestFilter: 'isPackage("Neos.Neos") && isController("Backend\\Module") && isAction("index")'
   options:
     templatePathAndFilename: 'resource://Devclaim.NeosModernBackend/Private/Templates/Backend/Module/Index.html'
+
+# the roles in the user module and the user settings: what each role is for, contains and allows
+# (Resources/Private/Partials/UserModule); every other partial stays the one of Neos (Flow takes the first path that has
+# the partial, unlike Fluid itself)
+- requestFilter: 'isPackage("Neos.Neos") && (isController("Module\\Administration\\Users") || isController("Module\\User\\UserSettings"))'
+  options:
+    partialRootPaths:
+      - 'resource://Devclaim.NeosModernBackend/Private/Partials/UserModule'
+      - 'resource://Neos.Neos/Private/Partials'

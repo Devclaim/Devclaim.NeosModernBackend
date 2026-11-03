@@ -1,0 +1,134 @@
+/*
+ * The roles of an account in the user module (Partials/UserModule/Module/Shared/RolesSelection.html, Users.js): a row
+ * per role on a muted background, no borders; the name blue when pointed at, a ticked role tinted blue in the same
+ * weight; what it allows as chips; a role included in a ticked one locked.
+ */
+.neos .dc-roles {
+	display: grid;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.neos .dc-role {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	gap: 12px;
+	align-items: start;
+	margin: 0;
+	padding: 12px;
+	border-radius: 4px;
+	background: #2a2a2a;
+	color: #e8e8e8;
+	font-size: 14px;
+	line-height: 1.45;
+	cursor: pointer;
+}
+
+.neos .dc-role:hover .dc-role__label {
+	color: #00adee;
+}
+
+.neos .dc-role:has(.dc-role__check:checked) {
+	background: #12303b;
+}
+
+.neos .dc-role[data-dc-locked] {
+	cursor: default;
+}
+
+.neos .dc-role[data-dc-locked]:hover .dc-role__label {
+	color: inherit;
+}
+
+.neos .dc-role .dc-role__check {
+	display: grid;
+	place-content: center;
+	width: 18px;
+	height: 18px;
+	margin: 2px 0 0;
+	border: 0;
+	border-radius: 3px;
+	background: #3f3f3f;
+	appearance: none;
+	cursor: inherit;
+}
+
+.neos .dc-role .dc-role__check:checked {
+	background: #00adee;
+}
+
+.neos .dc-role .dc-role__check:checked::before {
+	content: '';
+	width: 10px;
+	height: 10px;
+	background: #fff;
+	clip-path: polygon(14% 44%, 0 59%, 39% 100%, 100% 23%, 85% 9%, 38% 70%);
+}
+
+.neos .dc-role .dc-role__check:disabled {
+	opacity: 0.5;
+}
+
+.neos .dc-role__body {
+	display: grid;
+	gap: 4px;
+	min-width: 0;
+}
+
+.neos .dc-role__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 8px;
+}
+
+.neos .dc-role__label {
+	font-weight: 600;
+}
+
+.neos .dc-role__package {
+	color: #777;
+	font-size: 12px;
+}
+
+.neos .dc-role__included {
+	padding: 1px 8px;
+	border-radius: 10px;
+	background: #1d3a2a;
+	color: #7fd9a4;
+	font-size: 12px;
+}
+
+.neos .dc-role__description {
+	color: #a8a8a8;
+	font-size: 13px;
+}
+
+.neos .dc-role__contains {
+	display: block;
+}
+
+.neos .dc-role__permissions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 4px;
+}
+
+.neos .dc-role__permission {
+	padding: 2px 8px;
+	border-radius: 10px;
+	background: #3a3a3a;
+	color: #c8c8c8;
+	font-size: 12px;
+}
+
+.neos .dc-roles__summary {
+	margin: 10px 0 0;
+	padding: 10px 12px;
+	border-radius: 4px;
+	background: #1a1a1a;
+	color: #a8a8a8;
+	font-size: 13px;
+	line-height: 1.45;
+}

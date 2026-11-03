@@ -425,3 +425,14 @@
 		display: none !important;
 	}
 }
+
+/*
+ * A selected node the user may not edit (nodeToolbar.ts, syncReadOnly): no controls at all, only the tab with its type.
+ * Outside the anchor positioning: also for the toolbars of the Neos UI as they are.
+ */
+html[data-devclaim-neos-modern-backend-readonly] #neos-ContextToolbar-ContextMenu,
+html[data-devclaim-neos-modern-backend-readonly] #neos-ContextToolbar [class*='contextToolbar__nodeLabel'] > svg:last-of-type,
+html[data-devclaim-neos-modern-backend-readonly] #neos-ContextToolbar > [class*='toolBar'] > div:has(> #neos-InlineToolbar-DragSelectedNode),
+html[data-devclaim-neos-modern-backend-readonly] [class*='structuralToolBar__popover'] {
+	display: none !important;
+}

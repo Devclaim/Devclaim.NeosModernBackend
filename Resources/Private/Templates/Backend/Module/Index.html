@@ -7,6 +7,27 @@
 <f:layout name="Default" />
 
 <f:section name="head">
+	<f:comment>
+		Dark from the first paint, before the styles of Neos have loaded (body.neos-module); the splash of the page
+		before kept on when the change took long enough to show it (Public/Backend/Transition.js and .css)
+	</f:comment>
+	<f:if condition="{moduleConfiguration.viewport}">
+		<f:comment>a module made for phones as well (setting "viewport" of the module, e.g. the moderation)</f:comment>
+		<meta name="viewport" content="{moduleConfiguration.viewport}" />
+	</f:if>
+	<style>
+		html {
+			background-color: #141414;
+		}
+	</style>
+	<script>
+		try {
+			if (Date.now() - Number(sessionStorage.getItem('devclaim-neos-modern-backend-transition')) < 10000) {
+				document.documentElement.setAttribute('data-devclaim-transition', 'on');
+			}
+		} catch (e) {}
+	</script>
+
 	<title><neos:backend.translate id="{title}" /></title>
 
 	<link

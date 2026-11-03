@@ -58,6 +58,22 @@
                 <source>Done</source>
                 <target state="translated">Fertig</target>
             </trans-unit>
+            <trans-unit id="users.roles.contains" xml:space="preserve">
+                <source>Contains</source>
+                <target state="translated">Enthält</target>
+            </trans-unit>
+            <trans-unit id="users.roles.includedIn" xml:space="preserve">
+                <source>Included in</source>
+                <target state="translated">Enthalten in</target>
+            </trans-unit>
+            <trans-unit id="users.roles.summary" xml:space="preserve">
+                <source>Allowed altogether</source>
+                <target state="translated">Darf insgesamt</target>
+            </trans-unit>
+            <trans-unit id="users.roles.summaryNone" xml:space="preserve">
+                <source>No role: the user can only log in</source>
+                <target state="translated">Keine Rolle: kann sich nur anmelden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -5,7 +5,7 @@ import {hideStaleEditorToolbars} from './editorToolbars';
 import type {FrameWindow} from './guestFrame';
 import {insertBeforeOrAfterByHalves} from './insertPosition';
 import type {Neos} from './neos';
-import {closeMenuAfterAction, syncNodeToolbar} from './nodeToolbar';
+import {closeMenuAfterAction, syncNodeToolbar, syncReadOnly} from './nodeToolbar';
 import type {Options} from './options';
 import {Outline} from './outline';
 import {syncPlaceholders} from './placeholders';
@@ -86,8 +86,12 @@ export function attach(win: FrameWindow, options: Options, neos: Neos): void {
 			schedule();
 		}
 	}).observe(root, {attributes: true, attributeFilter: ['class', 'style'], childList: true, subtree: true, characterData: true});
-	// the Neos UI loaded the data of the nodes of the page: the placeholders of the ones it did not know yet
-	const unsubscribe = neos.store.subscribe(() => syncPlaceholders(doc, neos));
+	// the Neos UI loaded the data of the nodes of the page: the placeholders of the ones it did not know yet, and whether
+	// the selected one may be edited (its policy)
+	const unsubscribe = neos.store.subscribe(() => {
+		syncPlaceholders(doc, neos);
+		syncReadOnly(doc, doc.querySelector<HTMLElement>(FOCUSED), neos);
+	});
 	win.addEventListener('pagehide', unsubscribe, {once: true});
 	syncPlaceholders(doc, neos);
 	// page coordinates: scrolling the page only matters for the clamp to the visible width and where the toolbars go;

@@ -1,5 +1,5 @@
 /** What the node toolbar of the Neos UI shows, beyond its styles (styles/node-toolbar.css) */
-import {SHINE_THROUGH} from './constants';
+import {ATTRIBUTE, SHINE_THROUGH} from './constants';
 import {type Neos, nodeOf} from './neos';
 
 const MENU = '#neos-ContextToolbar-ContextMenu';
@@ -43,10 +43,25 @@ export function typeLabel(element: HTMLElement, neos: Neos): string {
 }
 
 /**
+ * A selected node the user may not edit gets no controls at all: no menu (copy, paste, …), no drag handle, no plus
+ * (styles/node-toolbar.css, -readonly on <html>); the tab still names its type. The Neos UI only disables what the
+ * node type forbids, copying and adding stay usable there. Its policy comes after the node (the Neos UI loads it):
+ * until then the node counts as editable, so this runs again when the store changes.
+ */
+export function syncReadOnly(doc: Document, selected: HTMLElement | null, neos: Neos): void {
+	const node = selected ? nodeOf(selected, 'data-__neos-node-contextpath', neos) : undefined;
+	const readOnly = node?.policy?.canEdit === false;
+	if (doc.documentElement.hasAttribute(`${ATTRIBUTE}-readonly`) !== readOnly) {
+		doc.documentElement.toggleAttribute(`${ATTRIBUTE}-readonly`, readOnly);
+	}
+}
+
+/**
  * The tab names the type of the selected node; the buttons of the menu get their short label as tooltip
  * ("Duplizieren", not the long title of the Neos UI). Set again whenever the Neos UI renders its toolbar again.
  */
 export function syncNodeToolbar(doc: Document, selected: HTMLElement, neos: Neos): void {
+	syncReadOnly(doc, selected, neos);
 	syncShineThroughNotice(doc, selected, neos);
 	const tabLabel = doc.querySelector(
 		'#neos-ContextToolbar [class*="contextToolbar__nodeLabel"] > span:not([data-shine-through-notice])'

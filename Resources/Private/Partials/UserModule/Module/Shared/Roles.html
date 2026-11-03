@@ -1,0 +1,8 @@
+{namespace dc=Devclaim\NeosModernBackend\ViewHelpers}
+<f:comment>
+	The roles of an account as badges (Neos.Neos Partials/Module/Shared/Roles.html, Views.yaml), named as in the roles
+	of the account (Classes/UserRoles/RoleDescriptions.php); the package of a role in its title
+</f:comment>
+<f:for each="{dc:roles(roles: roles)}" as="role">
+	<span class="neos-label" title="{role.packageKey}">{role.label}</span>
+</f:for>

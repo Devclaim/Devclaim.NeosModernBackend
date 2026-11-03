@@ -1,9 +1,11 @@
 Devclaim:
-  NeosModeration:
-    app:
-      styleSheets:
-        # the moderation app at /neos/moderation with the top bar of the backend (Resources/Public/Backend/TopBar.css)
-        'Devclaim.NeosModernBackend:TopBar': 'resource://Devclaim.NeosModernBackend/Public/Backend/TopBar.css'
+  NeosModernBackend:
+    # the roles in the user module (Classes/UserRoles/RoleDescriptions.php), per role identifier, all optional:
+    #   label, description: in place of the ones of the policy
+    #   can: what the role allows, as texts (what sets it apart: what it does not allow is what it does not list)
+    #   derive: false leaves out what the policy grants (true: its modules and the labels of its other privileges)
+    #   position: the order (smaller first; the rest by name)
+    userRoles: {}
   NeosStyleguide:
     # the node previews of the workspace review: "workspace:before|after:<node address>" (Compare.fusion)
     nodeReferences:
@@ -24,10 +26,23 @@ Neos:
           'Devclaim.NeosModernBackend:Focus': 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.css'
           # the menu button, the chevrons, one menu (Resources/Public/Backend/Chrome.css)
           'Devclaim.NeosModernBackend:Chrome': 'resource://Devclaim.NeosModernBackend/Public/Backend/Chrome.css'
+          # the splash between the modules when a change takes long (Resources/Public/Backend/Transition.css)
+          'Devclaim.NeosModernBackend:Transition': 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.css'
         javaScripts:
           # the menu closes with Escape and a click beside it (Resources/Public/Backend/Menu.js)
           'Devclaim.NeosModernBackend:Menu': 'resource://Devclaim.NeosModernBackend/Public/Backend/Menu.js'
+          # the splash between the modules when a change takes long (Resources/Public/Backend/Transition.js)
+          'Devclaim.NeosModernBackend:Transition': 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.js'
     modules:
+      administration:
+        submodules:
+          # the roles of an account: what each is for, contains and allows (Partials/UserModule, Views.yaml)
+          users:
+            additionalResources:
+              javaScripts:
+                'Devclaim.NeosModernBackend:Users': 'resource://Devclaim.NeosModernBackend/Public/Backend/Users.js'
+              styleSheets:
+                'Devclaim.NeosModernBackend:Users': 'resource://Devclaim.NeosModernBackend/Public/Backend/Users.css'
       management:
         submodules:
           # three panes like the activity log, the review with each change as the website shows it
@@ -61,6 +76,9 @@ Neos:
           # a section of the menu opens and closes with its chevron only, not with its link (Public/Backend/Drawer.js)
           'Devclaim.NeosModernBackend:Drawer':
             resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Drawer.js'
+          # the splash over the content module when going to a backend module takes long (Public/Backend/Transition.js)
+          'Devclaim.NeosModernBackend:Transition':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.js'
         stylesheets:
           # focus marked for the keyboard only, as in the backend modules
           'Devclaim.NeosModernBackend:Focus':
@@ -68,6 +86,9 @@ Neos:
           # the menu button and the chevrons, as in the backend modules
           'Devclaim.NeosModernBackend:Chrome':
             resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Chrome.css'
+          # the splash when going to a backend module, the content module dark before its own splash
+          'Devclaim.NeosModernBackend:Transition':
+            resource: 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.css'
       frontendConfiguration:
         'Devclaim.NeosModernBackend':
           # distance between the node and its outline (px); less where the frame has no room for it

@@ -1,0 +1,52 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+{namespace dc=Devclaim\NeosModernBackend\ViewHelpers}
+<f:comment>
+	The roles of a new user or an account (Neos.Neos Partials/Module/Shared/RolesSelection.html, Views.yaml): each with
+	what it is for, the roles it contains and what it allows (Classes/UserRoles/RoleDescriptions.php). A ticked role
+	ticks and locks the roles it contains: they are not sent, the account keeps only the roles ticked by hand
+	(Public/Backend/Users.js). The same field as Neos', so its controller and its rules stay as they are.
+</f:comment>
+<legend class="neos-control-label">{neos:backend.translate(source: 'Modules', id: 'users.roles')}</legend>
+<div
+	class="dc-roles"
+	data-dc-roles
+	data-dc-included-in="{neos:backend.translate(id: 'users.roles.includedIn', source: 'Main', package: 'Devclaim.NeosModernBackend', value: 'Included in')}"
+	data-dc-summary="{neos:backend.translate(id: 'users.roles.summary', source: 'Main', package: 'Devclaim.NeosModernBackend', value: 'Allowed altogether')}"
+	data-dc-summary-none="{neos:backend.translate(id: 'users.roles.summaryNone', source: 'Main', package: 'Devclaim.NeosModernBackend', value: 'No role: the user can only log in')}"
+>
+	<f:for each="{dc:roles(roles: availableRoles, account: account)}" as="role" iteration="iteration">
+		<label class="dc-role" for="roles-{iteration.cycle}" data-dc-role="{role.identifier}" data-dc-contains="{role.contains -> f:join(separator: ' ')}">
+			<f:if condition="{account}">
+				<f:then>
+					<f:form.checkbox name="roleIdentifiers" multiple="true" value="{role.identifier}" id="roles-{iteration.cycle}" class="dc-role__check" checked="{role.assigned}" />
+				</f:then>
+				<f:else>
+					<f:form.checkbox name="roleIdentifiers" multiple="true" value="{role.identifier}" id="roles-{iteration.cycle}" class="dc-role__check" />
+				</f:else>
+			</f:if>
+			<span class="dc-role__body">
+				<span class="dc-role__head">
+					<span class="dc-role__label">{role.label}</span>
+					<span class="dc-role__package">{role.packageKey}</span>
+					<span class="dc-role__included" data-dc-included hidden></span>
+				</span>
+				<f:if condition="{role.description} || {role.containsLabels}">
+					<span class="dc-role__description">
+						{role.description}
+						<f:if condition="{role.containsLabels}">
+							<span class="dc-role__contains">{neos:backend.translate(id: 'users.roles.contains', source: 'Main', package: 'Devclaim.NeosModernBackend', value: 'Contains')}: {role.containsLabels -> f:join(separator: ', ')}</span>
+						</f:if>
+					</span>
+				</f:if>
+				<f:if condition="{role.can}">
+					<span class="dc-role__permissions">
+						<f:for each="{role.can}" as="permission">
+							<span class="dc-role__permission" data-dc-permission><f:if condition="{permission.translate}"><f:then>{neos:backend.translate(id: permission.text, source: 'Modules', value: permission.text)}</f:then><f:else>{permission.text}</f:else></f:if></span>
+						</f:for>
+					</span>
+				</f:if>
+			</span>
+		</label>
+	</f:for>
+	<p class="dc-roles__summary" data-dc-summary-text hidden></p>
+</div>
