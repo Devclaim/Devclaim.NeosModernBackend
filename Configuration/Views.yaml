@@ -10,6 +10,14 @@
       - 'resource://Neos.Workspace.Ui/Private/Fusion'
       - 'resource://Devclaim.NeosModernBackend/Private/Fusion/Backend'
 
+# the login: the page of Neos with a viewport (Resources/Private/Fusion/Login)
+- requestFilter: 'isPackage("Neos.Neos") && isController("Login") && isAction("index") && isFormat("html")'
+  viewObjectName: 'Neos\Fusion\View\FusionView'
+  options:
+    fusionPathPatterns:
+      - 'resource://Neos.Neos/Private/Fusion/Backend'
+      - 'resource://Devclaim.NeosModernBackend/Private/Fusion/Login'
+
 # the page of every backend module: one menu instead of two (Templates/Backend/Module/Index.html)
 - requestFilter: 'isPackage("Neos.Neos") && isController("Backend\\Module") && isAction("index")'
   options:

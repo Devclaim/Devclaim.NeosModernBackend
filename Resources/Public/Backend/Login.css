@@ -1,0 +1,21 @@
+/*
+ * The login on phones. As high as what is visible: 100vh reaches behind the address bar of mobile browsers. The rule of
+ * Neos that lets its fields shrink on phones is weaker than the one of their minimum width.
+ */
+.neos .neos-modal-centered {
+	min-height: 100dvh;
+}
+
+@media (max-width: 480px) {
+	.neos .neos-login-box {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 320px;
+	}
+
+	.neos input[type='text'],
+	.neos input[type='password'] {
+		min-width: 0;
+		font-size: 16px;
+	}
+}

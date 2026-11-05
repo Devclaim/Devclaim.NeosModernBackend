@@ -58,6 +58,10 @@ Neos:
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.css'
                 'Devclaim.NeosModernBackend:Workspaces': 'resource://Devclaim.NeosModernBackend/Public/Backend/Workspaces.css'
     userInterface:
+      backendLoginForm:
+        stylesheets:
+          # the login on phones (Resources/Public/Backend/Login.css)
+          'Devclaim.NeosModernBackend:Login': 'resource://Devclaim.NeosModernBackend/Public/Backend/Login.css'
       inspector:
         dataTypes:
           # every integer property gets the number input of Devclaim.NeosUiEditors (minus, plus, the range of

@@ -1,0 +1,6 @@
+##
+# The login of the backend on phones: the page of Neos has no viewport (Views.yaml)
+#
+prototype(Neos.Neos:Core.BackendPage) {
+    additionalResources.viewport = '<meta name="viewport" content="width=device-width, initial-scale=1"/>'
+}
