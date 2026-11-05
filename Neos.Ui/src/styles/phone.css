@@ -1,0 +1,503 @@
+/*
+ * The content module on phones (src/phone): the page at full width, the sidebars as drawers from the left and the
+ * right. The Neos UI hashes the start of its class names, its elements are matched by the readable part
+ * ([class*='_name']); ":not(#\#)" wins against its own selectors.
+ */
+:is(.devclaim-phone-drawer-button, .devclaim-phone-more):not(#\#) {
+	display: none;
+}
+
+@media (max-width: 1023px) {
+	:root {
+		/* as wide as on desktop, a strip of the page stays to see where you are */
+		--devclaim-phone-drawer-width: min(320px, 100vw - 56px);
+		/* in the top bar from the right: publishing (text, number, the arrow of 47px in the Neos UI), workspace, language */
+		--devclaim-phone-publish-width: 190px;
+		--devclaim-phone-workspace-width: 130px;
+		--devclaim-phone-language-width: 100px;
+		--devclaim-phone-bar-right: calc(
+			var(--devclaim-phone-publish-width) + var(--devclaim-phone-workspace-width) + var(--devclaim-phone-language-width)
+		);
+	}
+
+	/* 100vh reaches behind the address bar of mobile browsers */
+	[class*='_applicationWrapper']:not(#\#) {
+		height: 100dvh;
+	}
+
+	/*
+	 * One column: the sidebars leave the grid. By lines: the build of the Neos UI hashes the names of its grid areas as
+	 * well.
+	 */
+	#neos-application:not(#\#) {
+		grid-template-areas: none;
+		grid-template-rows: 41px 40px minmax(0, 1fr);
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	#neos-application > [class*='_primaryToolbar']:not(#\#) {
+		grid-area: 1 / 1;
+	}
+
+	#neos-application > [class*='_secondaryToolbar']:not(#\#) {
+		z-index: 39;
+		grid-area: 2 / 1;
+		padding: 0;
+	}
+
+	#neos-application > [class*='_contentCanvas']:not(#\#) {
+		grid-area: 3 / 1;
+	}
+
+	/* the second bar: the mode with its name and the preview, no path of the page, no full screen */
+	[class*='_secondaryToolbar__leftHandedActions']:not(#\#),
+	#neos-FullScreenButton:not(#\#) {
+		display: none;
+	}
+
+	[class*='_secondaryToolbar__rightHandedActions']:not(#\#) {
+		flex: 1;
+		min-width: 0;
+		margin-left: 0;
+	}
+
+	#neos-PreviewButton:not(#\#) {
+		margin-left: auto;
+	}
+
+	/*
+	 * The top bar. Its right side is the popover of `⋯`, so every element, also of other plugins, stays where its plugin
+	 * put it; language, workspace and publishing leave it for the bar. By fixed widths: they are no longer in the flow of the bar.
+	 */
+	[class*='_primaryToolbar__leftSidedActions']:not(#\#) {
+		flex: 0 0 auto;
+	}
+
+	[class*='_primaryToolbar__actions']:not(#\#) {
+		justify-content: flex-end;
+		box-sizing: border-box;
+		min-width: 0;
+		padding-right: var(--devclaim-phone-bar-right);
+	}
+
+	.devclaim-phone-more:not(#\#) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 41px;
+		background: transparent;
+		color: #fff;
+	}
+
+	[data-devclaim-neos-modern-backend-more] .devclaim-phone-more:not(#\#) {
+		color: #00adee;
+	}
+
+	[class*='_primaryToolbar__rightSidedActions']:not(#\#) {
+		position: fixed;
+		top: 41px;
+		right: var(--devclaim-phone-bar-right);
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		width: max-content;
+		padding: 4px 0;
+		background-color: #222;
+		visibility: hidden;
+	}
+
+	[data-devclaim-neos-modern-backend-more] [class*='_primaryToolbar__rightSidedActions']:not(#\#) {
+		visibility: visible;
+	}
+
+	/* the rows, all alike: icon, label, a number */
+	[class*='_primaryToolbar__rightSidedActions'] > :not(#neos-PublishDropDown, [class*='_dropDownButton'], [class*='_dropDownContents'], [class*='_singleDimensionDropdown']):not(#\#) {
+		width: 100%;
+		min-height: 44px;
+	}
+
+	:is(
+		[class*='_primaryToolbar__rightSidedActions'] > button:not([class*='_dropDownButton']),
+		#neos-moderation-toggle a,
+		#neos-styleguide-toggle button,
+		#neos-workspace-rebase
+	):not(#\#) {
+		display: grid !important;
+		grid-template-columns: 16px auto auto;
+		column-gap: 12px !important;
+		align-items: center;
+		justify-items: start;
+		box-sizing: border-box;
+		width: 100%;
+		height: 44px;
+		margin: 0 !important;
+		padding: 0 16px !important;
+		font-size: 13px !important;
+		line-height: 1;
+		text-align: left;
+	}
+
+	:is(
+		[class*='_primaryToolbar__rightSidedActions'] > button:not([class*='_dropDownButton']),
+		#neos-moderation-toggle a,
+		#neos-styleguide-toggle button,
+		#neos-workspace-rebase
+	):not(#\#) > svg {
+		grid-column: 1;
+		justify-self: center;
+		width: 16px;
+		height: 16px;
+		margin: 0 !important;
+	}
+
+	/* those with only an icon: their title */
+	:is(
+		[class*='_primaryToolbar__rightSidedActions'] > button:not([class*='_dropDownButton']),
+		#neos-styleguide-toggle button,
+		#neos-workspace-rebase
+	):not(#\#)::after {
+		grid-column: 2;
+		content: attr(title);
+	}
+
+	#neos-moderation-toggle .neos-moderation-count:not(#\#) {
+		margin: 0;
+		color: #adadad;
+		font-size: 12px;
+	}
+
+	/* no keyboard on a phone */
+	#neos-application [class*='_primaryToolbar__rightSidedActions'] > button:has(svg[data-icon='keyboard']):not(#\#) {
+		display: none !important;
+	}
+
+	/* the language in the bar: the select box of the Neos UI */
+	#neos-application [class*='_primaryToolbar__rightSidedActions'] > [class*='_singleDimensionDropdown']:not(#\#) {
+		position: fixed;
+		top: 0;
+		right: calc(var(--devclaim-phone-publish-width) + var(--devclaim-phone-workspace-width));
+		width: var(--devclaim-phone-language-width);
+		height: 41px;
+		visibility: visible;
+	}
+
+	[class*='_singleDimensionDropdown'] [class*='_selectBox']:not([class*='_selectBox__'], [class*='_selectBoxHeader']):not(#\#) {
+		width: 100%;
+	}
+
+	[class*='_singleDimensionDropdown'] [class*='_selectBox__btn']:not(#\#) {
+		width: 100%;
+		min-width: 0;
+		min-height: 41px;
+		background: transparent;
+	}
+
+	/* the workspace in the bar, its name as far as it fits */
+	#neos-application [class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:not(#\#) {
+		position: fixed;
+		top: 0;
+		right: var(--devclaim-phone-publish-width);
+		display: flex;
+		gap: 6px;
+		align-items: center;
+		box-sizing: border-box;
+		width: var(--devclaim-phone-workspace-width);
+		height: 41px;
+		margin: 0 !important;
+		padding: 0 8px;
+		background-color: transparent !important;
+		font-size: 12px;
+		visibility: visible;
+	}
+
+	[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:not(#\#) [class*='_labelEllipsis'] {
+		flex: 1;
+		min-width: 0;
+		text-align: left;
+	}
+
+	[class*='_primaryToolbar__rightSidedActions'] > [class*='_dropDownContents']:not(#\#) {
+		visibility: visible;
+	}
+
+	/* publishing, with its arrow to the other options, in the bar */
+	#neos-PublishDropDown:not(#\#) {
+		position: fixed;
+		top: 0;
+		right: 0;
+		box-sizing: border-box;
+		width: var(--devclaim-phone-publish-width);
+		visibility: visible;
+	}
+
+	#neos-PublishDropDown-Publish:not(#\#) {
+		display: inline-flex;
+		gap: 6px;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: 100%;
+		overflow: hidden;
+		padding: 0 8px;
+		white-space: nowrap;
+	}
+
+	/* the left drawer: the header row of the sidebar and below it the sidebar; below the menu, above the toolbars */
+	:is(.devclaim-sidebar, .devclaim-sidebar__header):not(#\#) {
+		position: fixed;
+		left: 0;
+		z-index: 44;
+		width: var(--devclaim-phone-drawer-width);
+		transition: transform 0.2s ease;
+	}
+
+	.devclaim-sidebar__header:not(#\#) {
+		top: 41px;
+	}
+
+	.devclaim-sidebar:not(#\#) {
+		top: 82px;
+		bottom: 0;
+		display: flex;
+	}
+
+	:is(.devclaim-sidebar--isHidden, .devclaim-sidebar__header--isHidden):not(#\#) {
+		visibility: hidden;
+		transform: translateX(-100%);
+		transition: transform 0.2s ease, visibility 0s 0.2s;
+	}
+
+	/* the right drawer */
+	[class*='_rightSideBar']:not([class*='_rightSideBar__']):not(#\#) {
+		position: fixed;
+		top: 41px;
+		right: 0;
+		bottom: 0;
+		left: auto;
+		z-index: 44;
+		overflow: hidden;
+		box-sizing: border-box;
+		width: var(--devclaim-phone-drawer-width);
+		min-width: 0;
+		max-width: none;
+		height: auto;
+		resize: none;
+		transition: transform 0.2s ease;
+	}
+
+	/* a transform of its own only while closed: the fixed elements inside the open drawer stay on the window */
+	[class*='_rightSideBar'][class*='_rightSideBar--isHidden']:not([class*='_rightSideBar__']):not(#\#) {
+		visibility: hidden;
+		transform: translateX(100%);
+		transition: transform 0.2s ease, visibility 0s 0.2s;
+	}
+
+	[class*='_rightSideBar--isHidden'] > div:not(#\#) {
+		display: block;
+	}
+
+	/* like the buttons of the top bar: square, white, blue when pressed */
+	.devclaim-phone-drawer-button:not(#\#) {
+		position: fixed;
+		bottom: calc(16px + env(safe-area-inset-bottom));
+		z-index: 44;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		background-color: #0b0b0b;
+		color: #fff;
+	}
+
+	.devclaim-phone-drawer-button:not(#\#):is(:hover, :active) {
+		background-color: #0b0b0b;
+		color: #00adee;
+	}
+
+	.devclaim-phone-drawer-button--left:not(#\#) {
+		left: 16px;
+	}
+
+	.devclaim-phone-drawer-button--right:not(#\#) {
+		right: 16px;
+	}
+
+	/* the page beside the drawer: a tap on it with unapplied changes asks what to do with them */
+	[class*='_unappliedChangesOverlay']:not(#\#) {
+		width: calc(100% - var(--devclaim-phone-drawer-width));
+	}
+
+	[class*='_unappliedChangesOverlay']:not(#\#)::after {
+		width: var(--devclaim-phone-drawer-width);
+	}
+
+	/* notifications above the corner buttons, not over the top bar; they are 512px wide in the Neos UI */
+	[class*='_flashMessageContainer']:not(#\#) {
+		top: auto;
+		bottom: calc(72px + env(safe-area-inset-bottom));
+		width: min(516px, 100vw - 16px);
+		margin-top: 0;
+	}
+
+	[class*='_flashMessage']:not([class*='_flashMessage_'], [class*='_flashMessageContainer']):not(#\#) {
+		width: 100%;
+	}
+
+	[class*='_flashMessage__heading']:not(#\#) {
+		line-height: 1.3;
+	}
+
+	/* the media browser and the image cropper of an editor: the whole screen, over the drawer */
+	[class*='_secondaryInspector']:not([class*='_secondaryInspector__']):not(#\#) {
+		position: fixed;
+		inset: 0;
+		z-index: 46;
+		border: 0;
+	}
+}
+
+/* tablets: the second bar names the mode */
+@media (min-width: 600px) and (max-width: 1023px) {
+	#neos-application [class*='_secondaryToolbar__rightHandedActions'] [class*='_dropDown__modeBadge']:not(#\#) {
+		gap: 8px;
+		width: auto;
+		font-size: 13px;
+	}
+}
+
+/* phones: icons only, the texts of the wider layouts are in their titles */
+@media (max-width: 599px) {
+	:root {
+		--devclaim-phone-publish-width: 99px;
+		--devclaim-phone-workspace-width: 40px;
+		--devclaim-phone-language-width: 40px;
+	}
+
+	#neos-application [class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:not(#\#) {
+		justify-content: center;
+		padding: 0;
+	}
+
+	[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:not(#\#) :is([class*='_labelEllipsis'], [class*='_dropDownOpenerIcon']) {
+		display: none;
+	}
+
+	/* its icon in the middle: the Neos UI keeps room for the name beside it */
+	[class*='_primaryToolbar__rightSidedActions'] > button[class*='_dropDownButton']:not(#\#) > svg {
+		margin: 0 !important;
+	}
+
+	#neos-PublishDropDown-Publish:not(#\#) {
+		gap: 4px;
+		padding: 0;
+		font-size: 0;
+	}
+
+	#neos-PublishDropDown-Publish:not(#\#)::before {
+		width: 14px;
+		height: 14px;
+		background-color: currentColor;
+		content: '';
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l7 7-1.8 1.8-3.9-3.9V17h-2.6V7.9l-3.9 3.9L5 10zM4 19h16v2.5H4z'/%3E%3C/svg%3E") center / contain no-repeat;
+	}
+
+	#neos-PublishDropDown-Publish [class*='_badge']:not(#\#) {
+		margin: 0;
+		font-size: 11px;
+	}
+
+	/* the dialog of the node types: one below the other, the icon beside the label */
+	[class*='_dialog__contents']:has([class*='_nodeTypeDialogHeader']):not(#\#) {
+		box-sizing: border-box;
+		width: 100vw;
+		min-width: 0;
+		max-width: 100vw;
+	}
+
+	/* above, below, inside: icons, their titles name them; beside them the filter */
+	[class*='_nodeTypeDialogHeader'] [class*='_buttonGroup']:not(#\#) {
+		display: flex;
+		flex: none;
+		margin-left: 0;
+	}
+
+	[class*='_nodeTypeDialogHeader'] [class*='_buttonGroup'] > button:not(#\#) {
+		width: 40px;
+		padding: 0;
+		font-size: 0;
+	}
+
+	[class*='_nodeTypeDialogHeader'] [class*='_iconAlignment']:not(#\#) {
+		margin-right: 0;
+	}
+
+	[class*='_nodeTypeDialogHeader__filter']:not([class*='_nodeTypeDialogHeader__filter'][class*='Input'], [class*='IconSearch']):not(#\#) {
+		min-width: 0;
+		margin-left: 8px;
+	}
+
+	[class*='_groupContents']:has(> [class*='_nodeType']):not(#\#) {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		box-sizing: border-box;
+		width: 100%;
+		min-width: 0;
+	}
+
+	[class*='_groupContents'] > [class*='_nodeType']:not(#\#) {
+		box-sizing: border-box;
+		width: 100%;
+		min-width: 0;
+	}
+
+	[class*='_nodeType__item']:not(#\#) {
+		justify-content: flex-start;
+		box-sizing: border-box;
+		min-width: 0;
+		min-height: 52px;
+		padding: 14px 40px 14px 16px;
+		text-align: left;
+	}
+
+	[class*='_nodeType__item'] > span:not(#\#) {
+		flex-direction: row;
+		gap: 12px;
+		text-wrap: wrap;
+	}
+
+	/* the language: its icon over the select box, which stays what is tapped */
+	[class*='_singleDimensionDropdown']:not(#\#)::before {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background-color: #fff;
+		content: '';
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18'/%3E%3C/svg%3E") center / 16px no-repeat;
+		pointer-events: none;
+	}
+
+	[class*='_singleDimensionDropdown'] [class*='_selectBox__btn']:not(#\#) {
+		opacity: 0;
+	}
+}
+
+/* the logo does not fit next to the rest: its N */
+@media (max-width: 359px) {
+	[class*='_primaryToolbar__leftSidedActions'] [class*='_logo']:not(#\#) {
+		overflow: hidden;
+		width: 24px;
+		background-position: left center;
+		background-size: auto 22px;
+	}
+
+	[class*='_primaryToolbar__leftSidedActions'] [class*='_logo']:not(#\#) > svg {
+		width: 24px;
+	}
+
+	[class*='_primaryToolbar__leftSidedActions'] > [class*='_wrapper']:has([class*='_logo']):not(#\#) {
+		padding-right: 4px;
+	}
+}

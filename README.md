@@ -24,6 +24,18 @@ the content frame. Works with any frontend (Fusion or headless).
   life (rendered empty, CKEditor starting, focused, re-rendered), CKEditor's own is hidden: they never disappear, the
   height of an empty property never changes.
 - **Sidebar** – improved modernised sidebar
+- **Mobile optimisations** – the content module on phones and tablets, below 1024px (`phoneDrawers` in the settings,
+  `Neos.Ui/src/phone`):
+  - the page fills the screen; the trees and the inspector of the Neos UI open as drawers from the left and the right,
+    as wide as on desktop, with a button in the bottom corner of each side. A click beside them or on a node in the
+    tree closes them; they start closed and leave the sidebars of the wider layout as they were.
+  - the top bar keeps menu, logo, language, workspace and publishing, the rest of it, also of other plugins, is a
+    popover behind `⋯`; the second bar keeps mode and preview, without the path of the page. Below 600px these bars
+    are icons only, tablets show the texts.
+  - notifications above the corner buttons, at the width of the screen; the media browser over the whole screen; the
+    node types of the dialog "Hinzufügen" one below the other on phones.
+  - not made for phones yet: the node toolbar and the `+` depend on pointing at a node, drag and drop competes with
+    scrolling, and the other dialogs keep their desktop layout.
 - **Date and time picker** – replaces the date and time picker of the Neos UI: calendar and time in one floating
   popover, also in other plugins that use it (e.g. `NeosSvelte.Events`).
 - **Number input** – integer properties get the number input of

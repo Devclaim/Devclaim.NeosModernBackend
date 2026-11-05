@@ -1,7 +1,10 @@
 /** What this package reads from the Neos UI (its store and registries), typed only as far as it is used */
 export type Neos = {
 	store: {
-		getState(): {cr?: {nodes?: {byContextPath?: Record<string, NeosNode | undefined>}}};
+		getState(): {
+			cr?: {nodes?: {byContextPath?: Record<string, NeosNode | undefined>}};
+			ui?: {leftSideBar?: {isHidden?: boolean}; rightSideBar?: {isHidden?: boolean}};
+		};
 		dispatch(action: unknown): void;
 		subscribe(listener: () => void): () => void;
 	};

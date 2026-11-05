@@ -12,6 +12,8 @@ export type Options = {
 	dragAndDrop: boolean;
 	/** the document and content tree in the left sidebar in the style of the inspector */
 	sidebar: boolean;
+	/** on phones the page at full width and the sidebars as drawers (needs the sidebar of this package) */
+	phoneDrawers: boolean;
 	/** the DateTimeEditor with a calendar of its own (react-day-picker), instead of the one of the Neos UI */
 	dateTimeEditor: boolean;
 };
@@ -27,6 +29,7 @@ export function readOptions(configuration: unknown): Options {
 		duration: number(settings.duration, 180),
 		dragAndDrop: settings.dragAndDrop !== false,
 		sidebar: settings.sidebar !== false,
+		phoneDrawers: settings.phoneDrawers !== false,
 		dateTimeEditor: settings.dateTimeEditor !== false
 	};
 }

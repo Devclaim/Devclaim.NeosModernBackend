@@ -74,6 +74,7 @@ declare module '@neos-project/neos-ui-redux-store' {
 			ContentTree: {reloadTree(options: {merge: boolean}): unknown};
 			PageTree: {commenceSearch(contextPath: string, options: {query: string; filterNodeType: string | null}): unknown};
 			LeftSideBar: {toggle(): unknown; toggleContentTree(): unknown};
+			RightSideBar: {toggle(): unknown};
 		};
 	};
 }

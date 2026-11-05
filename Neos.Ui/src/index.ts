@@ -10,6 +10,7 @@ import {leaveFrameDocument, watchFrameContent} from './frameContent';
 import {watchGuestFrame} from './guestFrame';
 import type {Neos} from './neos';
 import {readOptions} from './options';
+import {closeDrawersOnClickInFrame, registerPhoneDrawers} from './phone';
 import {holdSplashScreen, whenLoaded} from './splash';
 import {registerSidebar} from './sidebar';
 import nodeTypesStyles from './styles/node-types.css';
@@ -41,6 +42,10 @@ manifest(PACKAGE, {}, (globalRegistry, {store, frontendConfiguration}) => {
 	if (options.sidebar) {
 		registerSidebar(globalRegistry.get('containers') as Containers, neos);
 	}
+	const phoneDrawers = options.sidebar && options.phoneDrawers;
+	if (phoneDrawers) {
+		registerPhoneDrawers(globalRegistry.get('containers') as Containers, neos);
+	}
 	if (options.dateTimeEditor) {
 		const inspector = globalRegistry.get('inspector') as {get(key: string): unknown};
 		registerDateTimeEditor(inspector.get('editors') as Editors, neos);
@@ -48,6 +53,9 @@ manifest(PACKAGE, {}, (globalRegistry, {store, frontendConfiguration}) => {
 	watchGuestFrame(
 		(frameWindow) => {
 			attach(frameWindow, options, neos);
+			if (phoneDrawers) {
+				closeDrawersOnClickInFrame(frameWindow.document, neos);
+			}
 			whenLoaded(frameWindow, releaseSplash);
 		},
 		(previous) => leaveFrameDocument(neos, previous)

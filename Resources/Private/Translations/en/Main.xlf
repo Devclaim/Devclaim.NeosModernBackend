@@ -56,6 +56,9 @@
             <trans-unit id="users.roles.summaryNone" xml:space="preserve">
                 <source>No role: the user can only log in</source>
             </trans-unit>
+            <trans-unit id="phone.more" xml:space="preserve">
+                <source>More</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

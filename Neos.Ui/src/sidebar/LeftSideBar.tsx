@@ -14,7 +14,7 @@ import {TreeSnapshot} from './TreeSnapshot';
 /** The container registry of the Neos UI ('containers') */
 export type Containers = {
 	get(key: string): ComponentType<any>;
-	set(key: string, component: ComponentType<any>): void;
+	set(key: string, component: ComponentType<any>, position?: string | number): void;
 	getChildren(key: string): Array<ComponentType<any>>;
 };
 

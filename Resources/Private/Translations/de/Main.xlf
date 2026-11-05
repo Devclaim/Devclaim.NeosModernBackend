@@ -74,6 +74,10 @@
                 <source>No role: the user can only log in</source>
                 <target state="translated">Keine Rolle: kann sich nur anmelden</target>
             </trans-unit>
+            <trans-unit id="phone.more" xml:space="preserve">
+                <source>More</source>
+                <target state="translated">Mehr</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

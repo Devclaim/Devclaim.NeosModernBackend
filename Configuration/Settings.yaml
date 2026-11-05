@@ -103,6 +103,8 @@ Neos:
           dragAndDrop: true
           # the document and content tree in the left sidebar in the style of the inspector
           sidebar: true
+          # on phones and tablets (below 1024px) the page at full width and the sidebars as drawers, see README.md
+          phoneDrawers: true
           # the DateTimeEditor with a calendar that can be typed into (react-day-picker), instead of the one of the Neos UI;
           # also the DateInput other plugins render in their editors (e.g. the occurrences of NeosSvelte.Events)
           dateTimeEditor: true
