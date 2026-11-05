@@ -34,8 +34,10 @@ the content frame. Works with any frontend (Fusion or headless).
     are icons only, tablets show the texts.
   - notifications above the corner buttons, at the width of the screen; the media browser over the whole screen; the
     node types of the dialog "Hinzufügen" one below the other on phones.
+  - dialogs inside the screen, whatever minimum width the Neos UI gives them. The workspace module sets its viewport
+    (a change opens below the list).
   - not made for phones yet: the node toolbar and the `+` depend on pointing at a node, drag and drop competes with
-    scrolling, and the other dialogs keep their desktop layout.
+    scrolling, and editors inside dialogs keep their desktop layout.
 - **Date and time picker** – replaces the date and time picker of the Neos UI: calendar and time in one floating
   popover, also in other plugins that use it (e.g. `NeosSvelte.Events`).
 - **Number input** – integer properties get the number input of

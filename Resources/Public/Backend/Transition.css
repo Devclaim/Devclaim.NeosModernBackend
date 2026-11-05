@@ -12,6 +12,15 @@
 	background-color: #222;
 }
 
+/*
+ * The splash of the content module (Neos.Neos.Ui ApplicationView, and its copy of src/splash.ts): as high as what is
+ * visible. 100vh reaches behind the address bar of mobile browsers, the logo would sit below the middle.
+ */
+.splash:is(#appContainer > *, [data-devclaim-neos-modern-backend-splash] > *) {
+	width: 100%;
+	height: 100dvh;
+}
+
 html[data-devclaim-transition]::before,
 html[data-devclaim-transition]::after {
 	content: '';

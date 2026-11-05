@@ -149,7 +149,13 @@
 		}
 		review.dataset.ready = 'true';
 		review.querySelectorAll('[data-dc-ws-change]').forEach((row) => {
-			row.addEventListener('click', () => selectChange(review, row.dataset.dcWsChange));
+			row.addEventListener('click', () => {
+				selectChange(review, row.dataset.dcWsChange);
+				// narrow: the change is below the list, not beside it
+				if (window.matchMedia('(max-width: 1100px)').matches) {
+					review.querySelector('[data-dc-ws-detail]:not([hidden])')?.scrollIntoView();
+				}
+			});
 		});
 		initSelection(review);
 		const first = review.querySelector('[data-dc-ws-change]');

@@ -333,6 +333,61 @@
 		width: var(--devclaim-phone-drawer-width);
 	}
 
+	/* dialogs inside the screen: the Neos UI gives many a minimum width of 720px, only some of them not on phones */
+	[class*='_dialog__contents']:not(#\#) {
+		box-sizing: border-box;
+		min-width: 0;
+		max-width: calc(100vw - 16px);
+	}
+
+	[class*='_dialog__contents']:not([class*='_dialog__contentsPosition']):not(#\#) {
+		width: auto;
+	}
+
+	[class*='_dialog__title']:not(#\#) {
+		overflow-wrap: anywhere;
+	}
+
+	[class*='_dialog__actions']:not(#\#) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		justify-content: flex-end;
+	}
+
+	[class*='_dialog__actions'] button:not(#\#) {
+		height: auto;
+		min-height: 40px;
+		margin: 0;
+		white-space: normal;
+	}
+
+	/* the diagrams of the publishing and the synchronising, the columns of a new node */
+	[class*='_diagram']:not([class*='_diagram_']):not(#\#) {
+		box-sizing: border-box;
+		width: auto;
+		max-width: 100%;
+		/* the labels below the icons are wider than them */
+		padding-right: 32px;
+		padding-left: 32px;
+	}
+
+	[class*='_diagram__process']:not([class*='_diagram__process_']):not(#\#) {
+		flex: 1 1 32px;
+		width: auto;
+		min-width: 32px;
+	}
+
+	[class*='_diagram__workspace__label']:not(#\#) {
+		width: 96px;
+	}
+
+	[class*='_primaryColumn']:not(#\#) {
+		flex-shrink: 1;
+		box-sizing: border-box;
+		min-width: 0;
+	}
+
 	/* notifications above the corner buttons, not over the top bar; they are 512px wide in the Neos UI */
 	[class*='_flashMessageContainer']:not(#\#) {
 		top: auto;
@@ -389,8 +444,9 @@
 		margin: 0 !important;
 	}
 
+	/* no gap: the text stays a flex item without a width, it would push the icon out of the middle */
 	#neos-PublishDropDown-Publish:not(#\#) {
-		gap: 4px;
+		gap: 0;
 		padding: 0;
 		font-size: 0;
 	}
@@ -404,7 +460,7 @@
 	}
 
 	#neos-PublishDropDown-Publish [class*='_badge']:not(#\#) {
-		margin: 0;
+		margin: 0 0 0 4px;
 		font-size: 11px;
 	}
 

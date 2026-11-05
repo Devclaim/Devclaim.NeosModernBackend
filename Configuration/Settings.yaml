@@ -48,6 +48,8 @@ Neos:
           # three panes like the activity log, the review with each change as the website shows it
           # (Resources/Private/Fusion/Backend, Views.yaml)
           workspace:
+            # made for phones as well: the viewport of the module page (Templates/Backend/Module/Index.html)
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
             additionalResources:
               javaScripts:
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.js'
