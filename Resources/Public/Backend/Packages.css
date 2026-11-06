@@ -1,0 +1,70 @@
+/*
+ * The packages on phones (setting "viewport" of the module): the table as a list under the headings of its groups, the
+ * name and version, the key below them; the type says little here.
+ */
+@media (max-width: 800px) {
+	.neos.neos-module.neos-module-administration-packages table.neos-table,
+	.neos.neos-module.neos-module-administration-packages table.neos-table tbody {
+		display: block;
+		width: 100%;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table thead,
+	.neos.neos-module.neos-module-administration-packages table.neos-table td.package-type,
+	.neos.neos-module.neos-module-administration-packages table.neos-table tr.neos-folder td:not(:first-child) {
+		display: none;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table tr {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		column-gap: 8px;
+		margin-bottom: 4px;
+		padding: 8px 10px;
+		background: #2a2a2a;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table tr.neos-folder {
+		margin-top: 16px;
+		padding: 0;
+		background: transparent;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table td {
+		display: block;
+		width: auto;
+		max-width: none;
+		height: auto;
+		padding: 0 !important; /* Neos: the first cell of a table, with !important */
+		border: 0;
+		background: transparent;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table label {
+		line-height: 1.5;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table .neos-label {
+		padding: 0;
+		background: transparent;
+		color: inherit;
+		font-size: inherit;
+		font-weight: 400;
+		line-height: 1.5;
+		letter-spacing: 0;
+		white-space: normal;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table td.package-version {
+		color: #a3a3a3;
+		font-size: 13px;
+	}
+
+	.neos.neos-module.neos-module-administration-packages table.neos-table td.package-key {
+		grid-column: 1 / -1;
+		color: #a3a3a3;
+		font-size: 13px;
+	}
+}

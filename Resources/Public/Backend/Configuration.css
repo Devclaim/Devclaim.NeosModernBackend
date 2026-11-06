@@ -1,0 +1,19 @@
+/*
+ * The configuration on phones (setting "viewport" of the module): the types wrap, the tree keeps its width: less room per
+ * level, long keys and values break.
+ */
+@media (max-width: 800px) {
+	.neos.neos-module.neos-module-administration-configuration .neos-content > .neos-button {
+		margin: 0 4px 4px 0;
+	}
+
+	.neos.neos-module.neos-module-administration-configuration #configuration ul ul {
+		margin-left: 0;
+		padding-left: 10px;
+	}
+
+	.neos.neos-module.neos-module-administration-configuration #configuration :is(li, .key, .value, .neos-tree-title) {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+}

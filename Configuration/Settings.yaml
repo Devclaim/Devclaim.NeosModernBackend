@@ -29,22 +29,67 @@ Neos:
           # the splash between the modules when a change takes long (Resources/Public/Backend/Transition.css)
           'Devclaim.NeosModernBackend:Transition': 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.css'
         javaScripts:
+          # search fields do not take the focus when a page opens (Resources/Public/Backend/Focus.js)
+          'Devclaim.NeosModernBackend:Focus': 'resource://Devclaim.NeosModernBackend/Public/Backend/Focus.js'
           # the menu closes with Escape and a click beside it (Resources/Public/Backend/Menu.js)
           'Devclaim.NeosModernBackend:Menu': 'resource://Devclaim.NeosModernBackend/Public/Backend/Menu.js'
           # the splash between the modules when a change takes long (Resources/Public/Backend/Transition.js)
           'Devclaim.NeosModernBackend:Transition': 'resource://Devclaim.NeosModernBackend/Public/Backend/Transition.js'
     modules:
       administration:
+        # the overviews of the groups are made for phones as well (Templates/Module/Widget.html, Chrome.css)
+        viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
         submodules:
-          # the roles of an account: what each is for, contains and allows (Partials/UserModule, Views.yaml)
+          # made for phones as well (Resources/Public/Backend/Packages.css)
+          packages:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              styleSheets:
+                'Devclaim.NeosModernBackend:Packages': 'resource://Devclaim.NeosModernBackend/Public/Backend/Packages.css'
+          # made for phones as well (Resources/Public/Backend/Dimensions.css)
+          dimensions:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              styleSheets:
+                'Devclaim.NeosModernBackend:Dimensions': 'resource://Devclaim.NeosModernBackend/Public/Backend/Dimensions.css'
+          # made for phones as well (Resources/Public/Backend/Configuration.css)
+          configuration:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              styleSheets:
+                'Devclaim.NeosModernBackend:Configuration': 'resource://Devclaim.NeosModernBackend/Public/Backend/Configuration.css'
+          # made for phones as well (Resources/Public/Backend/Sites.css)
+          sites:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              styleSheets:
+                'Devclaim.NeosModernBackend:Sites': 'resource://Devclaim.NeosModernBackend/Public/Backend/Sites.css'
+          # the roles of an account: what each is for, contains and allows (Partials/UserModule, Views.yaml); made for
+          # phones as well
           users:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
             additionalResources:
               javaScripts:
                 'Devclaim.NeosModernBackend:Users': 'resource://Devclaim.NeosModernBackend/Public/Backend/Users.js'
               styleSheets:
                 'Devclaim.NeosModernBackend:Users': 'resource://Devclaim.NeosModernBackend/Public/Backend/Users.css'
       management:
+        viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
         submodules:
+          # made for phones as well, its sidebar (Resources/Public/Backend/Media.css and .js)
+          media:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              javaScripts:
+                'Devclaim.NeosModernBackend:Media': 'resource://Devclaim.NeosModernBackend/Public/Backend/Media.js'
+              styleSheets:
+                'Devclaim.NeosModernBackend:Media': 'resource://Devclaim.NeosModernBackend/Public/Backend/Media.css'
+          # made for phones as well (Resources/Public/Backend/Redirects.css)
+          redirects:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+            additionalResources:
+              styleSheets:
+                'Devclaim.NeosModernBackend:Redirects': 'resource://Devclaim.NeosModernBackend/Public/Backend/Redirects.css'
           # three panes like the activity log, the review with each change as the website shows it
           # (Resources/Private/Fusion/Backend, Views.yaml)
           workspace:
@@ -52,11 +97,18 @@ Neos:
             viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
             additionalResources:
               javaScripts:
+                'Devclaim.NeosStyleguide:Preview': 'resource://Devclaim.NeosStyleguide/Public/Preview/Preview.js'
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.js'
                 'Devclaim.NeosModernBackend:Workspaces': 'resource://Devclaim.NeosModernBackend/Public/Backend/Workspaces.js'
               styleSheets:
+                'Devclaim.NeosStyleguide:Preview': 'resource://Devclaim.NeosStyleguide/Public/Preview/Preview.css'
                 'Devclaim.NeosModernBackend:Compare': 'resource://Devclaim.NeosModernBackend/Public/Backend/Compare.css'
                 'Devclaim.NeosModernBackend:Workspaces': 'resource://Devclaim.NeosModernBackend/Public/Backend/Workspaces.css'
+      user:
+        viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
+        submodules:
+          usersettings:
+            viewport: 'width=device-width, initial-scale=1, viewport-fit=cover'
     userInterface:
       backendLoginForm:
         stylesheets:

@@ -132,3 +132,83 @@
 	font-size: 13px;
 	line-height: 1.45;
 }
+
+/*
+ * The list of the users on phones (setting "viewport" of the module; the forms: Chrome.css): the search in two lines, the
+ * table as a list, name and accounts with their roles, the actions next to them; the last login is on the page of a user.
+ */
+@media (max-width: 800px) {
+	.neos.neos-module.neos-module-administration-users .neos-search-bar {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.neos.neos-module.neos-module-administration-users .neos-search-bar input[type='search'] {
+		flex: 1 1 100%;
+	}
+
+	.neos.neos-module.neos-module-administration-users .neos-search-bar select {
+		flex: 1 1 0;
+		width: auto;
+		min-width: 0;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table,
+	.neos.neos-module.neos-module-administration-users table.users-table tbody {
+		display: block;
+		width: 100%;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table thead,
+	.neos.neos-module.neos-module-administration-users table.users-table tr > td:nth-child(3) {
+		display: none;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody tr {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-rows: auto 1fr;
+		column-gap: 8px;
+		margin-bottom: 4px;
+		padding: 10px;
+		background: #2a2a2a;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td {
+		display: block;
+		grid-column: 1;
+		width: auto;
+		height: auto;
+		padding: 0 !important; /* Neos: the first cell of a table, with !important */
+		border: 0;
+		background: transparent;
+		line-height: 1.5;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td:first-child {
+		font-weight: 600;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td:nth-child(2) {
+		color: #a3a3a3;
+		font-size: 13px;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td:nth-child(2) i {
+		display: none;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td.neos-action {
+		grid-row: 1 / span 2;
+		grid-column: 2;
+		align-self: start;
+	}
+
+	.neos.neos-module.neos-module-administration-users table.users-table tbody td.neos-action > .neos-pull-right {
+		display: flex;
+		float: none;
+		gap: 4px;
+	}
+}

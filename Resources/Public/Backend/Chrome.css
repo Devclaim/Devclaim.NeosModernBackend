@@ -244,21 +244,24 @@
 }
 
 /*
- * The shared action footer of backend modules. Keep it sticky and full-width, but replace the legacy 72px strip and
- * solid semantic slabs with a compact action bar that reads as part of the module chrome.
+ * The actions at the end of a page of a backend module: no bar, they simply end the page, in as many lines as they need.
+ * Plain grey buttons, the main one first and in a calm blue, what deletes apart at the end. ":not(#…)": Neos pins this
+ * footer in several ways (sticky, in the media module fixed).
  */
-.neos.neos-module .neos-footer {
+.neos.neos-module .neos-footer:not(#\#) {
+	position: static;
 	display: flex;
 	flex: none;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 8px;
-	height: 56px;
-	margin-top: auto;
-	padding: 10px 54px;
-	overflow: hidden;
-	border-top: 1px solid #323232;
-	background: #141414;
-	box-shadow: 0 -8px 24px rgb(0 0 0 / 16%);
+	height: auto;
+	margin: auto 0 0;
+	padding: 24px 0 0;
+	overflow: visible;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
 }
 
 .neos.neos-module .neos-footer > .neos-button,
@@ -270,20 +273,19 @@
 	height: 36px;
 	margin: 0;
 	padding: 0 14px;
-	border: 1px solid #3f3f3f;
-	border-radius: 2px;
-	background: #282828;
-	color: #eee;
-	line-height: 34px;
+	border: 0;
+	border-radius: 0;
+	background: #323232;
+	color: #f2f2f2;
+	line-height: 36px;
 	text-decoration: none;
-	transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+	transition: background-color .12s ease, color .12s ease;
 }
 
 .neos.neos-module .neos-footer > .neos-button:not([disabled], .neos-disabled):hover,
 .neos.neos-module .neos-footer > form > .neos-button:not([disabled], .neos-disabled):hover {
-	border-color: #00adee;
-	background: #2c2c2c;
-	color: #35c3f8;
+	background: #3f3f3f;
+	color: #fff;
 }
 
 .neos.neos-module .neos-footer > .neos-button:focus-visible,
@@ -292,26 +294,45 @@
 	outline-offset: 2px;
 }
 
-.neos.neos-module .neos-footer > .neos-button-success {
-	border-color: rgb(0 163 56 / 70%);
-	background: rgb(0 163 56 / 14%);
+.neos.neos-module .neos-footer > :is(.neos-button-primary, form:has(> .neos-button-primary)) {
+	order: -1;
 }
 
-.neos.neos-module .neos-footer > .neos-button-success:not([disabled], .neos-disabled):hover {
-	border-color: #00a338;
-	background: rgb(0 163 56 / 22%);
+.neos.neos-module .neos-footer > .neos-button-primary,
+.neos.neos-module .neos-footer > form > .neos-button-primary {
+	background: #0e7aa3;
 	color: #fff;
 }
 
-.neos.neos-module .neos-footer > .neos-button-danger {
-	border-color: rgb(255 70 13 / 70%);
-	background: rgb(255 70 13 / 12%);
+.neos.neos-module .neos-footer > .neos-button-primary:not([disabled], .neos-disabled):hover,
+.neos.neos-module .neos-footer > form > .neos-button-primary:not([disabled], .neos-disabled):hover {
+	background: #1489b6;
 }
 
-.neos.neos-module .neos-footer > .neos-button-danger:not([disabled], .neos-disabled):hover {
-	border-color: #ff460d;
-	background: rgb(255 70 13 / 20%);
-	color: #fff;
+.neos.neos-module .neos-footer > :is(.neos-button-danger, form:has(> .neos-button-danger)) {
+	order: 1;
+	margin-left: auto;
+}
+
+.neos.neos-module .neos-footer > .neos-button-danger,
+.neos.neos-module .neos-footer > form > .neos-button-danger {
+	background: rgb(255 70 13 / 14%);
+	color: #ff9b8f;
+}
+
+.neos.neos-module .neos-footer > .neos-button-danger:not([disabled], .neos-disabled):hover,
+.neos.neos-module .neos-footer > form > .neos-button-danger:not([disabled], .neos-disabled):hover {
+	background: rgb(255 70 13 / 24%);
+	color: #ffb8ae;
+}
+
+/* the second bar and the buttons of the drawers on phones belong to the page below the styleguide: not while it is open */
+:root:has(#neos-styleguide-view) .devclaim-phone-drawer-button:not(#\#) {
+	display: none;
+}
+
+:root:has(#neos-styleguide-view) [class*='_secondaryToolbar']:not(#\#) {
+	visibility: hidden;
 }
 
 /* the top bar of the backend modules: as dark, as high as the one of the content module */
@@ -598,6 +619,104 @@ svg:is([class*='fa-chevron-circle-right'], [class*='fa-circle-chevron-right']) {
 }
 
 /*
+ * One popover in every backend module, whatever Neos calls it: its two dropdowns (one list, or several lists with
+ * titles) and the preview of an image. The look of the sidebars: a grey surface, a softer grey under the pointer, what
+ * is chosen in blue text. The menu of the user lives in the menu panel and keeps its look. ":not(#…)" also wins against
+ * the rules of the modules for their own dropdowns.
+ */
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list, .neos-popover):not(#neos-user-actions *) {
+	border: 0;
+	border-radius: 0;
+	background: #323232;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) {
+	box-sizing: border-box;
+	width: max-content;
+	min-width: 200px;
+	max-width: calc(100vw - 32px);
+	margin: 2px 0 0;
+	padding: 4px;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) .neos-dropdown-menu-list-title {
+	height: auto;
+	padding: 8px 10px 4px;
+	border: 0;
+	color: #a3a3a3;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.4;
+}
+
+/* the lists of Neos float, each as wide as its longest entry: full width, or the selection stops short of the edge */
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) ul {
+	float: none;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li,
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) ul > li {
+	height: auto;
+	border: 0;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li + li {
+	border: 0;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li > :is(a, button) {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	height: 36px;
+	padding: 0 10px;
+	border: 0;
+	background: transparent;
+	color: #f2f2f2;
+	font-size: 14px;
+	line-height: 36px;
+	text-align: left;
+	text-decoration: none;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li > :is(a, button):is(:hover, :focus-visible) {
+	background: #3f3f3f;
+	color: #fff;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li > a.neos-active,
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li.neos-active > a {
+	background: #3a3a3a;
+	color: #00adee;
+}
+
+.neos :is(.neos-dropdown-menu, .neos-dropdown-menu-list):not(#neos-user-actions *) li > :is(a, button) i {
+	flex: none;
+	width: 16px;
+	margin: 0;
+	color: inherit;
+	line-height: 1;
+	text-align: center;
+}
+
+.neos .neos-popover-title {
+	border: 0;
+	background: transparent;
+	color: #a3a3a3;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+/*
  * The overview of a group of modules (Inhaltsverwaltung, Verwaltung): a card per module (Templates/Module/Widget.html),
  * the rows of three of Neos as one grid; a card lighter when pointed at, never blue
  */
@@ -627,6 +746,61 @@ svg:is([class*='fa-chevron-circle-right'], [class*='fa-circle-chevron-right']) {
 	width: auto;
 	min-height: 0;
 	margin: 0;
+}
+
+/* narrow windows (the overviews have a viewport for phones, Settings.yaml): down to one column step by step, with
+   narrower cards before the last step and the room of the page for them */
+@media (max-width: 1000px) {
+	.neos :has(> .neos-row-fluid > [class*='neos-span'] > .dc-module-card) {
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+	}
+}
+
+@media (max-width: 800px) {
+	.neos.neos-module:is(
+		.neos-module-management,
+		.neos-module-administration,
+		.neos-module-user,
+		.neos-module-management-media,
+		.neos-module-management-redirects,
+		.neos-module-administration-users,
+		.neos-module-administration-packages,
+		.neos-module-administration-sites,
+		.neos-module-administration-configuration,
+		.neos-module-administration-dimensions,
+		.neos-module-user-usersettings
+	) > .neos-module-wrap {
+		padding-right: 16px;
+		padding-left: 16px;
+	}
+
+	/* the forms of the users, the sites and the user settings: the columns of Neos one below the other */
+	.neos.neos-module:is(.neos-module-administration-users, .neos-module-administration-sites, .neos-module-user-usersettings) :is([class*='neos-span'], [class*='neos-offset']):not(input, select, textarea) {
+		float: none;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.neos.neos-module:is(.neos-module-administration-users, .neos-module-administration-sites, .neos-module-user-usersettings) :is(input:not([type='checkbox'], [type='radio'], [type='submit']), select, textarea) {
+		box-sizing: border-box;
+		width: 100%;
+		font-size: 16px;
+	}
+
+	/* a dialog of a module stays on the screen */
+	.neos.neos-module .neos-modal-content {
+		box-sizing: border-box;
+		position: static;
+		max-width: calc(100vw - 32px);
+		margin-right: 0;
+		margin-left: 0;
+	}
+
+	.neos .dc-module-card__link,
+	.neos .dc-module-card__link:hover,
+	.neos .dc-module-card__link:focus {
+		padding: 16px;
+	}
 }
 
 .dc-module-card {

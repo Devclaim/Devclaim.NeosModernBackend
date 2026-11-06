@@ -1,15 +1,20 @@
 /*
  * The compare of a change (Compare.fusion): every [data-compare] of the page, also ones added later (htmx of the
  * workspace module, older entries of the activity log). The frames load the node previews of the styleguide adapter
- * once the compare comes into view; the views side by side and slider (a line to drag); the changed words marked in
- * the rendered website (the frames have the origin of the backend, so their documents can be read). A side the website
- * cannot show (data-node-preview-unavailable) is left out, the whole compare when neither can.
+ * once the compare comes into view, a placeholder over them until they are ready; the views side by side and slider (a
+ * line to drag); the changed words marked in the rendered website (the frames have the origin of the backend, so their
+ * documents can be read). A side the website cannot show (data-node-preview-unavailable) is left out, the whole compare
+ * when neither can.
+ *
+ * The window of a preview (rounded, sheet, placeholder, waiting for fonts) is the styleguide's: window.DevclaimPreview
+ * (Preview.js of Devclaim.NeosStyleguide, loaded before this script).
  *
  * window.DevclaimCompare.markField(element): a changed field (data-old, data-new) with its changed words marked, for
  * the field lists of the modules.
  */
 (() => {
 	const MAX_CELLS = 250000;
+	const preview = window.DevclaimPreview;
 
 	/** words and the spaces between them, so a diff keeps the text as it was */
 	const tokens = (text) => text.split(/(\s+)/).filter((token) => token !== '');
@@ -145,23 +150,45 @@
 		// no storage: the default
 	}
 
-	/** the frames of a view at the zoom: as wide as their viewport allows, as high as the highest node, scaled */
+	/** the room of the sheet around a frame, in px (padding in Compare.css) */
+	const INSET = preview.inset;
+
+	/** the frames at the zoom, as wide as their viewport allows: the width the website renders at */
+	function place(frames) {
+		let rendered = 0;
+		for (const frame of frames) {
+			const viewport = frame.closest('.dc-compare__viewport');
+			rendered = Math.round((viewport.clientWidth - 2 * INSET) / zoom);
+			frame.style.width = `${rendered}px`;
+			frame.style.transform = `scale(${zoom})`;
+		}
+		return rendered;
+	}
+
+	function setHeight(frames, height) {
+		for (const frame of frames) {
+			frame.style.height = `${height}px`;
+			frame.closest('.dc-compare__viewport').style.height = `${Math.ceil(height * zoom) + 2 * INSET}px`;
+		}
+	}
+
+	/** the height of every view seen, by its nodes and width: a compare opened again has the right size at once */
+	const heights = new Map();
+	const heightKey = (frames, rendered) => {
+		const refs = [...frames[0].closest('[data-pane]').querySelectorAll('iframe[data-ref]')].map((frame) => frame.dataset.ref);
+		return `${refs.sort().join(' ')} ${rendered}`;
+	};
+
+	/** the frames of a view at the zoom, as high as the highest node, measured at the width they render at */
 	function fit(frames) {
-		const heights = frames.map((frame) => {
+		const rendered = place(frames);
+		const measured = frames.map((frame) => {
 			const root = rootOf(frame.contentDocument);
 			return root ? Math.ceil(root.getBoundingClientRect().bottom) : 0;
 		});
-		const height = Math.max(120, ...heights);
-		for (const frame of frames) {
-			const viewport = frame.closest('.dc-compare__viewport');
-			const width = viewport ? viewport.clientWidth : frame.parentElement.clientWidth;
-			frame.style.width = `${Math.round(width / zoom)}px`;
-			frame.style.height = `${height}px`;
-			frame.style.transform = `scale(${zoom})`;
-			if (viewport) {
-				viewport.style.height = `${Math.ceil(height * zoom)}px`;
-			}
-		}
+		const height = Math.max(120, ...measured);
+		heights.set(heightKey(frames, rendered), height);
+		setHeight(frames, height);
 	}
 
 	/** all loaded frames of the page again, after the zoom or the width changed */
@@ -234,6 +261,15 @@
 		});
 	}
 
+	/** the frames of a view are ready: on the sheet of their page, the placeholders fade out over them */
+	function reveal(pane, frames) {
+		const color = frames[0]?.contentDocument ? preview.pageBackground(frames[0].contentDocument) : null;
+		pane.querySelectorAll('.dc-compare__viewport, .dc-compare__clip').forEach((element) => {
+			element.style.background = color ?? preview.sheet;
+		});
+		preview.hidePlaceholders(pane);
+	}
+
 	/** the page of the node previews of an adapter: its manifest (nodePreview), asked once per adapter */
 	const manifests = new Map();
 	function previewTemplate(adapter) {
@@ -266,27 +302,38 @@
 			compare.hidden = true;
 			return;
 		}
+		// the width and, if seen before, the height from the start: the page does not change its layout after loading
+		const known = heights.get(heightKey(frames, place(frames)));
+		if (known) {
+			setHeight(frames, known);
+		}
 		let loaded = 0;
 		for (const frame of pending) {
-			frame.addEventListener('load', () => {
+			frame.addEventListener('load', async () => {
 				makeInert(frame.contentDocument);
 				markFocus(compare, frame.contentDocument);
-				const root = rootOf(frame.contentDocument);
-				if (root) {
-					new ResizeObserver(() => fit(frames)).observe(root);
-				}
 				if (++loaded < pending.length) {
 					return;
 				}
 				if (pane.dataset.pane === 'side') {
 					leaveOutUnavailable(compare, frames);
 				}
-				fit(frames.filter((frame) => !frame.closest('[hidden]')));
 				const before = pane.querySelector('iframe[data-side="before"]');
 				const after = pane.querySelector('iframe[data-side="after"]');
 				if (before && after && !isUnavailable(before) && !isUnavailable(after)) {
 					markFrames(before.contentDocument, after.contentDocument);
 				}
+				const shown = frames.filter((candidate) => !candidate.closest('[hidden]'));
+				const documents = shown.map((candidate) => candidate.contentDocument).filter(Boolean);
+				await Promise.all(documents.map(preview.settled));
+				// htmx replaced the compare meanwhile
+				if (shown.length === 0 || !pane.isConnected) {
+					return;
+				}
+				fit(shown);
+				reveal(pane, shown);
+				const observer = new ResizeObserver(() => fit(shown));
+				documents.forEach((document) => observer.observe(rootOf(document)));
 			});
 			frame.src = template
 				.replace('{ref}', encodeURIComponent(frame.dataset.ref))
@@ -392,7 +439,10 @@
 			button.addEventListener('click', () => setZoom(Number(button.dataset.zoom)));
 		});
 		compare.querySelectorAll('[data-zoom-value]').forEach((value) => (value.textContent = `${Math.round(zoom * 100)} %`));
-		compare.querySelectorAll('.dc-compare__viewport').forEach((viewport) => widths.observe(viewport));
+		compare.querySelectorAll('.dc-compare__viewport').forEach((viewport) => {
+			viewport.append(preview.placeholderElement());
+			widths.observe(viewport);
+		});
 		compare.querySelectorAll('[data-view]').forEach((button) => {
 			button.addEventListener('click', () => show(compare, button.dataset.view));
 		});

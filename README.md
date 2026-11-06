@@ -20,6 +20,11 @@ the content frame. Works with any frontend (Fusion or headless).
   back, the page stays as it is when the next one is there soon (an instant change, dark from its first paint, no
   white in between); only when it takes longer, the splash screen fades in after the click and the next page keeps it
   until it has loaded (`Resources/Public/Backend/Transition.js` and `.css`).
+- **Backend on phones** – the overviews of the module groups and the media module have a viewport for phones: the cards
+  of an overview down to one column (`Chrome.css`), in the media module the filters above the images and the forms in
+  one column (`Resources/Public/Backend/Media.css`); the redirects, users, packages and sites as lists
+  (`Redirects.css`, `Users.css`, `Packages.css`, `Sites.css`), the configuration tree (`Configuration.css`) and the
+  dimensions graph (`Dimensions.css`).
 - **Steady placeholders** – the placeholders of inline editable properties are drawn by the package for their whole
   life (rendered empty, CKEditor starting, focused, re-rendered), CKEditor's own is hidden: they never disappear, the
   height of an empty property never changes.
@@ -55,7 +60,8 @@ the content frame. Works with any frontend (Fusion or headless).
   the review of the workspace module for each change (the node in the workspace against its base workspace, node
   references `workspace:before|after:<node address>`); as a Fusion component
   (`Devclaim.NeosModernBackend:Compare`, `Resources/Public/Backend/Compare.js` and `.css`) for other backend modules,
-  e.g. the activity log of Devclaim.NeosActivity.
+  e.g. the activity log of Devclaim.NeosActivity. Its preview window comes from the styleguide: such a module loads
+  `Preview.js` and `Preview.css` of Devclaim.NeosStyleguide (`Resources/Public/Preview`) before them.
 
 - **Workspace module** – the workspace module of Neos (Neos.Workspace.Ui) in three panes, in the look of the
   backend: the workspaces as a tree by base workspace (their changes in short, outdated ones marked), the selected one

@@ -1,0 +1,17 @@
+/*
+ * The dimensions on phones (setting "viewport" of the module): the graph is drawn at fixed positions, it stays as it is
+ * and scrolls in its box, reaching to the edges of the screen; the buttons wrap.
+ */
+@media (max-width: 800px) {
+	.neos.neos-module.neos-module-administration-dimensions .neos-content > .neos-button {
+		margin: 0 4px 4px 0;
+	}
+
+	/* important: Neos sets them on the element */
+	.neos.neos-module.neos-module-administration-dimensions div#graph {
+		box-sizing: content-box;
+		width: calc(100% + 32px) !important;
+		margin: 0 -16px;
+		overflow: auto !important;
+	}
+}

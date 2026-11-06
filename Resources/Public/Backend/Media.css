@@ -1,0 +1,703 @@
+/*
+ * The bar above the images (all widths): one grey strip, the count on the left, the tools and the upload on the right.
+ * The two groups of Neos dissolve, so the upload can go to the end; no lines, every tool the same size.
+ */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options {
+	display: flex;
+	align-items: center;
+	min-height: 40px;
+	padding: 0 2px 0 12px;
+	border: 0;
+	background: #2a2a2a;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options:not(:has(*)) {
+	display: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options {
+	display: contents;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options .count {
+	order: 1;
+	height: auto;
+	margin-right: auto;
+	padding: 0;
+	border: 0;
+	color: #a3a3a3;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options {
+	display: flex;
+	order: 2;
+	float: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > :is(a, .neos-dropdown),
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > :is(a, .neos-dropdown):first-child {
+	border: 0;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > a,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > .neos-dropdown > span > a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	min-width: 0;
+	height: 36px;
+	padding: 0;
+	color: #f2f2f2;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > a i,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > .neos-dropdown > span > a i {
+	line-height: 1;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > a.neos-active,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > .neos-dropdown > span > a.neos-active {
+	color: #00adee;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > a:hover,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > .neos-dropdown > span > a:hover,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-view-options > .neos-dropdown.neos-open > span > a {
+	background: #3a3a3a;
+	color: #fff;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a {
+	display: flex;
+	order: 3;
+	align-items: center;
+	gap: 6px;
+	height: 36px;
+	padding: 0 10px;
+	color: #00adee;
+	white-space: nowrap;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a:hover {
+	background: #3a3a3a;
+	color: #35c3f8;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a i {
+	margin: 0;
+}
+
+/*
+ * The upload: no area on the page. The drop area of Neos (#dropzone, with its uploader) lies over the whole window, out
+ * of sight until a file is dragged over it (Media.js); hidden, not removed, the uploader stays bound to it.
+ */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #dropzone.neos-upload-area {
+	position: fixed;
+	inset: 0;
+	z-index: 2147483000;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: rgba(0, 0, 0, 0.78);
+	color: #f2f2f2;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 120ms ease, visibility 120ms;
+}
+
+body.dc-media-dropping.neos-module-management-media.neos-module.neos-controls .neos.media-browser #dropzone.neos-upload-area {
+	visibility: visible;
+	opacity: 1;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #dropzone.neos-upload-area > :not(.dc-media-drop) {
+	display: none;
+}
+
+.dc-media-drop {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	text-align: center;
+	pointer-events: none;
+}
+
+/* Neos hides the icons and texts of the area while a file is over the page */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #dropzone .dc-media-drop :is(i, strong, span) {
+	display: block;
+	padding: 0;
+}
+
+.dc-media-drop i {
+	color: #00adee;
+	font-size: 40px;
+}
+
+.dc-media-drop strong {
+	font-size: 22px;
+	font-weight: 500;
+}
+
+.dc-media-drop span {
+	color: #a3a3a3;
+	font-size: 14px;
+}
+
+/* the uploader leaves no trace on the page: its file input takes no pointer ("No files selected"), no room while empty */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #uploader .moxie-shim,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #uploader .moxie-shim input {
+	pointer-events: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser #filelist:empty {
+	margin: 0;
+}
+
+/* the images start level with the sidebar */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content-help {
+	display: none;
+}
+
+/* an image can be dragged onto a collection or tag: a grip on it under the pointer (the whole image drags, as in Neos) */
+@media (hover: hover) {
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-img-container.draggable-asset {
+		position: relative;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-img-container.draggable-asset::after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		width: 28px;
+		height: 28px;
+		background: rgba(0, 0, 0, 0.6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Ccircle cx='5.5' cy='3' r='1.5'/%3E%3Ccircle cx='10.5' cy='3' r='1.5'/%3E%3Ccircle cx='5.5' cy='8' r='1.5'/%3E%3Ccircle cx='10.5' cy='8' r='1.5'/%3E%3Ccircle cx='5.5' cy='13' r='1.5'/%3E%3Ccircle cx='10.5' cy='13' r='1.5'/%3E%3C/svg%3E") center / 16px no-repeat;
+		opacity: 0;
+		cursor: grab;
+		transition: opacity 120ms ease;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-thumbnail:hover .neos-img-container.draggable-asset::after {
+		opacity: 1;
+	}
+}
+
+/*
+ * The sidebar of the media module (all widths): quiet rows, a plain count, a soft selection. Editing a list (the button
+ * in its heading) shows only what can be edited, as cards with their actions, and a field to add one.
+ */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > h2 {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 32px;
+	margin: 0 0 4px;
+	border: 0;
+	line-height: 32px;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > h2 .neos-media-aside-list-edit-toggle {
+	float: none;
+	width: auto;
+	min-width: 32px;
+	height: 32px;
+	padding: 0 8px;
+	border: 0;
+	background: transparent;
+	color: #a3a3a3;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 32px;
+	text-align: center;
+	cursor: pointer;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > h2 .neos-media-aside-list-edit-toggle:hover {
+	background: #2a2a2a;
+	color: #fff;
+}
+
+/* while editing it leaves the mode: "Fertig" (Media.js) */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > h2 .neos-media-aside-list-edit-toggle.neos-active {
+	background: transparent;
+	color: #00adee;
+	font-size: 13px;
+}
+
+.neos-module-management-media .neos-media-aside-list-edit-toggle.neos-active i {
+	display: none;
+}
+
+.neos-module-management-media .neos-media-aside-list-edit-toggle.neos-active::before {
+	content: attr(data-done);
+}
+
+/* stronger than the rules of Neos for a narrow sidebar (phones, and more than 25 tags at any width), which turn the rows
+   into blue labels */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list {
+	border: 0;
+	background: transparent;
+	font-size: 14px;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li {
+	display: block;
+	margin: 0;
+	background: transparent;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a {
+	display: block;
+	padding: 8px 40px 8px 10px;
+	background: transparent;
+	color: #f2f2f2;
+	font-size: 14px;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a:hover:not(.neos-drag-active) {
+	background: #2a2a2a;
+	color: #fff;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-active,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-active:hover:not(.neos-drag-active) {
+	background: #2a2a2a;
+	color: #00adee;
+}
+
+/* the count: a plain number, readable on every state of the row */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a > span,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a:hover:not(.neos-drag-active) > span {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	padding: 0;
+	background: transparent;
+	color: #a3a3a3;
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	transform: translateY(-50%);
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-active > span,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-active:hover:not(.neos-drag-active) > span {
+	color: #00adee;
+}
+
+/* editing: the cards */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active li > a > span,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active > li:not(:has(.neos-sidelist-edit-actions)) {
+	display: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active > li {
+	position: relative;
+	width: auto;
+	margin-bottom: 4px;
+	background: #2a2a2a;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active > li > a {
+	display: block;
+	padding-right: 84px;
+	background: transparent;
+	color: #f2f2f2;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions {
+	position: absolute;
+	top: 50%;
+	right: 4px;
+	display: flex;
+	gap: 2px;
+	transform: translateY(-50%);
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions :is(a, button) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #a3a3a3;
+	font-size: 14px;
+	line-height: 36px;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions i,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions i:hover {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions :is(a, button):hover {
+	background: #3a3a3a;
+	color: #fff;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active .neos-sidelist-edit-actions .neos-button-danger:hover {
+	background: transparent;
+	color: #ff9b8f;
+}
+
+/* the search: one field with its button, the line of the focus under both */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search {
+	display: flex;
+	flex-direction: row-reverse;
+	background: #3f3f3f;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search:focus-within {
+	box-shadow: inset 0 -2px 0 #00adee;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search > div {
+	flex: 1;
+	min-width: 0;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search input,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search input:focus {
+	border: 0;
+	outline: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search button[type='submit'] {
+	flex: none;
+	float: none;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+/* the field to add one: a card too, its button a plus */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > form.neos-media-aside-list-editing-active {
+	display: flex;
+	gap: 0;
+	margin-top: 0;
+}
+
+.neos-module-management-media .neos-media-aside-group > form br {
+	display: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > form input[type='text'] {
+	flex: 1;
+	width: auto;
+	min-width: 0;
+	height: 36px;
+	padding: 0 10px;
+	border: 0;
+	background: #2a2a2a;
+	color: #f2f2f2;
+	font-size: 14px;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > form button[type='submit'] {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 0;
+	background: #2a2a2a;
+	color: transparent;
+	font-size: 0;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > form button[type='submit']:hover {
+	background: #00adee;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > form button[type='submit']::before {
+	width: 14px;
+	height: 14px;
+	background:
+		linear-gradient(#f2f2f2, #f2f2f2) center / 100% 2px no-repeat,
+		linear-gradient(#f2f2f2, #f2f2f2) center / 2px 100% no-repeat;
+	content: '';
+}
+
+/* an image under the pointer, in the grid and the list: it brightens, its name turns blue, no frame; a row of the list
+   also lightens */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-assets .neos-thumbnails li .neos-img-container:hover {
+	outline: 0;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-thumbnails li.asset .neos-img-container > img,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list .neos-list-thumbnail img {
+	transition: filter 150ms ease;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-thumbnails li.asset:hover .neos-img-container > img,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset:hover .neos-list-thumbnail img {
+	filter: brightness(1.18);
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-thumbnails li.asset .neos-img-label .asset-label,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset td.asset-label {
+	transition: color 150ms ease;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-thumbnails li.asset:hover .neos-img-label .asset-label,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset:hover td.asset-label {
+	color: #00adee;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset td {
+	transition: background-color 150ms ease;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset:hover td {
+	background-color: #3a3a3a;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser table.neos-table.asset-list tbody tr.asset:hover td .neos-label {
+	background-color: #4a4a4a;
+	color: #fff;
+}
+
+
+/*
+ * While an image is dragged (Neos marks the rows it can go to with neos-drag-active): the images step back, the sidebar
+ * lights up as the place to go, the row under the pointer says what a drop does ("Hinzufügen", Media.js)
+ */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content:has(.neos-drag-active) .neos-media-aside {
+	background: #2a2a2a;
+	box-shadow: 0 0 0 8px #2a2a2a;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content:has(.neos-drag-active) .neos-media-aside .neos-media-aside-group > h2 {
+	color: #00adee;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content:has(.neos-drag-active) .neos-media-aside :is(.neos-search, .neos-media-aside-list-edit-toggle),
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content:has(.neos-drag-active) .neos-media-aside .neos-media-aside-list li > a:not(.neos-drag-active) {
+	opacity: 0.4;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content:has(.neos-drag-active) .neos-media-assets :is(.neos-img-container:not(.ui-draggable-dragging), .neos-img-label, tr.asset:not(.ui-draggable-dragging)) {
+	opacity: 0.4;
+}
+
+/* the image under the pointer: clearly above the page (Neos sets a faint opacity on it), small enough not to cover the
+   rows it goes to, shrunk around the point it was grabbed at (Media.js) */
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .ui-draggable-dragging {
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+	opacity: 0.9 !important;
+	cursor: grabbing;
+	transform: scale(0.4);
+	transform-origin: var(--dc-media-grab-x, 50%) var(--dc-media-grab-y, 50%);
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active:hover {
+	outline: 0;
+	background: transparent;
+	color: #f2f2f2;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active > span {
+	display: block;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active::after {
+	content: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active.neos-drag-hover,
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active.neos-drag-hover:hover {
+	outline: 0;
+	background: #3a3a3a;
+	box-shadow: inset 3px 0 0 #00adee;
+	color: #f2f2f2;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active.neos-drag-hover > span {
+	display: none;
+}
+
+body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list li > a.neos-drag-active.neos-drag-hover::after {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	color: #00adee;
+	font-size: 13px;
+	content: attr(data-add);
+	transform: translateY(-50%);
+}
+
+/*
+ * The media module on phones (setting "viewport" of the module; Neos.Media.Browser has rules for narrow windows, but
+ * keeps its sidebar next to the images, the seven columns of the list and the two columns of the forms). The sidebar
+ * above the images, its lists as lines to swipe, the list down to what identifies an asset, the forms in one column.
+ */
+/* next to the sidebar the seven columns of the list do not fit either: the date and the type go first */
+@media (max-width: 1023px) {
+	.neos-module-management-media table.neos-table.asset-list :is(th, td):is(:nth-child(3), :nth-child(5)) {
+		display: none;
+	}
+}
+
+@media (max-width: 767px) {
+	/* the upload: a round button in reach of the thumb, the link of the bar itself */
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a {
+		position: fixed;
+		right: 16px;
+		bottom: calc(16px + env(safe-area-inset-bottom));
+		z-index: 100;
+		gap: 0; /* the hidden text is still an item: a gap would push the plus off the middle */
+		justify-content: center;
+		width: 56px;
+		height: 56px;
+		padding: 0;
+		border-radius: 50%;
+		background: #00adee;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+		color: #fff;
+		font-size: 0;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a:hover {
+		background: #00adee;
+		color: #fff;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a i {
+		display: none;
+	}
+
+	/* drawn, a "+" of the font sits above the middle */
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-options .neos-file-options > a::before {
+		content: '';
+		width: 20px;
+		height: 20px;
+		background:
+			linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+			linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+	}
+
+	/* the last line of the page not under it */
+	.neos.neos-module.neos-module-management-media > .neos-module-wrap:has(.neos-file-options > a) {
+		padding-bottom: 88px;
+	}
+
+	/* the search and the filters first, without them a phone would scroll past every image */
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content {
+		flex-direction: column-reverse;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-media-aside,
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-media-assets {
+		flex: none;
+		width: 100%;
+		min-width: 0;
+		margin: 0;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-content .neos-search {
+		max-width: none;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group {
+		margin: 0 0 12px;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group > h2 {
+		margin: 0 0 6px;
+		font-size: 13px;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-list:not(.neos-media-aside-list-editing-active) {
+		display: flex;
+		gap: 8px;
+		margin: 0 -16px;
+		padding: 0 16px;
+		overflow-x: auto;
+		font-size: 14px;
+		scrollbar-width: none;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-list:not(.neos-media-aside-list-editing-active) > li {
+		flex: none;
+		width: auto;
+		margin: 0;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list:not(.neos-media-aside-list-editing-active) > li > a {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: auto;
+		height: 36px;
+		padding: 0 12px;
+		background: #2a2a2a;
+		white-space: nowrap;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list:not(.neos-media-aside-list-editing-active) > li > a.neos-active {
+		background: #323232;
+		color: #00adee;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list:not(.neos-media-aside-list-editing-active) > li > a > span {
+		position: static;
+		transform: none;
+	}
+
+	/* while editing a list it is the whole width again, its names readable */
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-group .neos-media-aside-list.neos-media-aside-list-editing-active {
+		font-size: 14px;
+	}
+
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-list input,
+	body.neos-module-management-media.neos-module.neos-controls .neos.media-browser .neos-media-aside .neos-media-aside-list button {
+		max-width: none;
+	}
+
+	/* the list: the image, the name and the actions; the rest is on the page of the asset */
+	.neos-module-management-media table.neos-table.asset-list :is(th, td):nth-child(n + 3):not(.neos-action) {
+		display: none;
+	}
+
+	.neos-module-management-media table.neos-table.asset-list td.asset-label {
+		width: 100%;
+		overflow-wrap: anywhere;
+	}
+
+	/* the forms: asset, upload, replace */
+	.neos-module-management-media .neos-row-fluid > [class*='neos-span'] {
+		float: none;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.neos-module-management-media .neos-image-example img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* below 16px a phone zooms into a field */
+	.neos-module-management-media :is(input, textarea, select) {
+		font-size: 16px;
+	}
+}

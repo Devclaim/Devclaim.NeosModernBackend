@@ -1,6 +1,7 @@
 /*
  * The compare of a change (Compare.fusion, Compare.js) in the look of the Neos backend: its greys, the Neos blue for
- * what is active, square corners, no borders. The website in it is white: its own look in the dark backend.
+ * what is active, square corners, no borders. The website lies in the window of the styleguide (Preview.css of
+ * Devclaim.NeosStyleguide): rounded, on a sheet in its own color, with a placeholder until it is ready.
  */
 .dc-compare {
 	--dc-compare-raised: #323232;
@@ -74,7 +75,7 @@
 /* side by side; new content: one, not wider than a page column needs */
 .dc-compare__side {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
 	gap: 16px;
 }
 
@@ -112,12 +113,12 @@
 	background: var(--dc-compare-blue);
 }
 
-/* the frame shows the website wider than itself, scaled down to fit (Compare.js): it cuts off what lies outside */
+/* the frame shows the website wider than itself, scaled down to fit (Compare.js): it cuts off what lies outside. The
+   padding: a little room around the frame (INSET in Compare.js), not in it, so the website keeps its width. The height
+   until the frames are ready: fixed, then it follows them */
 .dc-compare__viewport {
-	position: relative;
-	min-height: 60px;
-	overflow: hidden;
-	background: #fff;
+	height: 280px;
+	padding: 12px;
 }
 
 .dc-compare__frame {
@@ -175,6 +176,7 @@
 .dc-compare__clip {
 	position: absolute;
 	inset: 0;
+	padding: 12px;
 	overflow: hidden;
 	clip-path: inset(0 50% 0 0);
 }
@@ -251,6 +253,6 @@
 
 @media (max-width: 1000px) {
 	.dc-compare__side {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 }

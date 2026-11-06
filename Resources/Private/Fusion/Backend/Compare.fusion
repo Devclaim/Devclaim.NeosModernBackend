@@ -51,20 +51,20 @@ prototype(Devclaim.NeosModernBackend:Compare) < prototype(Neos.Fusion:Component)
             <div class="dc-compare__side" data-pane="side">
                 <figure class="dc-compare__figure" data-figure="before" @if.shown={props.before}>
                     <figcaption><span class="dc-compare__dot"></span>{private.before}</figcaption>
-                    <div class="dc-compare__viewport">
+                    <div class="dc-compare__viewport dc-preview-window">
                         <iframe class="dc-compare__frame" data-ref={props.before} data-side="before" title={private.before}></iframe>
                     </div>
                 </figure>
                 <figure class="dc-compare__figure" data-figure="after">
                     <figcaption @if.shown={props.before}><span class="dc-compare__dot dc-compare__dot--after"></span>{private.after}</figcaption>
-                    <div class="dc-compare__viewport">
+                    <div class="dc-compare__viewport dc-preview-window">
                         <iframe class="dc-compare__frame" data-ref={props.after} data-side="after" title={private.after}></iframe>
                     </div>
                 </figure>
             </div>
 
             <div class="dc-compare__slider" data-pane="slider" hidden @if.shown={props.before}>
-                <div class="dc-compare__stack dc-compare__viewport">
+                <div class="dc-compare__stack dc-compare__viewport dc-preview-window">
                     <iframe class="dc-compare__frame" data-ref={props.after} title={private.after}></iframe>
                     <div class="dc-compare__clip">
                         <iframe class="dc-compare__frame" data-ref={props.before} title={private.before}></iframe>

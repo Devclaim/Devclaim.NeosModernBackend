@@ -1,0 +1,83 @@
+/*
+ * The sites on phones (setting "viewport" of the module; the forms: Chrome.css): the table of the sites as a list under
+ * the headings of their packages, name, root node and domains, the actions next to them. The table of the domains in a
+ * site stays one, its names wrap.
+ */
+@media (max-width: 800px) {
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *),
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody {
+		display: block;
+		width: 100%;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) thead,
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody tr:not(.neos-folder) > td:nth-child(4) {
+		display: none;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody tr {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-rows: auto auto 1fr;
+		column-gap: 8px;
+		margin-bottom: 4px;
+		padding: 10px;
+		background: #2a2a2a;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody tr.neos-folder {
+		grid-template-rows: auto;
+		align-items: center;
+		margin-top: 12px;
+		padding: 0;
+		background: transparent;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody td {
+		display: block;
+		grid-column: 1;
+		width: auto;
+		height: auto;
+		padding: 0 !important; /* Neos: the first cell of a table, with !important */
+		border: 0;
+		background: transparent;
+		line-height: 1.5;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody tr:not(.neos-folder) > td:first-child {
+		font-weight: 600;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody tr.neos-folder > td:last-child {
+		grid-column: 2;
+		grid-row: 1;
+		width: 32px;
+		text-align: center;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody td.neos-action {
+		grid-row: 1 / span 3;
+		grid-column: 2;
+		align-self: start;
+	}
+
+	.neos.neos-module.neos-module-administration-sites table.neos-table:not(fieldset *) tbody td.neos-action > .neos-pull-right {
+		display: flex;
+		float: none;
+		gap: 4px;
+	}
+
+	.neos.neos-module.neos-module-administration-sites fieldset table.neos-table td {
+		line-height: 1.4;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.neos.neos-module.neos-module-administration-sites fieldset table.neos-table td.neos-action > .neos-pull-right {
+		display: flex;
+		float: none;
+		gap: 4px;
+	}
+}

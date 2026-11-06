@@ -2,6 +2,22 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file original="" product-name="Devclaim.NeosModernBackend" source-language="en" target-language="de" datatype="plaintext">
         <body>
+            <trans-unit id="media.drop" xml:space="preserve">
+                <source>Drop files here</source>
+                <target state="translated">Dateien hier ablegen</target>
+            </trans-unit>
+            <trans-unit id="media.drop.hint" xml:space="preserve">
+                <source>They will be added to the media</source>
+                <target state="translated">Sie werden zu den Medien hinzugefügt</target>
+            </trans-unit>
+            <trans-unit id="media.add" xml:space="preserve">
+                <source>Add</source>
+                <target state="translated">Hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="media.done" xml:space="preserve">
+                <source>Done</source>
+                <target state="translated">Fertig</target>
+            </trans-unit>
             <trans-unit id="content.shineThrough" xml:space="preserve">
                 <source>Content from a fallback dimension</source>
                 <target state="translated">Inhalt aus einer Fallback-Dimension</target>

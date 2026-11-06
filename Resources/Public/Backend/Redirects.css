@@ -1,0 +1,159 @@
+/*
+ * The redirects module on phones (setting "viewport" of the module): the page edge to edge, forms and filters in one
+ * column. Where its table does not fit it becomes a list: code, source, target, the actions next to them. The dates only
+ * when they matter (not active yet, expired), the rest of a row is in its form.
+ */
+@media (max-width: 1300px) {
+	/* the details are columns: there are none here */
+	.neos.neos-module-management-redirects .redirects-toggle-details {
+		display: none;
+	}
+
+	.neos.neos-module-management-redirects .redirects-table-wrap {
+		overflow: visible;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table,
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody {
+		display: block;
+		width: 100%;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table thead {
+		display: none;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row {
+		display: grid;
+		grid-template-columns: 28px minmax(0, 1fr) auto;
+		column-gap: 8px;
+		align-items: center;
+		margin-bottom: 4px;
+		padding: 8px;
+		background: #2a2a2a;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td {
+		display: none;
+		overflow: visible;
+		width: auto;
+		max-width: none;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		white-space: normal;
+		overflow-wrap: anywhere;
+		line-height: 1.4;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td:is(
+		.redirects-table__row__column-select-checkbox,
+		.redirects-table__row__column-status-code,
+		.redirects-table__row__column-source-uri-path,
+		.redirects-table__row__column-target-uri-path,
+		.neos-action
+	),
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td:has(.neos-label-warning, .neos-label-important) {
+		display: block;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td.redirects-table__row__column-select-checkbox {
+		grid-row: 1 / span 4;
+		grid-column: 1;
+		align-self: start;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td:not(.redirects-table__row__column-select-checkbox, .neos-action) {
+		grid-column: 2;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td.redirects-table__row__column-status-code {
+		color: #a3a3a3;
+		font-size: 12px;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td.redirects-table__row__column-target-uri-path::before {
+		color: #a3a3a3;
+		content: '\2192\00a0';
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__row > td.neos-action {
+		display: flex;
+		grid-row: 1 / span 4;
+		grid-column: 3;
+		gap: 4px;
+		align-self: start;
+	}
+
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__single-column-row,
+	.neos.neos-module-management-redirects table.neos-table.redirects-table tbody tr.redirects-table__single-column-row > td {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
+	}
+}
+
+@media (max-width: 800px) {
+	.neos.neos-module-management-redirects :is(.add-redirect-form, .redirects-filter, .import-redirects-form) .row {
+		margin-right: 0;
+		margin-left: 0;
+	}
+
+	.neos.neos-module-management-redirects :is(.add-redirect-form, .redirects-filter, .import-redirects-form) .neos-control-group,
+	.neos.neos-module-management-redirects .add-redirect-form .neos-control-group--half {
+		flex: 1 1 100%;
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	/* the two dates side by side still fit, the actions too */
+	.neos.neos-module-management-redirects .add-redirect-form .neos-control-group--half {
+		flex-basis: calc(50% - 4px);
+	}
+
+	.neos.neos-module-management-redirects .add-redirect-form .row {
+		gap: 8px;
+	}
+
+	.neos.neos-module-management-redirects .add-redirect-form .row--actions .neos-control-group {
+		flex: 1 1 0;
+	}
+
+	.neos.neos-module-management-redirects .redirects-filter select {
+		width: 100%;
+	}
+
+	.neos.neos-module-management-redirects .redirects-table-toolbar {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.neos.neos-module-management-redirects .add-redirect-form .textarea-wrap {
+		height: auto;
+	}
+
+	.neos.neos-module-management-redirects .add-redirect-form textarea,
+	.neos.neos-module-management-redirects .add-redirect-form textarea:focus {
+		position: static;
+		height: 80px;
+		line-height: 1.4;
+	}
+
+	/* below 16px a phone zooms into a field */
+	.neos.neos-module-management-redirects :is(input, textarea, select) {
+		font-size: 16px;
+	}
+}
+
+/* "Import" is marked as dangerous by the module, here it is an action like the export */
+.neos.neos-module.neos-module-management-redirects .neos-footer > .neos-button-danger {
+	order: 0;
+	margin-left: 0;
+	background: #323232;
+	color: #f2f2f2;
+}
+
+.neos.neos-module.neos-module-management-redirects .neos-footer > .neos-button-danger:hover {
+	background: #3f3f3f;
+	color: #fff;
+}
